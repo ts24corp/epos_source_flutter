@@ -1,3 +1,7 @@
+import 'dart:collection';
+
+import 'package:epos_source_flutter/src/app/pages/login/login_page_viewmodel.dart';
+import 'package:epos_source_flutter/src/app/theme/theme_primary.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
@@ -10,9 +14,15 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  bool _showPass = false;
+  LoginPageViewModel loginPageViewModel = new LoginPageViewModel();
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
         body: Container(
             padding: EdgeInsets.fromLTRB(30, 0, 30, 0),
@@ -38,7 +48,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(0, 0, 0, 60),
-                    child: Text('Hello\nWelcome Back',
+                    child: Text('EPOS\nChào mừng bạn',
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.black,
@@ -46,54 +56,74 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(0, 0, 0, 40),
-                    child: TextField(
+                    child: TextFormField(
                       style: TextStyle(fontSize: 18, color: Colors.black),
                       decoration: InputDecoration(
                           labelText: "EMAIL",
-                          labelStyle: TextStyle(
-                              color: Color(0xff888888), fontSize: 15)),
+                          labelStyle: ThemePrimary.loginPageButton(context)),
+                      keyboardType: TextInputType.emailAddress,
+                      textInputAction: TextInputAction.next,
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 0, 0, 40),
-                    child: Stack(
-                        alignment: AlignmentDirectional.centerEnd,
-                        children: <Widget>[
-                          TextField(
-                            style: TextStyle(fontSize: 18, color: Colors.black),
-                            obscureText: true,
-                            decoration: InputDecoration(
-                                labelText: "PASSWORD",
-                                labelStyle: TextStyle(
-                                    color: Color(0xff888888), fontSize: 15)),
-                          ),
-                          Text(
-                            "SHOW",
-                            style: TextStyle(
-                                color: Colors.blue,
-                                fontSize: 13,
-                                fontWeight: FontWeight.bold),
-                          )
-                        ]),
-                  ),
-                      SizedBox(
-                        width: double.infinity,
-                        height: 56,
-                        child: RaisedButton(
-                          color: Colors.blue,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(8))
-                          ),
-                          onPressed: onSignInClicked,
-                          child: Text("Sign in",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16
-                            ),
-                          )
-                        ),
-                      )
+                  StreamBuilder<Object>(
+                      stream: loginPageViewModel.showPassStream,
+                      builder: (context, snapshot) {
+                        return Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 0, 0, 40),
+                          child: Stack(
+                              alignment: AlignmentDirectional.centerEnd,
+                              children: <Widget>[
+                                TextFormField(
+                                  style: TextStyle(
+                                      fontSize: 18, color: Colors.black),
+                                  obscureText: loginPageViewModel.showPass
+                                      ? true
+                                      : false,
+                                  decoration: InputDecoration(
+                                      labelText: "PASSWORD",
+                                      labelStyle: ThemePrimary.loginPageButton(
+                                          context)),
+                                  keyboardType: TextInputType.text,
+                                  textInputAction: TextInputAction.done,
+                                ),
+                                GestureDetector(
+                                  onTap: loginPageViewModel.onTapShowPassword,
+                                  child: Text(
+                                    loginPageViewModel.showPass
+                                        ? "HIDE"
+                                        : "SHOW",
+                                    style: TextStyle(
+                                        color: Theme.of(context).primaryColor,
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                )
+                              ]),
+                        );
+                      }),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 56,
+                    child: RaisedButton(
+                        color: Theme.of(context).primaryColor,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(8))),
+                        onPressed: loginPageViewModel.onTapShowPassword,
+                        child: Text(
+                          "Sign in",
+                          style: TextStyle(color: Colors.white, fontSize: 16),
+                        )),
+                  )
                 ]))));
   }
-  void onSignInClicked() {}
+
+  void onSignInClicked() {
+    print("clicked");
+  }
+
+  // void onTapShowPass() {
+  //   setState(() {
+  //     _showPass = !_showPass;
+  //   });
+  // }
 }
