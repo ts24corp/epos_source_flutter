@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:epos_source_flutter/src/app/helper/validator.dart';
-import 'package:epos_source_flutter/src/app/pages/checkTicket/checkTicket_history_page.dart';
 import 'package:epos_source_flutter/src/app/pages/checkTicket/checkTicket_page.dart';
+import 'package:epos_source_flutter/src/app/pages/checkTicketHistory/checkTicket_history_page.dart';
 import 'package:epos_source_flutter/src/app/pages/tabs/tabs_check_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

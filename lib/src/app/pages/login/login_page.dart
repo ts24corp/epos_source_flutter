@@ -14,23 +14,23 @@ class LoginPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       body: ChangeNotifierProvider(
-        child: BodyWidget(),
+        child: LoginBodyWidget(),
         builder: (context) => LoginPageViewModel(),
       ),
     );
   }
 }
 
-class BodyWidget extends StatefulWidget {
+class LoginBodyWidget extends StatefulWidget {
   @override
   // State<StatefulWidget> createState() {
   //   // TODO: implement createState
   //   return null;
   // }
-  _BodyWidgetPageState createState() => _BodyWidgetPageState();
+  _LoginBodyWidgetPageState createState() => _LoginBodyWidgetPageState();
 }
 
-class _BodyWidgetPageState extends State<BodyWidget> {
+class _LoginBodyWidgetPageState extends State<LoginBodyWidget> {
   final focus = FocusNode();
   @override
   void initState() {

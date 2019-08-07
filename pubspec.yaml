@@ -26,6 +26,7 @@ dependencies:
   rxdart: ^0.22.1  
   bloc: ^0.14.4
   provider: ^3.0.0+1
+  barcode_scan: ^1.0.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
