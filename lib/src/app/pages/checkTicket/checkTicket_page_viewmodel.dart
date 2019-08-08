@@ -1,19 +1,22 @@
 import 'dart:async';
+import 'package:epos_source_flutter/src/app/core/base-viewmodel/baseViewModel.dart';
 import 'package:flutter/services.dart';
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flutter/material.dart';
 
-class CheckTicketViewModel extends ChangeNotifier {
+class CheckTicketViewModel extends ViewModelBase {
   CheckTicketViewModel();
+
+  BuildContext context;
 
   String _result = "11";
   get result => _result;
   StreamController _checkTicketController = new StreamController();
   Stream get checkTicketStream => _checkTicketController.stream;
 
+  @override
   void dispose() {
     print("dispose");
-    super.dispose();
     _checkTicketController.close();
   }
 
@@ -30,6 +33,7 @@ class CheckTicketViewModel extends ChangeNotifier {
       }
     } on FormatException {
       _result = "You pressed the back button before scanning anything";
+      _checkTicketController.sink.add(true);
     } catch (ex) {
       _result = "Unknown Error $ex";
     }
