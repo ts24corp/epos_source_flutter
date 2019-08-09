@@ -92,12 +92,16 @@ class LoginPageViewModel extends ChangeNotifier {
   onSignInClicked() {
     if (isValidInfo())
       // Navigator.push(
-      //     context,
-      //     MaterialPageRoute(
-      //         builder: (context) => TabsCheckPage(
-      //             routeChildName: CheckTicketHistoryPage.routeName)));
+      //   context,
+      //   MaterialPageRoute(
+      //     builder: (context) => TabsCheckPage(
+      //       TabsCheckArgurment(
+      //           routeChildName: CheckTicketHistoryPage.routeName),
+      //     ),
+      //   ),
+      // );
       Navigator.pushNamed(context, TabsCheckPage.routeName,
-          arguments: TabsCheckArgurment(
-              routeChildName: CheckTicketHistoryPage.routeName));
+          arguments:
+              TabsCheckArgurment(routeChildName: CheckTicketPage.routeName));
   }
 }

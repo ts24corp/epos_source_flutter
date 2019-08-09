@@ -1,5 +1,6 @@
 import 'package:epos_source_flutter/src/app/pages/checkTicket/checkTicket_page.dart';
 import 'package:epos_source_flutter/src/app/pages/checkTicketHistory/checkTicket_history_page.dart';
+import 'package:epos_source_flutter/src/app/pages/checkTicketHistory/first_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -22,8 +23,13 @@ class TabsCheckArgurment {
 class _TabsCheckPageState extends State<TabsCheckPage> {
   int currentTabIndex = 0;
   List<Widget> tabs = [
-    CheckTicketPage(),
-    CheckTicketHistoryPage(),
+    //CheckTicketPage(),
+    CheckTicketPage(
+      key: PageStorageKey('CheckTicketPage'),
+    ),
+    CheckTicketHistoryPage(
+      key: PageStorageKey('CheckTicketHistoryPage'),
+    ),
   ];
   @override
   void initState() {
@@ -43,15 +49,18 @@ class _TabsCheckPageState extends State<TabsCheckPage> {
   }
 
   onTapped(int index) {
-    setState(() {
-      currentTabIndex = index;
-    });
+    setState(() => currentTabIndex = index);
   }
 
+  final PageStorageBucket bucket = PageStorageBucket();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: tabs[currentTabIndex],
+      body: PageStorage(
+        child: tabs[currentTabIndex],
+        bucket: bucket,
+      ),
+      // body: tabs[currentTabIndex],
       bottomNavigationBar: BottomNavigationBar(
         onTap: onTapped,
         currentIndex: currentTabIndex,
