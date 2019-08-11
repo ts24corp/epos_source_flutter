@@ -1,6 +1,7 @@
 import 'package:epos_source_flutter/src/app/core/baseViewModel.dart';
 import 'package:epos_source_flutter/src/app/pages/checkTicket/checkTicket_page_viewmodel.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 class CheckTicketPage extends StatelessWidget {
@@ -26,11 +27,11 @@ class CheckTicketPage extends StatelessWidget {
   }
 
   Widget _appBar(viewModel) => AppBar(
-        title: Text(viewModel.result),
+        title: Text("Soát vé"),
       );
 
   Widget _floatingActionButton(viewModel) => FloatingActionButton.extended(
-        icon: Icon(Icons.scanner),
+        icon: Icon(FontAwesomeIcons.qrcode),
         label: Text("Scan"),
         onPressed: viewModel.scanQR,
       );
@@ -46,11 +47,41 @@ class _CheckTicketBodyWidgetState extends State<CheckTicketBodyWidget> {
   @override
   Widget build(BuildContext context) {
     viewModel = ViewModelProvider.of(context);
-    return Center(
-      child: Text(
-        viewModel.result,
-        style: new TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold),
-      ),
-    );
+    if (viewModel.result != "111") {
+      return Card(
+        margin: EdgeInsets.all(10),
+        elevation: 4,
+        child: Column(
+          children: <Widget>[
+
+            Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                Text("Ma dat ve"),
+              ],
+            ),
+            
+            Row(
+             mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                Text("Ma dat ve"),
+                Text("Ma dat ve")
+              ],
+            )
+            ,
+            Row(
+             mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                Text("Ma dat ve"),
+                Text("Ma dat ve")
+              ],
+            )
+           // Divider(color: Colors.blue)
+          ],
+        )
+      );
+    } else {
+      return Container();
+    }
   }
 }

@@ -7,7 +7,7 @@ class CheckTicketHistoryPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
-        title: new Text("CheckTicketHistory"),
+        title: new Text("Lịch sử"),
       ),
       body: ListView.builder(itemBuilder: (context, index) {
         return ListTile(

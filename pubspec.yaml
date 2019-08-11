@@ -27,6 +27,8 @@ dependencies:
   bloc: ^0.14.4
   provider: ^3.0.0+1
   barcode_scan: ^1.0.0
+  font_awesome_flutter: ^8.5.0
+  curved_navigation_bar: ^0.3.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

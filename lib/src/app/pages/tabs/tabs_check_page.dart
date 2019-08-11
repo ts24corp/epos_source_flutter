@@ -1,3 +1,4 @@
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:epos_source_flutter/src/app/pages/checkTicket/checkTicket_page.dart';
 import 'package:epos_source_flutter/src/app/pages/checkTicketHistory/checkTicket_history_page.dart';
 import 'package:epos_source_flutter/src/app/pages/checkTicketHistory/first_page.dart';
@@ -55,23 +56,48 @@ class _TabsCheckPageState extends State<TabsCheckPage> {
   final PageStorageBucket bucket = PageStorageBucket();
   @override
   Widget build(BuildContext context) {
+    // return Scaffold(
+    //   body: PageStorage(
+    //     child: tabs[currentTabIndex],
+    //     bucket: bucket,
+    //   ),
+    //   // body: tabs[currentTabIndex],
+    //   bottomNavigationBar: BottomNavigationBar(
+    //     onTap: onTapped,
+    //     currentIndex: currentTabIndex,
+    //     items: [
+    //       BottomNavigationBarItem(
+    //         icon: Icon(Icons.home),
+    //         title: Text("Home"),
+    //       ),
+    //       BottomNavigationBarItem(
+    //         icon: Icon(Icons.history),
+    //         title: Text("History"),
+    //       ),
+    //     ],
+    //   ),
+    // );
     return Scaffold(
       body: PageStorage(
         child: tabs[currentTabIndex],
         bucket: bucket,
       ),
-      // body: tabs[currentTabIndex],
-      bottomNavigationBar: BottomNavigationBar(
+      bottomNavigationBar: CurvedNavigationBar(
+        index: currentTabIndex,
         onTap: onTapped,
-        currentIndex: currentTabIndex,
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            title: Text("Home"),
+        animationDuration: Duration(milliseconds: 300),
+        backgroundColor: Color(0xffFAFAFA),
+        color: Theme.of(context).primaryColor,
+        height: 50,
+        // currentIndex: currentTabIndex,
+        items: <Widget>[
+          Icon(
+            Icons.home,
+            color: Colors.white,
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.history),
-            title: Text("History"),
+          Icon(
+            Icons.history,
+             color: Colors.white,
           ),
         ],
       ),
