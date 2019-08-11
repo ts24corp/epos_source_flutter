@@ -1,4 +1,4 @@
-import 'package:epos_source_flutter/src/app/core/base-viewmodel/baseViewModel.dart';
+import 'package:epos_source_flutter/src/app/core/baseViewModel.dart';
 import 'package:epos_source_flutter/src/app/pages/checkTicket/checkTicket_page_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

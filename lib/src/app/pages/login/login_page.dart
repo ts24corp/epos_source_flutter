@@ -39,10 +39,10 @@ class _LoginBodyWidgetPageState extends State<LoginBodyWidget> {
 
   @override
   Widget build(BuildContext context) {
-    var loginPageViewModel = Provider.of<LoginPageViewModel>(context);
-    loginPageViewModel.context = context;
+    var viewmodel = Provider.of<LoginPageViewModel>(context);
+    viewmodel.context = context;
     return StreamBuilder<Object>(
-      stream: loginPageViewModel.loginStream,
+      stream: viewmodel.loginStream,
       builder: (context, snapshot) {
         return SingleChildScrollView(
           child: Container(
@@ -55,7 +55,7 @@ class _LoginBodyWidgetPageState extends State<LoginBodyWidget> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 SizedBox(
-                  height: 140,
+                  height: 100,
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(0, 0, 0, 40),
@@ -75,14 +75,25 @@ class _LoginBodyWidgetPageState extends State<LoginBodyWidget> {
                           color: Colors.black,
                           fontSize: 30)),
                 ),
+                DropdownButton<String>(
+                  isExpanded: true,
+                  style: TextStyle(color: Colors.black, fontSize: 20),
+                  hint: DropdownMenuItem(
+                    value: null,
+                    child: Text("Chọn công ty"),
+                  ),
+                  items: viewmodel.listCompany,
+                  onChanged: viewmodel.listCompanyOnchanged,
+                  value: viewmodel.currentCompany,
+                ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(0, 0, 0, 40),
                   child: TextFormField(
-                    controller: loginPageViewModel.emailController,
+                    controller: viewmodel.emailController,
                     style: TextStyle(fontSize: 18, color: Colors.black),
                     decoration: InputDecoration(
                         labelText: "EMAIL",
-                        errorText: loginPageViewModel.errorEmail,
+                        errorText: viewmodel.errorEmail,
                         labelStyle: ThemePrimary.loginPageButton(context)),
                     keyboardType: TextInputType.emailAddress,
                     textInputAction: TextInputAction.next,
@@ -97,26 +108,25 @@ class _LoginBodyWidgetPageState extends State<LoginBodyWidget> {
                       alignment: AlignmentDirectional.centerEnd,
                       children: <Widget>[
                         TextFormField(
-                          controller: loginPageViewModel.passController,
+                          controller: viewmodel.passController,
                           focusNode: focus,
                           style: TextStyle(fontSize: 18, color: Colors.black),
-                          obscureText:
-                              !loginPageViewModel.showPass ? true : false,
+                          obscureText: !viewmodel.showPass ? true : false,
                           decoration: InputDecoration(
                               labelText: "PASSWORD",
-                              errorText: loginPageViewModel.errorPass,
+                              errorText: viewmodel.errorPass,
                               labelStyle:
                                   ThemePrimary.loginPageButton(context)),
                           keyboardType: TextInputType.text,
                           textInputAction: TextInputAction.done,
                           onFieldSubmitted: (v) {
-                            loginPageViewModel.onSignInClicked();
+                            viewmodel.onSignInClicked();
                           },
                         ),
                         GestureDetector(
-                          onTap: loginPageViewModel.onTapShowPassword,
+                          onTap: viewmodel.onTapShowPassword,
                           child: Text(
-                            loginPageViewModel.showPass ? "HIDE" : "SHOW",
+                            viewmodel.showPass ? "HIDE" : "SHOW",
                             style: TextStyle(
                                 color: Theme.of(context).primaryColor,
                                 fontSize: 13,
@@ -132,7 +142,7 @@ class _LoginBodyWidgetPageState extends State<LoginBodyWidget> {
                       color: Theme.of(context).primaryColor,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(Radius.circular(8))),
-                      onPressed: loginPageViewModel.onSignInClicked,
+                      onPressed: viewmodel.onSignInClicked,
                       child: Text(
                         "Sign in",
                         style: TextStyle(color: Colors.white, fontSize: 16),
@@ -150,7 +160,7 @@ class _LoginBodyWidgetPageState extends State<LoginBodyWidget> {
   // @override
   // void dispose() {
   //   // TODO: implement dispose
-  //   loginPageViewModel.dispose();
+  //   viewmodel.dispose();
   //   super.dispose();
   // }
 }

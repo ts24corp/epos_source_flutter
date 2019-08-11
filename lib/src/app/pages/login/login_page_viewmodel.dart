@@ -18,17 +18,10 @@ class LoginPageViewModel extends ChangeNotifier {
 
   // StreamController<bool> _showPassController = new StreamController();
   // Stream get showPassStream => _showPassController.stream;
-  LoginPageViewModel() {
-    _emailController.addListener(() {
-      if (_emailController.text.length > 1) isValidEmail();
-    });
-    _passController.addListener(() {
-      if (_passController.text.length > 1) isValidInfo();
-    });
-  }
   BuildContext context;
   StreamController _loginController = new StreamController();
   Stream get loginStream => _loginController.stream;
+  Sink get loginSink => _loginController.sink;
   bool _showPass = false;
   get showPass => _showPass;
 
@@ -43,6 +36,25 @@ class LoginPageViewModel extends ChangeNotifier {
   String _errorPass;
   get errorPass => _errorPass;
 
+// List company
+  List<DropdownMenuItem<String>> _listCompany = new List();
+  get listCompany => _listCompany;
+
+  String currentCompany;
+
+  List _company = ["Suối tiên", "Đầm sen"];
+
+  LoginPageViewModel() {
+    _emailController.addListener(() {
+      if (_emailController.text.length > 1) isValidEmail();
+    });
+    _passController.addListener(() {
+      if (_passController.text.length > 1) isValidInfo();
+    });
+    _listCompany = getDropDownMenuItems();
+    //currentCompany = _listCompany[0].value;
+  }
+
   void dispose() {
     print("dispose");
     // _emailSub.close();
@@ -50,6 +62,25 @@ class LoginPageViewModel extends ChangeNotifier {
     // _btnSignInSub.close();
     super.dispose();
     _loginController.close();
+  }
+
+  List<DropdownMenuItem<String>> getDropDownMenuItems() {
+    List<DropdownMenuItem<String>> items = new List();
+    for (String comp in _company) {
+      // here we are creating the drop down menu items, you can customize the item right here
+      // but I'll just use a simple text for this
+      items.add(new DropdownMenuItem(
+        value: comp, 
+        child: new Text(comp),
+        ));
+    }
+    return items;
+  }
+
+//OnChanged list company
+  void listCompanyOnchanged(String value) {
+    currentCompany = value;
+    loginSink.add(value);
   }
 
   void onTapShowPassword() {

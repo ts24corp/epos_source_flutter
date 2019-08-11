@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:epos_source_flutter/src/app/core/base-viewmodel/baseViewModel.dart';
+import 'package:epos_source_flutter/src/app/core/baseViewModel.dart';
 import 'package:flutter/services.dart';
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flutter/material.dart';
