@@ -22,5 +22,8 @@ class CheckTicketHistoryModel extends ViewModelBase {
 
   CheckTicketHistoryModel.updateState() {
     listTicketInfoSink.add(ticketInfo.getListInfo());
+    listTicketInfoStream.listen((data) {
+      print(data);
+    });
   }
 }

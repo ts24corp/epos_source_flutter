@@ -64,7 +64,7 @@ class TicketInfo {
           jsonDecode(localStorage.getItem(TicketInfo.aliasName));
       listTicketInfo = List<TicketInfo>.from(
           _listTicketInfo.map((i) => TicketInfo.fromJson(i)));
-      print(listTicketInfo);
+      // print(listTicketInfo);
     }
     return listTicketInfo;
   }

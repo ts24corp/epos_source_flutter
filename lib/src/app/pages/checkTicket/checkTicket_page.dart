@@ -41,7 +41,7 @@ class CheckTicketPage extends StatelessWidget {
               "Xác nhận",
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
-            shape: CircleBorder(side: BorderSide(color: Colors.transparent)),
+            // shape: CircleBorder(side: BorderSide(color: Colors.transparent)),
           ),
         ],
       );
