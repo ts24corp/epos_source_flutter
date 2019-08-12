@@ -77,7 +77,7 @@ class _LoginBodyWidgetPageState extends State<LoginBodyWidget> {
                 ),
                 DropdownButton<String>(
                   isExpanded: true,
-                  style: TextStyle(color: Colors.black, fontSize: 20),
+                  style: TextStyle(color: Colors.black, fontSize: 18),
                   hint: DropdownMenuItem(
                     value: null,
                     child: Text("Chọn công ty"),

@@ -29,6 +29,13 @@ dependencies:
   barcode_scan: ^1.0.0
   font_awesome_flutter: ^8.5.0
   curved_navigation_bar: ^0.3.0
+  card_settings: ^1.4.1
+  date_format: ^1.0.6
+  intl: ^0.15.8
+  gradient_app_bar: ^0.0.1
+  shared_preferences: ^0.5.3+4
+  localstorage: ^2.0.0
+  scoped_model: ^1.0.1
 dev_dependencies:
   flutter_test:
     sdk: flutter

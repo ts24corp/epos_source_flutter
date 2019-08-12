@@ -1,9 +1,18 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:scoped_model/scoped_model.dart';
 
 Type _typeOf<T>() => T;
 
-abstract class ViewModelBase {
-  void dispose();
+abstract class ViewModelBase extends Model {
+  void dispose() {
+    streamController.close();
+  }
+
+  StreamController streamController = StreamController();
+  Stream get stream => streamController.stream;
+  Sink get sink => streamController.sink;
 }
 
 class ViewModelProvider<T extends ViewModelBase> extends StatefulWidget {

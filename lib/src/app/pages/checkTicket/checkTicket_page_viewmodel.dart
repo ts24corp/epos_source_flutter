@@ -1,30 +1,37 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:core';
 import 'package:epos_source_flutter/src/app/core/baseViewModel.dart';
+import 'package:epos_source_flutter/src/app/model/ticket-info.dart';
+import 'package:epos_source_flutter/src/app/pages/checkTicketHistory/checkTicket_history_page.dart';
+import 'package:epos_source_flutter/src/app/pages/checkTicketHistory/checkTicket_history_page_viewmodel.dart';
 import 'package:flutter/services.dart';
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flutter/material.dart';
 
 class CheckTicketViewModel extends ViewModelBase {
-  CheckTicketViewModel();
+  // CheckTicketViewModel();
 
   BuildContext context;
 
   String _result = "11";
   get result => _result;
-  StreamController _checkTicketController = new StreamController();
-  Stream get checkTicketStream => _checkTicketController.stream;
+  // StreamController _checkTicketController = new StreamController();
+  // Stream get checkTicketStream => _checkTicketController.stream;
+  // Sink get checkTicketSink => _checkTicketController.sink;
 
+  TicketInfo ticketInfo = TicketInfo();
   @override
   void dispose() {
     print("dispose");
-    _checkTicketController.close();
+    super.dispose();
   }
 
   Future scanQR() async {
     try {
       String qrResult = await BarcodeScanner.scan();
-      _result = qrResult;
-      _checkTicketController.sink.add(true);
+      ticketInfo = TicketInfo.fromJson(jsonDecode(qrResult));
+      sink.add(true);
     } on PlatformException catch (ex) {
       if (ex.code == BarcodeScanner.CameraAccessDenied) {
         _result = "Camera permission was denied";
@@ -33,9 +40,18 @@ class CheckTicketViewModel extends ViewModelBase {
       }
     } on FormatException {
       _result = "You pressed the back button before scanning anything";
-      _checkTicketController.sink.add(true);
+      sink.add(true);
     } catch (ex) {
       _result = "Unknown Error $ex";
     }
+  }
+
+  ///Xác nhận vé
+  Future conFirmTicket() async {
+    ticketInfo.ticketState = "Đã xác nhận";
+    ticketInfo.saveLocal();
+    ticketInfo.getListInfo();
+    sink.add(true);
+    CheckTicketHistoryModel.updateState();
   }
 }

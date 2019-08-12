@@ -26,11 +26,11 @@ class _TabsCheckPageState extends State<TabsCheckPage> {
   List<Widget> tabs = [
     //CheckTicketPage(),
     CheckTicketPage(
-      key: PageStorageKey('CheckTicketPage'),
-    ),
+        //key: PageStorageKey('CheckTicketPage'),
+        ),
     CheckTicketHistoryPage(
-      key: PageStorageKey('CheckTicketHistoryPage'),
-    ),
+        // key: PageStorageKey('CheckTicketHistoryPage'),
+        ),
   ];
   @override
   void initState() {
@@ -78,9 +78,14 @@ class _TabsCheckPageState extends State<TabsCheckPage> {
     //   ),
     // );
     return Scaffold(
-      body: PageStorage(
-        child: tabs[currentTabIndex],
-        bucket: bucket,
+      // body: PageStorage(
+      //   child: tabs[currentTabIndex],
+      //   bucket: bucket,
+      // ),
+      ///Keep state of each page when change tab
+      body: IndexedStack(
+        index: currentTabIndex,
+        children: tabs,
       ),
       bottomNavigationBar: CurvedNavigationBar(
         index: currentTabIndex,
@@ -97,7 +102,7 @@ class _TabsCheckPageState extends State<TabsCheckPage> {
           ),
           Icon(
             Icons.history,
-             color: Colors.white,
+            color: Colors.white,
           ),
         ],
       ),
