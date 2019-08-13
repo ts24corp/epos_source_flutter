@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:epos_source_flutter/src/app/helper/validator.dart';
 import 'package:epos_source_flutter/src/app/pages/checkTicket/checkTicket_page.dart';
-import 'package:epos_source_flutter/src/app/pages/checkTicketHistory/checkTicket_history_page.dart';
+
 import 'package:epos_source_flutter/src/app/pages/tabs/tabs_check_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -70,9 +70,9 @@ class LoginPageViewModel extends ChangeNotifier {
       // here we are creating the drop down menu items, you can customize the item right here
       // but I'll just use a simple text for this
       items.add(new DropdownMenuItem(
-        value: comp, 
+        value: comp,
         child: new Text(comp),
-        ));
+      ));
     }
     return items;
   }

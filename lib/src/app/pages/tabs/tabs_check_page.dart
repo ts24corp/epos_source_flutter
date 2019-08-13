@@ -1,8 +1,9 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:epos_source_flutter/src/app/core/baseViewModel.dart';
 import 'package:epos_source_flutter/src/app/pages/checkTicket/checkTicket_page.dart';
 import 'package:epos_source_flutter/src/app/pages/checkTicketHistory/checkTicket_history_page.dart';
-import 'package:epos_source_flutter/src/app/pages/checkTicketHistory/first_page.dart';
-import 'package:flutter/foundation.dart';
+import 'package:epos_source_flutter/src/app/pages/tabs/tabs_check_viewmodel.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -77,15 +78,19 @@ class _TabsCheckPageState extends State<TabsCheckPage> {
     //     ],
     //   ),
     // );
+    var viewModel = new TabsCheckViewModel();
     return Scaffold(
       // body: PageStorage(
       //   child: tabs[currentTabIndex],
       //   bucket: bucket,
       // ),
       ///Keep state of each page when change tab
-      body: IndexedStack(
-        index: currentTabIndex,
-        children: tabs,
+      body: ViewModelProvider(
+        viewmodel: viewModel,
+        child: IndexedStack(
+          index: currentTabIndex,
+          children: tabs,
+        ),
       ),
       bottomNavigationBar: CurvedNavigationBar(
         index: currentTabIndex,

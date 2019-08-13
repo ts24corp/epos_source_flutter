@@ -3,8 +3,6 @@ import 'dart:convert';
 import 'dart:core';
 import 'package:epos_source_flutter/src/app/core/baseViewModel.dart';
 import 'package:epos_source_flutter/src/app/model/ticket-info.dart';
-import 'package:epos_source_flutter/src/app/pages/checkTicketHistory/checkTicket_history_page.dart';
-import 'package:epos_source_flutter/src/app/pages/checkTicketHistory/checkTicket_history_page_viewmodel.dart';
 import 'package:flutter/services.dart';
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +18,10 @@ class CheckTicketViewModel extends ViewModelBase {
   // Stream get checkTicketStream => _checkTicketController.stream;
   // Sink get checkTicketSink => _checkTicketController.sink;
 
-  TicketInfo ticketInfo = TicketInfo();
+  TicketInfo ticketInfo;
+  CheckTicketViewModel() {
+    ticketInfo = new TicketInfo();
+  }
   @override
   void dispose() {
     print("dispose");
@@ -31,6 +32,7 @@ class CheckTicketViewModel extends ViewModelBase {
     try {
       String qrResult = await BarcodeScanner.scan();
       ticketInfo = TicketInfo.fromJson(jsonDecode(qrResult));
+      ticketInfo.getListInfo();
       sink.add(true);
     } on PlatformException catch (ex) {
       if (ex.code == BarcodeScanner.CameraAccessDenied) {
@@ -50,8 +52,6 @@ class CheckTicketViewModel extends ViewModelBase {
   Future conFirmTicket() async {
     ticketInfo.ticketState = "Đã xác nhận";
     ticketInfo.saveLocal();
-    ticketInfo.getListInfo();
     sink.add(true);
-    CheckTicketHistoryModel.updateState();
   }
 }

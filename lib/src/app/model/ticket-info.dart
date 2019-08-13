@@ -54,7 +54,9 @@ class TicketInfo {
   List<TicketInfo> listTicketInfo = new List();
 
   Future<void> saveLocal() async {
-    listTicketInfo.add(this);
+    var index =
+        listTicketInfo.indexWhere((item) => item.ticketId == this.ticketId);
+    if (index == -1) listTicketInfo.insert(0, this);
     localStorage.setItem("listTicketInfo", json.encode(listTicketInfo));
   }
 

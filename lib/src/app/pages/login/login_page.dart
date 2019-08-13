@@ -1,8 +1,6 @@
-import 'dart:collection';
-
 import 'package:epos_source_flutter/src/app/pages/login/login_page_viewmodel.dart';
 import 'package:epos_source_flutter/src/app/theme/theme_primary.dart';
-import 'package:flutter/gestures.dart';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -10,7 +8,6 @@ class LoginPage extends StatelessWidget {
   static const String routeName = "/login";
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       body: ChangeNotifierProvider(
@@ -23,10 +20,6 @@ class LoginPage extends StatelessWidget {
 
 class LoginBodyWidget extends StatefulWidget {
   @override
-  // State<StatefulWidget> createState() {
-  //   // TODO: implement createState
-  //   return null;
-  // }
   _LoginBodyWidgetPageState createState() => _LoginBodyWidgetPageState();
 }
 
@@ -159,7 +152,6 @@ class _LoginBodyWidgetPageState extends State<LoginBodyWidget> {
 
   // @override
   // void dispose() {
-  //   // TODO: implement dispose
   //   viewmodel.dispose();
   //   super.dispose();
   // }

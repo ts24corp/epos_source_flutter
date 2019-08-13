@@ -1,10 +1,10 @@
 import 'package:date_format/date_format.dart';
 import 'package:epos_source_flutter/src/app/core/baseViewModel.dart';
+import 'package:epos_source_flutter/src/app/helper/index.dart';
 import 'package:epos_source_flutter/src/app/pages/checkTicket/checkTicket_page_viewmodel.dart';
+import 'package:epos_source_flutter/src/app/pages/tabs/tabs_check_viewmodel.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart' as prefix0;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:intl/intl.dart';
 import 'package:gradient_app_bar/gradient_app_bar.dart';
 
 class CheckTicketPage extends StatelessWidget {
@@ -12,31 +12,31 @@ class CheckTicketPage extends StatelessWidget {
   const CheckTicketPage({Key key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    var checkTicketViewModel = new CheckTicketViewModel();
+    TabsCheckViewModel viewModel = ViewModelProvider.of(context);
+    var checkTicketViewModel = viewModel.checkTicketViewModel;
     return ViewModelProvider(
-      viewmodel: checkTicketViewModel,
-      child: StreamBuilder<Object>(
-          stream: checkTicketViewModel.stream,
-          builder: (context, snapshot) {
-            return Scaffold(
-                appBar: _appBar(checkTicketViewModel),
-                body: CheckTicketBodyWidget(),
-                floatingActionButton:
-                    _floatingActionButton(checkTicketViewModel),
-                floatingActionButtonLocation:
-                    FloatingActionButtonLocation.centerFloat);
-          }),
-    );
+        viewmodel: checkTicketViewModel,
+        child: StreamBuilder<Object>(
+            stream: checkTicketViewModel.stream,
+            builder: (context, snapshot) {
+              return Scaffold(
+                  appBar: _appBar(viewModel),
+                  body: CheckTicketBodyWidget(),
+                  floatingActionButton:
+                      _floatingActionButton(checkTicketViewModel),
+                  floatingActionButtonLocation:
+                      FloatingActionButtonLocation.centerFloat);
+            }));
   }
 
-  Widget _appBar(viewModel) => GradientAppBar(
+  Widget _appBar(TabsCheckViewModel viewModel) => GradientAppBar(
         title: Text("Soát vé"),
         backgroundColorStart: Colors.blue,
         backgroundColorEnd: Color(0Xff135691),
         actions: <Widget>[
           FlatButton(
             textColor: Colors.white,
-            onPressed: viewModel.conFirmTicket,
+            onPressed: viewModel.updateStateWhenConfirmTicket,
             child: Text(
               "Xác nhận",
               style: TextStyle(fontWeight: FontWeight.bold),
@@ -60,7 +60,6 @@ class CheckTicketBodyWidget extends StatefulWidget {
 
 class _CheckTicketBodyWidgetState extends State<CheckTicketBodyWidget> {
   CheckTicketViewModel viewModel;
-  final oCcy = new NumberFormat("#,##0");
   @override
   Widget build(BuildContext context) {
     viewModel = ViewModelProvider.of(context);
@@ -104,7 +103,8 @@ class _CheckTicketBodyWidgetState extends State<CheckTicketBodyWidget> {
                   : Container(),
               rowTicketInfo(
                   label: "Đơn giá",
-                  value: '₫' + oCcy.format(viewModel.ticketInfo.ticketPrice)),
+                  value: '₫' +
+                      Common.formatMoney(viewModel.ticketInfo.ticketPrice)),
               Padding(
                 padding: const EdgeInsets.only(bottom: 10),
                 child: rowTicketInfo(
