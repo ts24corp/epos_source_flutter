@@ -2,8 +2,10 @@ import 'dart:async';
 
 import 'package:epos_source_flutter/src/app/helper/validator.dart';
 import 'package:epos_source_flutter/src/app/pages/checkTicket/checkTicket_page.dart';
+import 'package:epos_source_flutter/src/app/pages/saleTicket/saleTicket_page.dart';
 
 import 'package:epos_source_flutter/src/app/pages/tabs/tabs_check_page.dart';
+import 'package:epos_source_flutter/src/app/pages/tabs/tabs_sale_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -120,7 +122,7 @@ class LoginPageViewModel extends ChangeNotifier {
     return false;
   }
 
-  onSignInClicked() {
+  onSignInClicked() async {
     if (isValidInfo())
       // Navigator.push(
       //   context,
@@ -131,8 +133,49 @@ class LoginPageViewModel extends ChangeNotifier {
       //     ),
       //   ),
       // );
-      Navigator.pushNamed(context, TabsCheckPage.routeName,
-          arguments:
-              TabsCheckArgurment(routeChildName: CheckTicketPage.routeName));
+
+      await _chooseBusinessType();
+    // Navigator.pushNamed(context, TabsCheckPage.routeName,
+    //     arguments:
+    //         TabsCheckArgurment(routeChildName: CheckTicketPage.routeName));
+  }
+
+  Future<void> _chooseBusinessType() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Thông báo'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Chọn loại hình sử dụng'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Bán vé'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.pushNamed(context, TabsSalePage.routeName,
+                    arguments: TabsSaleArgurment(
+                        routeChildName: SaleTicketPage.routeName));
+              },
+            ),
+            FlatButton(
+              child: Text('Soát vé'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.pushNamed(context, TabsCheckPage.routeName,
+                    arguments: TabsCheckArgurment(
+                        routeChildName: CheckTicketPage.routeName));
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }
