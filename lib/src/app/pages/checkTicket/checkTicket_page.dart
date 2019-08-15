@@ -14,13 +14,14 @@ class CheckTicketPage extends StatelessWidget {
   Widget build(BuildContext context) {
     TabsCheckViewModel viewModel = ViewModelProvider.of(context);
     var checkTicketViewModel = viewModel.checkTicketViewModel;
+
     return ViewModelProvider(
         viewmodel: checkTicketViewModel,
         child: StreamBuilder<Object>(
             stream: checkTicketViewModel.stream,
             builder: (context, snapshot) {
               return Scaffold(
-                  appBar: _appBar(viewModel),
+                  appBar: _appBar(viewModel, context),
                   body: CheckTicketBodyWidget(),
                   floatingActionButton:
                       _floatingActionButton(checkTicketViewModel),
@@ -29,9 +30,10 @@ class CheckTicketPage extends StatelessWidget {
             }));
   }
 
-  Widget _appBar(TabsCheckViewModel viewModel) => GradientAppBar(
+  Widget _appBar(TabsCheckViewModel viewModel, BuildContext context) =>
+      GradientAppBar(
         title: Text("Soát vé"),
-        backgroundColorStart: Colors.blue,
+        backgroundColorStart: Theme.of(context).primaryColor,
         backgroundColorEnd: Color(0Xff135691),
         actions: <Widget>[
           FlatButton(

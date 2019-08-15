@@ -12,7 +12,7 @@ class CheckTicketViewModel extends ViewModelBase {
 
   BuildContext context;
 
-  String _result = "11";
+  String _result = "";
   get result => _result;
   // StreamController _checkTicketController = new StreamController();
   // Stream get checkTicketStream => _checkTicketController.stream;
@@ -32,7 +32,7 @@ class CheckTicketViewModel extends ViewModelBase {
     try {
       String qrResult = await BarcodeScanner.scan();
       ticketInfo = TicketInfo.fromJson(jsonDecode(qrResult));
-      ticketInfo.getListInfo();
+      await ticketInfo.getListInfo();
       sink.add(true);
     } on PlatformException catch (ex) {
       if (ex.code == BarcodeScanner.CameraAccessDenied) {
@@ -51,6 +51,7 @@ class CheckTicketViewModel extends ViewModelBase {
   ///Xác nhận vé
   Future conFirmTicket() async {
     ticketInfo.ticketState = "Đã xác nhận";
+    await ticketInfo.getListInfo();
     ticketInfo.saveLocal();
     sink.add(true);
   }

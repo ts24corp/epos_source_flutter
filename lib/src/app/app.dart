@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
         theme: ThemePrimary.theme(),
         initialRoute: '/',
         routes: Routes.route
-        // home: LoginPage()
+        //  home: LoginPage()
         );
   }
 }

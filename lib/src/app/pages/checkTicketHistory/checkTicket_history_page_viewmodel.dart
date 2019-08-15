@@ -7,8 +7,11 @@ class CheckTicketHistoryModel extends ViewModelBase {
     super.dispose();
   }
 
+  TicketInfo ticketInfo;
   CheckTicketHistoryModel() {
     ticketInfo = new TicketInfo();
+    ticketInfo.getListInfo().then((_) {
+      sink.add(true);
+    });
   }
-  TicketInfo ticketInfo;
 }

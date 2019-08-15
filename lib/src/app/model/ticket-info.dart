@@ -5,18 +5,17 @@ import 'package:intl/intl.dart';
 
 class TicketInfo {
   int ticketPrice = 590000;
-  String companyName = "";
-  String ticketName = "";
-  String ticketType = "";
+  String companyName = "Suối tiên";
+  String ticketName = "Vé vào cổng";
+  String ticketType = "Vé người lớn";
   int ticketAdultQuantity = 0;
   int ticketChildQuantity = 0;
   String ticketCustomer = "VƯƠNG MINH LUÂN";
-  String ticketId = "1121908120010104651614-1";
+  String ticketId = "";
   String ticketDate = DateFormat("yyyy-MM-dd").format(DateTime.now());
-  String ticketState = "";
-  TicketInfo() {
-    getListInfo();
-  }
+  String ticketState = "Chưa xác nhận";
+  List<TicketInfo> listTicketInfo = new List<TicketInfo>();
+  TicketInfo();
 
   static String aliasName = "listTicketInfo";
   TicketInfo.fromJson(Map<String, dynamic> json) {
@@ -51,8 +50,6 @@ class TicketInfo {
     return data;
   }
 
-  List<TicketInfo> listTicketInfo = new List();
-
   Future<void> saveLocal() async {
     var index =
         listTicketInfo.indexWhere((item) => item.ticketId == this.ticketId);
@@ -60,13 +57,15 @@ class TicketInfo {
     localStorage.setItem("listTicketInfo", json.encode(listTicketInfo));
   }
 
-  List<TicketInfo> getListInfo() {
-    if (localStorage.getItem("listTicketInfo") != null) {
-      var _listTicketInfo =
-          jsonDecode(localStorage.getItem(TicketInfo.aliasName));
-      listTicketInfo = List<TicketInfo>.from(
-          _listTicketInfo.map((i) => TicketInfo.fromJson(i)));
-      // print(listTicketInfo);
+  Future<List<TicketInfo>> getListInfo() async {
+    bool ready = await localStorage.ready;
+    if (ready) {
+      if (localStorage.getItem("listTicketInfo") != null) {
+        var _listTicketInfo =
+            jsonDecode(localStorage.getItem(TicketInfo.aliasName));
+        listTicketInfo = List<TicketInfo>.from(
+            _listTicketInfo.map((i) => TicketInfo.fromJson(i)));
+      }
     }
     return listTicketInfo;
   }

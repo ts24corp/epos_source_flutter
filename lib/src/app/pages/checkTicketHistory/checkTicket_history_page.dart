@@ -41,6 +41,7 @@ class _CTHBodyWidgetState extends State<CTHBodyWidget> {
   @override
   Widget build(BuildContext context) {
     viewModel = ViewModelProvider.of(context);
+    //viewModel.ticketInfo.listTicketInfo = viewModel.ticketInfo.getListInfo();
     var _listTicket = viewModel.ticketInfo.listTicketInfo;
     return ListView.builder(
         itemCount: _listTicket.length,
