@@ -1,3 +1,4 @@
+import 'package:epos_source_flutter/src/app/core/app_setting.dart';
 import 'package:epos_source_flutter/src/app/pages/login/login_page_viewmodel.dart';
 import 'package:epos_source_flutter/src/app/theme/theme_primary.dart';
 
@@ -30,8 +31,14 @@ class _LoginBodyWidgetPageState extends State<LoginBodyWidget> {
     super.initState();
   }
 
+  getApi() async {
+    await api.getToken();
+    print(2312);
+  }
+
   @override
   Widget build(BuildContext context) {
+    getApi();
     var viewmodel = Provider.of<LoginPageViewModel>(context);
     viewmodel.context = context;
     return StreamBuilder<Object>(

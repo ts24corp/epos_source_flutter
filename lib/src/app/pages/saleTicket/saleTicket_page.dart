@@ -1,4 +1,6 @@
 import 'package:epos_source_flutter/src/app/core/baseViewModel.dart';
+import 'package:epos_source_flutter/src/app/pages/saleTicket/saleTicket_page_viewmodel.dart';
+import 'package:epos_source_flutter/src/app/pages/saleTicketHistory/saleTicketHistory_viewmodel.dart';
 import 'package:epos_source_flutter/src/app/pages/tabs/tabs_sale_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:gradient_app_bar/gradient_app_bar.dart';
@@ -10,6 +12,7 @@ class SaleTicketPage extends StatelessWidget {
   Widget build(BuildContext context) {
     TabsSaleViewModel viewModel = ViewModelProvider.of(context);
     var saleTicketViewModel = viewModel.saleTicketViewModel;
+    saleTicketViewModel.context = context;
     return ViewModelProvider(
       viewmodel: saleTicketViewModel,
       child: StreamBuilder<Object>(
@@ -47,8 +50,10 @@ class SaleTicketBodyWidget extends StatefulWidget {
 }
 
 class _SaleTicketBodyWidgetState extends State<SaleTicketBodyWidget> {
+  SaleTicketViewModel viewModel;
   @override
   Widget build(BuildContext context) {
+    viewModel = ViewModelProvider.of(context);
     return SingleChildScrollView(
       child: Container(
         padding: EdgeInsets.all(8.0),
@@ -79,13 +84,23 @@ class _SaleTicketBodyWidgetState extends State<SaleTicketBodyWidget> {
                   fontWeight: FontWeight.bold),
             ),
           ),
-          Flexible(
-            child: Text("label",
-                overflow: TextOverflow.clip,
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                )),
+          GestureDetector(
+            onTap: viewModel.areaSaleOnTap,
+            child: Row(
+              children: <Widget>[
+                Text(
+                  'Chọn khu vực',
+                  style: TextStyle(
+                    color: Color(0xffb6b8b6),
+                    fontSize: 18,
+                  ),
+                ),
+                Icon(
+                  Icons.arrow_drop_down,
+                  color: Color(0xffb6b8b6),
+                )
+              ],
+            ),
           )
         ],
       );
