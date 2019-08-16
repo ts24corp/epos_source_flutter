@@ -1,6 +1,5 @@
 import 'package:epos_source_flutter/src/app/core/baseViewModel.dart';
 import 'package:epos_source_flutter/src/app/pages/saleTicket/saleTicket_page_viewmodel.dart';
-import 'package:epos_source_flutter/src/app/pages/saleTicketHistory/saleTicketHistory_viewmodel.dart';
 import 'package:epos_source_flutter/src/app/pages/tabs/tabs_sale_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:gradient_app_bar/gradient_app_bar.dart';

@@ -32,8 +32,8 @@ class _LoginBodyWidgetPageState extends State<LoginBodyWidget> {
   }
 
   getApi() async {
-    await api.getToken();
-    print(2312);
+    //await api.getToken();
+    await api.authorization();
   }
 
   @override
