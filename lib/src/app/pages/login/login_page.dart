@@ -1,5 +1,6 @@
 import 'package:epos_source_flutter/src/app/core/app_setting.dart';
 import 'package:epos_source_flutter/src/app/pages/login/login_page_viewmodel.dart';
+import 'package:epos_source_flutter/src/app/repository/api_master.dart';
 import 'package:epos_source_flutter/src/app/theme/theme_primary.dart';
 
 import 'package:flutter/material.dart';
@@ -33,7 +34,14 @@ class _LoginBodyWidgetPageState extends State<LoginBodyWidget> {
 
   getApi() async {
     //await api.getToken();
-    await api.authorization();
+    api.grandType = GrandType.client_credentials;
+    // api.clientId = "r9o1DJD4rZlDnhnzJnSn9LKvhaqhTX";
+    //api.clienSecret = "ojrZZVCwLf4sqIn9CkZusNOetDTWo9";
+    api.username = "odoo_template";
+    api.password = "odoo_template";
+    //var result = await api.authorization();
+    //print(result);
+    await api.getDataModelDemo();
   }
 
   @override

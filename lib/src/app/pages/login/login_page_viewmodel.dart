@@ -7,7 +7,9 @@ import 'package:epos_source_flutter/src/app/pages/saleTicket/saleTicket_page.dar
 import 'package:epos_source_flutter/src/app/pages/tabs/tabs_check_page.dart';
 import 'package:epos_source_flutter/src/app/pages/tabs/tabs_sale_page.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/cupertino.dart' as prefix1;
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' as prefix0;
 
 class LoginPageViewModel extends ChangeNotifier {
   // final _emailSub = BehaviorSubject<String>();
