@@ -23,6 +23,7 @@ class Api1 extends ApiMaster {
       ['name', 'ilike', 'dưa hấu']
     ];
     body["limit"] = 10;
+    body["order"] = "name desc";
     var params = convertSerialize(body);
     return http
         .get('${this.api}/search_read/product.template?$params',
