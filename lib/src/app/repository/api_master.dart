@@ -6,6 +6,7 @@ import 'package:epos_source_flutter/src/app/core/app_setting.dart';
 enum GrandType { password, client_credentials }
 
 class ApiMaster {
+  String aliasName = "ApiMaster";
   String api = "$domainApi/api";
   String clientId = "OXBNFh9a2yj4YBRgSXjI1W4OTO8mrN";
   String clienSecret = "smM4lVzzsnnvHrobQnr1oRUTDl02Ka";
@@ -22,6 +23,24 @@ class ApiMaster {
   DateTime _expiresIn;
   get expiresIn => _expiresIn;
   ApiMaster();
+
+  ApiMaster.fromJson(Map<String, dynamic> json) {
+    api = json['api'];
+    clientId = json['clientId'];
+    clienSecret = json['clienSecret'];
+    username = json['username'];
+    password = json['password'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['api'] = this.api;
+    data['clientId'] = this.clientId;
+    data['clienSecret'] = this.clienSecret;
+    data['username'] = this.username;
+    data['password'] = this.password;
+    return data;
+  }
 
   String convertSerialize(Map<String, dynamic> obj) {
     var str = "";

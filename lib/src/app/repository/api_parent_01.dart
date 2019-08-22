@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:epos_source_flutter/src/app/core/app_setting.dart';
 import 'package:epos_source_flutter/src/app/model/index.dart';
 import 'package:http/http.dart' as http;
 
@@ -8,7 +9,7 @@ import 'api_master.dart';
 class Api1 extends ApiMaster {
   Api1();
 
-//  /api/search_read/{model}
+  /// api/search_read/{model}
   Future<List<ProductTemplate>> getDataModelDemo() async {
     await this.authorization();
     body = new Map();
@@ -40,5 +41,25 @@ class Api1 extends ApiMaster {
       }
       return listResult;
     });
+  }
+
+  ///Kiểm tra thông tin đăng nhập.
+  ///Trả về true or false.
+  Future<bool> checkLogin({String username, String password}) async {
+    var result = false;
+    this.grandType = GrandType.client_credentials;
+    this.username = username;
+    this.password = password;
+    result = await this.authorization();
+    return result;
+  }
+
+  ///Lưu thông tin cấu hình domain
+  void saveConfigDomain({String domain, String clientID, String clientSecret}) {
+    this.api = "$domain/api";
+    domainApi = domain;
+    this.clientId = clientId;
+    this.clienSecret = clientSecret;
+    localStorage.setItem(this.aliasName, json.encode(this.toJson()));
   }
 }
