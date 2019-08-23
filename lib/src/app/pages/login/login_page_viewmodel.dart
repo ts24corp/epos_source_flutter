@@ -2,14 +2,13 @@ import 'dart:async';
 
 import 'package:epos_source_flutter/src/app/helper/validator.dart';
 import 'package:epos_source_flutter/src/app/pages/checkTicket/checkTicket_page.dart';
+import 'package:epos_source_flutter/src/app/pages/configDomain/configDomain_page.dart';
 import 'package:epos_source_flutter/src/app/pages/saleTicket/saleTicket_page.dart';
 
 import 'package:epos_source_flutter/src/app/pages/tabs/tabs_check_page.dart';
 import 'package:epos_source_flutter/src/app/pages/tabs/tabs_sale_page.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/cupertino.dart' as prefix1;
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart' as prefix0;
 
 class LoginPageViewModel extends ChangeNotifier {
   // final _emailSub = BehaviorSubject<String>();
@@ -46,7 +45,10 @@ class LoginPageViewModel extends ChangeNotifier {
 
   String currentCompany;
 
-  List _company = ["Suối tiên", "Đầm sen"];
+  List<dynamic> _company = [
+    {'id': 1, 'name': 'Thủ công'},
+    {'id': 2, 'name': 'QR code'}
+  ];
 
   LoginPageViewModel() {
     _emailController.addListener(() {
@@ -70,20 +72,26 @@ class LoginPageViewModel extends ChangeNotifier {
 
   List<DropdownMenuItem<String>> getDropDownMenuItems() {
     List<DropdownMenuItem<String>> items = new List();
-    for (String comp in _company) {
+    for (dynamic comp in _company) {
       // here we are creating the drop down menu items, you can customize the item right here
       // but I'll just use a simple text for this
       items.add(new DropdownMenuItem(
-        value: comp,
-        child: new Text(comp),
+        value: comp['name'],
+        child: Text(comp['name']),
       ));
     }
     return items;
   }
 
 //OnChanged list company
-  void listCompanyOnchanged(String value) {
+  void listCompanyOnchanged(value) {
     currentCompany = value;
+    print(value);
+    if (value == 'Thủ công') {
+      Navigator.pushNamed(context, ConfigDomainPage.routeName);
+    } else if (value == 'QR code') {
+      Navigator.pushNamed(context, SaleTicketPage.routeName);
+    }
     loginSink.add(value);
   }
 
@@ -135,7 +143,6 @@ class LoginPageViewModel extends ChangeNotifier {
       //     ),
       //   ),
       // );
-
       await _chooseBusinessType();
     // Navigator.pushNamed(context, TabsCheckPage.routeName,
     //     arguments:

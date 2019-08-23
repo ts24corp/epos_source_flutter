@@ -90,7 +90,7 @@ class _LoginBodyWidgetPageState extends State<LoginBodyWidget> {
                   style: TextStyle(color: Colors.black, fontSize: 18),
                   hint: DropdownMenuItem(
                     value: null,
-                    child: Text("Chọn công ty"),
+                    child: Text("Cấu hình domain"),
                   ),
                   items: viewmodel.listCompany,
                   onChanged: viewmodel.listCompanyOnchanged,

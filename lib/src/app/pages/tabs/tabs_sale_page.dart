@@ -1,5 +1,6 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:epos_source_flutter/src/app/core/baseViewModel.dart';
+import 'package:epos_source_flutter/src/app/pages/placeTicket/placeTicket_page.dart';
 import 'package:epos_source_flutter/src/app/pages/saleTicket/saleTicket_page.dart';
 import 'package:epos_source_flutter/src/app/pages/saleTicketHistory/saleTicketHistory_page.dart';
 import 'package:epos_source_flutter/src/app/pages/tabs/tabs_sale_viewmodel.dart';
@@ -24,9 +25,10 @@ class _TabsSalePageState extends State<TabsSalePage> {
   int currentTabIndex = 0;
   List<Widget> tabs = [
     //CheckTicketPage(),
-    SaleTicketPage(
-        //key: PageStorageKey('CheckTicketPage'),
-        ),
+    // SaleTicketPage(
+    //     //key: PageStorageKey('CheckTicketPage'),
+    //     ),
+    PlaceTicketPage(),
     SaleTicketHistoryPage(
         // key: PageStorageKey('CheckTicketHistoryPage'),
         ),
@@ -39,7 +41,7 @@ class _TabsSalePageState extends State<TabsSalePage> {
 
   _navigateChild(TabsSaleArgurment arg) {
     switch (arg.routeChildName) {
-      case SaleTicketPage.routeName:
+      case PlaceTicketPage.routeName:
         currentTabIndex = 0;
         break;
       case SaleTicketHistoryPage.routeName:
