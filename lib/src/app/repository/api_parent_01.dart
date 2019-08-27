@@ -28,7 +28,7 @@ class Api1 extends ApiMaster {
     var params = convertSerialize(body);
     return http
         .get('${this.api}/search_read/product.template?$params',
-            headers: headers)
+            headers: this.headers)
         .then((http.Response response) {
       List<ProductTemplate> listResult = new List();
       if (response.statusCode == 200) {
@@ -47,11 +47,25 @@ class Api1 extends ApiMaster {
   ///Trả về true or false.
   Future<bool> checkLogin({String username, String password}) async {
     var result = false;
-    this.grandType = GrandType.client_credentials;
+    this.grandType = GrandType.password;
     this.username = username;
     this.password = password;
-    result = await this.authorization();
+    result = await this.authorization(refresh: true);
     return result;
+  }
+
+  //Kiểm tra quyền truy cập POS
+  Future<bool> checkAccessRightPOS() async {
+    await this.authorization();
+    return http
+        .get('${this.api}/access/rights/pos.config', headers: this.headers)
+        .then((http.Response response) {
+      if (response.statusCode == 200) {
+        bool result = response.body.toLowerCase() == 'true' ? true : false;
+        return result;
+      }
+      return false;
+    });
   }
 
   ///Lưu thông tin cấu hình domain

@@ -99,22 +99,26 @@ class ApiMaster {
     });
   }
 
-  Future<dynamic> authorization() async {
+  Future<dynamic> authorization({refresh: false}) async {
     bool result = true;
-    //kiểm tra nếu grandType thay đổi
-    if (grandType == grandTypeTemp) {
-      //kiểm tra nếu token tồn tại
-      if (_expiresIn != null) {
-        DateTime currentTime = DateTime.now();
-        var diffTime = _expiresIn.difference(currentTime).inSeconds;
-        print(diffTime);
-        //lấy lại token.
-        if (diffTime <= 0) result = await getToken();
-      } else
-        result = await getToken();
-    } else {
-      grandTypeTemp = grandType;
+    if (refresh) {
       result = await getToken();
+    } else {
+      //kiểm tra nếu grandType thay đổi
+      if (grandType == grandTypeTemp) {
+        //kiểm tra nếu token tồn tại
+        if (_expiresIn != null) {
+          DateTime currentTime = DateTime.now();
+          var diffTime = _expiresIn.difference(currentTime).inSeconds;
+          print(diffTime);
+          //lấy lại token.
+          if (diffTime <= 0) result = await getToken();
+        } else
+          result = await getToken();
+      } else {
+        grandTypeTemp = grandType;
+        result = await getToken();
+      }
     }
     return result;
   }

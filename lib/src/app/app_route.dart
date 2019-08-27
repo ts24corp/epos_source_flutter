@@ -2,6 +2,7 @@ import 'package:epos_source_flutter/src/app/pages/checkTicket/checkTicket_page.d
 import 'package:epos_source_flutter/src/app/pages/checkTicketHistory/checkTicket_history_page.dart';
 import 'package:epos_source_flutter/src/app/pages/configDomain/configDomain_page.dart';
 import 'package:epos_source_flutter/src/app/pages/login/login_page.dart';
+import 'package:epos_source_flutter/src/app/pages/payTicket/payTicket_page.dart';
 import 'package:epos_source_flutter/src/app/pages/placeTicket/placeTicket_page.dart';
 import 'package:epos_source_flutter/src/app/pages/saleTicket/saleTicket_page.dart';
 import 'package:epos_source_flutter/src/app/pages/saleTicketHistory/saleTicketHistory_page.dart';
@@ -23,5 +24,6 @@ class Routes {
     SaleTicketPage.routeName: (context) => SaleTicketPage(),
     ConfigDomainPage.routeName: (context) => ConfigDomainPage(),
     PlaceTicketPage.routeName: (context) => PlaceTicketPage(),
+    PayTicketPage.routeName: (context) => PayTicketPage(),
   };
 }

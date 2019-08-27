@@ -1,0 +1,486 @@
+import 'package:epos_source_flutter/src/app/core/baseViewModel.dart';
+import 'package:epos_source_flutter/src/app/pages/saleTicket/saleTicket_page_viewmodel.dart';
+import 'package:epos_source_flutter/src/app/pages/tabs/tabs_sale_viewmodel.dart';
+import 'package:flutter/material.dart';
+import 'package:gradient_app_bar/gradient_app_bar.dart';
+import 'dart:async';
+import 'package:intl/intl.dart';
+
+class SaleTicketPage extends StatelessWidget {
+  static const String routeName = "/saleTicket";
+
+  @override
+  Widget build(BuildContext context) {
+    TabsSaleViewModel viewModel = ViewModelProvider.of(context);
+    var saleTicketViewModel = viewModel.saleTicketViewModel;
+
+    return ViewModelProvider(
+      viewmodel: saleTicketViewModel,
+      child: StreamBuilder<Object>(
+          stream: saleTicketViewModel.stream,
+          builder: (context, snapshot) {
+            return new Scaffold(
+              appBar: _appBar(viewModel),
+              body: SaleTicketBodyWidget(),
+            );
+          }),
+    );
+  }
+
+  Widget _appBar(TabsSaleViewModel viewModel) => GradientAppBar(
+        title: Text("Bán vé"),
+        backgroundColorStart: Colors.blue,
+        backgroundColorEnd: Color(0Xff135691),
+        actions: <Widget>[
+          FlatButton(
+            textColor: Colors.white,
+            onPressed: () {},
+            child: Text(
+              "Lưu",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            // shape: CircleBorder(side: BorderSide(color: Colors.transparent)),
+          ),
+        ],
+      );
+}
+
+class SaleTicketBodyWidget extends StatefulWidget {
+  @override
+  _SaleTicketBodyWidgetState createState() => _SaleTicketBodyWidgetState();
+}
+
+class _SaleTicketBodyWidgetState extends State<SaleTicketBodyWidget> {
+  SaleTicketViewModel viewModal;
+  String dropdownValue = 'One';
+  int value1 = 0;
+  int value2 = 0;
+  var _array = ['Suối tiên', 'Đầm sen'];
+  var _outlet = ['Còn vé', 'Hết vé'];
+  String _selectItem = null;
+  String _outletSelecte = null;
+
+  _numberTicketReduction1() {
+    setState(() {
+      if (value1 != 0) {
+        value1--;
+      }
+    });
+  }
+
+  _numberTicketReduction2() {
+    setState(() {
+      if (value2 != 0) {
+        value2--;
+      }
+    });
+  }
+
+  _numberTicketIncrease1() {
+    setState(() {
+      value1++;
+    });
+  }
+
+  _numberTicketIncrease2() {
+    setState(() {
+      value2++;
+    });
+  }
+
+  DateTime _date = new DateTime.now();
+  String formatDate = DateFormat('kk:mm – dd-MM-yyyy').format(DateTime.now());
+  TimeOfDay _time = new TimeOfDay.now();
+  Future<TimeOfDay> _selectedDate(BuildContext context) async {
+    final TimeOfDay picked = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+      // firstDate: DateTime(2018),
+      // lastDate: DateTime(2030),
+    );
+    if (picked != null && picked != _date) {
+      setState(() {
+        _time = picked;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    viewModal = ViewModelProvider.of(context);
+    return SingleChildScrollView(
+      child: Container(
+        padding: EdgeInsets.all(8.0),
+        child: Column(
+          children: <Widget>[
+            _areaSale(),
+            // ticketWiget(label: "Khu vực bán", value: 'Vé vào cổng'),
+            _dateTime(),
+            // ticketWiget(label: "Ngày giờ", value: '31/11/2019'),
+            _cateloTicket(),
+            _ticketState(),
+            ticketWiget(label: "Người đặt vé", value: 'Nguyễn Văn A'),
+            ticketWiget(
+                label: "Số điện thoại", value: '0123456789', indexLast: true),
+            // _dateTime(),
+
+            _customerName(),
+            _phoneNumber(),
+            _total(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _areaSale() => Padding(
+        padding: const EdgeInsets.all(4.0),
+        child: Column(
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  // width: MediaQuery.of(context).size.width * 0.3,
+                  child: Text(
+                    "Khu vực bán",
+                    style: TextStyle(
+                        fontSize: 18,
+                        // color: Theme.of(context).primaryColor,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+                // Flexible(
+                //   child: Text("Vé vào cổng",
+                //       overflow: TextOverflow.clip,
+                //       style: TextStyle(
+                //         fontSize: 18,
+                //         fontWeight: FontWeight.bold,
+                //       )),
+                // )
+                DropdownButton<String>(
+                  style: TextStyle(color: Colors.black, fontSize: 18),
+                  hint: DropdownMenuItem(
+                    child: Text("Vé vào"),
+                    value: null,
+                  ),
+                  items: _array.map((String value) {
+                    return DropdownMenuItem<String>(
+                        value: value, child: Text(value));
+                  }).toList(),
+                  onChanged: (String newValue) {
+                    setState(() {
+                      this._selectItem = newValue;
+                    });
+                  },
+                  value: _selectItem,
+                )
+              ],
+            ),
+            // Divider(),
+          ],
+        ),
+      );
+
+  Widget _dateTime() => Column(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  child: Text(
+                    "Ngày giờ",
+                    style: TextStyle(
+                        fontSize: 18,
+                        // color: Theme.of(context).primaryColor,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+                FlatButton(
+                  onPressed: () {
+                    _selectedDate(context);
+                  },
+                  child: Text(
+                    viewModal.formattedDate,
+                    style: TextStyle(
+                      fontSize: 18,
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+          Divider()
+        ],
+      );
+  Widget _cateloTicket() => Padding(
+        padding: const EdgeInsets.all(4.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            Container(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                "Loại vé:",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+            ),
+            // Divider(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Container(
+                      child: Text(
+                        "Người lớn:",
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    Container(
+                      child: Text(
+                        "Giá: đ300.000",
+                        style: TextStyle(fontSize: 18),
+                      ),
+                    ),
+                  ],
+                ),
+                Container(
+                    child: Row(
+                  children: <Widget>[
+                    ButtonTheme(
+                      minWidth: 30.0,
+                      height: 30.0,
+                      child: RaisedButton(
+                        onPressed: _numberTicketReduction1,
+                        child: Text(
+                          "-",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 20),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: Text(
+                        '$value1',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 18),
+                      ),
+                    ),
+                    ButtonTheme(
+                      minWidth: 30.0,
+                      height: 30.0,
+                      child: RaisedButton(
+                        onPressed: _numberTicketIncrease1,
+                        child: Text(
+                          "+",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 20),
+                        ),
+                      ),
+                    ),
+                  ],
+                )),
+              ],
+            ),
+            Divider(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Container(
+                      child: Text(
+                        "Trẻ em:",
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    Container(
+                      child: Text(
+                        "Giá: đ100.000",
+                        style: TextStyle(
+                          fontSize: 18,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Container(
+                    child: Row(
+                  children: <Widget>[
+                    ButtonTheme(
+                      minWidth: 30.0,
+                      height: 30.0,
+                      child: RaisedButton(
+                        onPressed: _numberTicketReduction2,
+                        child: Text(
+                          "-",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 20),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: Text(
+                        '$value2',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 18),
+                      ),
+                    ),
+                    ButtonTheme(
+                      minWidth: 30.0,
+                      height: 30.0,
+                      child: RaisedButton(
+                        onPressed: _numberTicketIncrease2,
+                        child: Text(
+                          "+",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 20),
+                        ),
+                      ),
+                    )
+                  ],
+                )),
+              ],
+            ),
+            Divider(),
+          ],
+        ),
+      );
+  Widget _ticketState() => Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  // width: MediaQuery.of(context).size.width * 0.3,
+                  child: Text(
+                    "Trạng thái",
+                    style: TextStyle(
+                        fontSize: 18,
+                        // color: Theme.of(context).primaryColor,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+                // Flexible(
+                //   child: Text("Vé vào cổng",
+                //       overflow: TextOverflow.clip,
+                //       style: TextStyle(
+                //         fontSize: 18,
+                //         fontWeight: FontWeight.bold,
+                //       )),
+                // )
+                DropdownButton<String>(
+                  style: TextStyle(color: Colors.black, fontSize: 18),
+                  hint: DropdownMenuItem(
+                    child: Text("Trạng thái"),
+                    value: null,
+                  ),
+                  items: _outlet.map((String value) {
+                    return DropdownMenuItem<String>(
+                        value: value, child: Text(value));
+                  }).toList(),
+                  onChanged: (String newValue) {
+                    setState(() {
+                      this._outletSelecte = newValue;
+                    });
+                  },
+                  value: _outletSelecte,
+                )
+              ],
+            ),
+            // Divider(),
+          ],
+        ),
+      );
+
+  Widget _customerName() => Container();
+
+  Widget _phoneNumber() => Container();
+  Widget _total() => Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Align(
+          alignment: FractionalOffset.bottomCenter,
+          child: Container(
+            color: Colors.amber,
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                    child: Text(
+                      "Thành tiền:",
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Container(
+                    child: Text(
+                      "đ300.000",
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+  Widget ticketWiget({String label, String value, bool indexLast = false}) =>
+      Column(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  child: Text(
+                    label,
+                    style: TextStyle(
+                        fontSize: 18,
+                        // color: Theme.of(context).primaryColor,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+                Flexible(
+                  child: Text(
+                    value,
+                    overflow: TextOverflow.clip,
+                    style: TextStyle(
+                      // fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+          indexLast == false
+              ? Divider(
+                  color: Color(0xffdcdcde),
+                  indent: 7,
+                )
+              : Container()
+        ],
+      );
+}

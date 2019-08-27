@@ -1,7 +1,6 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:epos_source_flutter/src/app/core/baseViewModel.dart';
 import 'package:epos_source_flutter/src/app/pages/placeTicket/placeTicket_page.dart';
-import 'package:epos_source_flutter/src/app/pages/saleTicket/saleTicket_page.dart';
 import 'package:epos_source_flutter/src/app/pages/saleTicketHistory/saleTicketHistory_page.dart';
 import 'package:epos_source_flutter/src/app/pages/tabs/tabs_sale_viewmodel.dart';
 import 'package:flutter/material.dart';

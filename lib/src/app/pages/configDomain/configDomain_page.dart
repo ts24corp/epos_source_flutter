@@ -91,8 +91,8 @@ class ConfigDomainBodyWidget extends StatefulWidget {
 
 class _ConfigDomainBodyWidgetState extends State<ConfigDomainBodyWidget> {
   ConfigDomainPageViewModel viewModel;
-  final focus_client_id = FocusNode();
-  final focus_client_serect = FocusNode();
+  final focusClientId = FocusNode();
+  final focusClientSerect = FocusNode();
   @override
   Widget build(BuildContext context) {
     viewModel = ViewModelProvider.of(context);
@@ -113,14 +113,14 @@ class _ConfigDomainBodyWidgetState extends State<ConfigDomainBodyWidget> {
                 keyboardType: TextInputType.text,
                 textInputAction: TextInputAction.next,
                 onFieldSubmitted: (v) {
-                  FocusScope.of(context).requestFocus(focus_client_id);
+                  FocusScope.of(context).requestFocus(focusClientId);
                 },
               ),
             ),
             Container(
               child: TextFormField(
                 controller: viewModel.clientIDController,
-                focusNode: focus_client_id,
+                focusNode: focusClientId,
                 style: TextStyle(fontSize: 18, color: Colors.black),
                 decoration: InputDecoration(
                     labelText: "CLIENT ID",
@@ -128,14 +128,14 @@ class _ConfigDomainBodyWidgetState extends State<ConfigDomainBodyWidget> {
                 keyboardType: TextInputType.text,
                 textInputAction: TextInputAction.next,
                 onFieldSubmitted: (v) {
-                  FocusScope.of(context).requestFocus(focus_client_serect);
+                  FocusScope.of(context).requestFocus(focusClientSerect);
                 },
               ),
             ),
             Container(
               child: TextFormField(
                 controller: viewModel.clientSerectController,
-                focusNode: focus_client_serect,
+                focusNode: focusClientSerect,
                 style: TextStyle(fontSize: 18, color: Colors.black),
                 decoration: InputDecoration(
                     labelText: "CLIENT SERECT",
