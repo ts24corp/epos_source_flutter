@@ -5,14 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:gradient_app_bar/gradient_app_bar.dart';
 
 class ConfigDomainPage extends StatefulWidget {
-   static const String routeName = "/configDomain";
+  static const String routeName = "/configDomain";
   @override
   _ConfigDomainPageState createState() => _ConfigDomainPageState();
 }
 
 class _ConfigDomainPageState extends State<ConfigDomainPage> {
   ConfigDomainPageViewModel viewModel = ConfigDomainPageViewModel();
-   @override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _appBar(viewModel),
@@ -23,8 +23,7 @@ class _ConfigDomainPageState extends State<ConfigDomainPage> {
     );
   }
 
-  Widget _appBar(ConfigDomainPageViewModel viewModel) =>
-      GradientAppBar(
+  Widget _appBar(ConfigDomainPageViewModel viewModel) => GradientAppBar(
         title: Text("Cấu hình domain"),
         backgroundColorStart: Colors.blue,
         backgroundColorEnd: Color(0Xff135691),
@@ -97,13 +96,13 @@ class _ConfigDomainBodyWidgetState extends State<ConfigDomainBodyWidget> {
   Widget build(BuildContext context) {
     viewModel = ViewModelProvider.of(context);
     return SingleChildScrollView(
-          child: Padding(
+      child: Padding(
         padding: const EdgeInsets.all(10),
         child: Column(
           children: <Widget>[
             Container(
               child: TextFormField(
-                 controller: viewModel.domainController,
+                controller: viewModel.domainController,
                 //controller: _domainController,
                 style: TextStyle(fontSize: 18, color: Colors.black),
                 autofocus: true,
@@ -138,7 +137,7 @@ class _ConfigDomainBodyWidgetState extends State<ConfigDomainBodyWidget> {
                 focusNode: focusClientSerect,
                 style: TextStyle(fontSize: 18, color: Colors.black),
                 decoration: InputDecoration(
-                    labelText: "CLIENT SERECT",
+                    labelText: "CLIENT SECRET",
                     labelStyle: ThemePrimary.loginPageButton(context)),
                 keyboardType: TextInputType.text,
                 textInputAction: TextInputAction.done,

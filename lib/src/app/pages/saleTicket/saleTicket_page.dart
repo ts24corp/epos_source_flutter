@@ -3,6 +3,7 @@ import 'dart:core';
 import 'package:epos_source_flutter/src/app/core/baseViewModel.dart';
 import 'package:epos_source_flutter/src/app/pages/payTicket/payTicket_page.dart';
 import 'package:epos_source_flutter/src/app/pages/saleTicket/saleTicket_page_viewmodel.dart';
+import 'package:epos_source_flutter/src/app/theme/sizeConfig.dart';
 import 'package:flutter/material.dart';
 // import 'package:gradient_app_bar/gradient_app_bar.dart';
 
@@ -95,7 +96,7 @@ class _SaleTicketPageState extends State<SaleTicketPage> {
                   //   ],
                   // ),
                 ),
-                body: SaleTicketBodyWidget(),
+                body: SafeArea(child: SaleTicketBodyWidget()),
               ),
             );
           }),
@@ -232,11 +233,13 @@ Widget _listChooseEat(BuildContext context) {
               children: <Widget>[
                 Container(
                   color: Colors.black26.withOpacity(0.2),
-                  padding: EdgeInsets.only(top: 8, bottom: 8),
+                  padding: EdgeInsets.only(top: 4, bottom: 4),
                   width: size.width,
                   child: Text(
                     '${viewModel.formatter.format(item['price'])}đ',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                        fontSize: SizeConfig.blockSizeHorizontal * 10,
+                        fontWeight: FontWeight.bold),
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -249,7 +252,7 @@ Widget _listChooseEat(BuildContext context) {
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             inherit: true,
-                            fontSize: 25,
+                            fontSize: SizeConfig.blockSizeHorizontal * 12,
                             color: Colors.black,
                             fontWeight: FontWeight.bold),
                       ),
@@ -316,7 +319,7 @@ Widget _viewCommit(BuildContext context) {
           ),
           child: Text(
             '${viewModel.formatter.format(viewModel.total)}đ',
-            style: TextStyle(fontSize: 30, fontWeight: FontWeight.w600),
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
           ),
         ),
         SizedBox(
@@ -381,7 +384,7 @@ Widget infoCardEat(dynamic item, BuildContext context) {
         alignment: Alignment.bottomLeft,
         child: Text(
           item['name'],
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
       ),
       Container(
@@ -389,61 +392,65 @@ Widget infoCardEat(dynamic item, BuildContext context) {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Container(
+            Flexible(
+                flex: 1,
                 child: Row(
-              children: <Widget>[
-                ButtonTheme(
-                  minWidth: 30.0,
-                  height: 30.0,
-                  child: RaisedButton(
-                     shape: RoundedRectangleBorder(
-                      borderRadius: new BorderRadius.circular(30.0)),
-                      color: Colors.blue[300],
-                    onPressed: () {
-                      viewModel.numberTicketDecrease(item);
-                    },
-                    child: Text(
-                      "-",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                          color: Colors.white),
+                  children: <Widget>[
+                    SizedBox(
+                      width: 30,
+                      height: 30,
+                      child: RaisedButton(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: new BorderRadius.circular(30.0)),
+                        color: Colors.blue[300],
+                        onPressed: () {
+                          viewModel.numberTicketDecrease(item);
+                        },
+                        child: Text(
+                          "-",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                              color: Colors.white),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: Text(
-                    '${item['number']}',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                  ),
-                ),
-                ButtonTheme(
-                  minWidth: 30.0,
-                  height: 30.0,
-                  
-                  child: RaisedButton(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: new BorderRadius.circular(30.0)),
-                      color: Colors.blue[300],
-                    onPressed: () {
-                      viewModel.numberTicketIncrease(item);
-                    },
-                    child: Text(
-                      "+",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                          color: Colors.white),
+                    Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: Text(
+                        '${item['number']}',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 18),
+                      ),
                     ),
-                  ),
-                ),
-              ],
-            )),
-            Container(
+                    SizedBox(
+                      width: 30,
+                      height: 30,
+                      child: RaisedButton(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: new BorderRadius.circular(30)),
+                        color: Colors.blue[300],
+                        onPressed: () {
+                          viewModel.numberTicketIncrease(item);
+                        },
+                        child: Text(
+                          "+",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                              color: Colors.white),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                  ],
+                )),
+            Flexible(
+              flex: 1,
               child: Text(
                 '${viewModel.formatter.format(item['price'])}đ',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
             )
           ],
@@ -475,10 +482,10 @@ Widget _listViewEat(BuildContext context) {
               Icon(
                 Icons.shopping_cart,
                 color: Colors.black26,
-                size: 90,
+                size: 45,
               ),
               Text('Giỏ hàng trống',
-                  style: TextStyle(color: Colors.black26, fontSize: 30)),
+                  style: TextStyle(color: Colors.black26, fontSize: 20)),
             ]),
       ),
     );

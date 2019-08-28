@@ -26,8 +26,7 @@ class ConfigDomainPageViewModel extends ViewModelBase {
     _domainController.dispose();
     _clientIDController.dispose();
     _clientSerectController.dispose();
-
   }
 
-  onSaveConfigDomain() async {}
+  Future<void> onSaveConfigDomain() async {}
 }

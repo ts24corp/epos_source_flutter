@@ -68,6 +68,33 @@ class Api1 extends ApiMaster {
     });
   }
 
+  //Lấy thông tin user session
+  Future<dynamic> getUserInfo() async {
+    await this.authorization();
+    body = new Map();
+    body["fields"] = ['name', 'id'];
+    body["domain"] = [
+      [
+        'email',
+        '=',
+        this.username,
+      ]
+    ];
+    body["limit"] = 1;
+    var params = convertSerialize(body);
+    return http
+        .get('${this.api}/search_read/res.users?$params', headers: this.headers)
+        .then((http.Response response) {
+      if (response.statusCode == 200) {
+        var list = json.decode(response.body);
+        return list;
+      } else
+        return null;
+    }).catchError((error) {
+      return null;
+    });
+  }
+
   ///Lưu thông tin cấu hình domain
   void saveConfigDomain({String domain, String clientID, String clientSecret}) {
     this.api = "$domain/api";

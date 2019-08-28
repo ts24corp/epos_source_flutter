@@ -1,3 +1,4 @@
+import 'package:epos_source_flutter/src/app/theme/sizeConfig.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
@@ -14,6 +15,16 @@ class Common {
   static String sanitizing(String str) {
     var diacr = Diacritics();
     return diacr.removeDiacritics(str).toLowerCase();
+  }
+
+  //Khởi tạo Size Config
+  static void initFontSize(context) {
+    SizeConfig().init(context);
+  }
+
+  //Chỉnh font size scale được cho từng screen.
+  static double setFontSize(double size) {
+    return SizeConfig.safeBlockHorizontal * size;
   }
 }
 
@@ -294,6 +305,7 @@ class Diacritics {
     });
   }
 }
+
 class NumericTextFormatter extends TextInputFormatter {
   TextEditingValue formatEditUpdate(
       TextEditingValue oldValue, TextEditingValue newValue) {

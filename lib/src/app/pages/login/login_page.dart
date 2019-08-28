@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:epos_source_flutter/src/app/core/app_setting.dart';
 import 'package:epos_source_flutter/src/app/pages/login/login_page_viewmodel.dart';
 import 'package:epos_source_flutter/src/app/repository/api_master.dart';
+import 'package:epos_source_flutter/src/app/theme/sizeConfig.dart';
 import 'package:epos_source_flutter/src/app/theme/theme_primary.dart';
 
 import 'package:flutter/material.dart';
@@ -49,11 +50,15 @@ class _LoginBodyWidgetPageState extends State<LoginBodyWidget> {
     print('checkLogin: $result');
     result = await api.checkAccessRightPOS();
     print('checkAccessRightPOS: $result');
+    var user = await api.getUserInfo();
+    print('getUserInfo: $user');
   }
 
   @override
   Widget build(BuildContext context) {
     getApi();
+    SizeConfig().init(context);
+    print('sizeConfig ${SizeConfig.safeBlockHorizontal * 30}');
     var viewmodel = Provider.of<LoginPageViewModel>(context);
     viewmodel.context = context;
     return StreamBuilder<Object>(
@@ -88,7 +93,7 @@ class _LoginBodyWidgetPageState extends State<LoginBodyWidget> {
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Colors.black,
-                          fontSize: 30)),
+                          fontSize: SizeConfig.safeBlockHorizontal * 30)),
                 ),
                 DropdownButton<String>(
                   isExpanded: true,
