@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class LoadingDialog {
   static void showLoadingDialog(BuildContext context, String msg) {
@@ -6,25 +7,25 @@ class LoadingDialog {
       context: context,
       barrierDismissible: false,
       builder: (context) => new Dialog(
-            backgroundColor: Colors.transparent,
-            child: Container(
-              color: Color(0xffffffff),
-              height: 100,
-              child: new Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  new CircularProgressIndicator(),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-                    child: new Text(
-                      msg,
-                      style: TextStyle(fontSize: 18),
-                    ),
-                  ),
-                ],
+        backgroundColor: Colors.transparent,
+        child: Container(
+          color: Color(0xffffffff),
+          height: 100,
+          child: new Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              new CircularProgressIndicator(),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                child: new Text(
+                  msg,
+                  style: TextStyle(fontSize: 18),
+                ),
               ),
-            ),
+            ],
           ),
+        ),
+      ),
     );
   }
 

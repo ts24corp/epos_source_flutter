@@ -13,6 +13,18 @@ abstract class ViewModelBase extends Model {
   StreamController streamController = StreamController();
   Stream get stream => streamController.stream;
   Sink get sink => streamController.sink;
+  bool loading;
+  ViewModelBase() {
+    this.loading = false;
+  }
+  updateState() {
+    this.sink.add(true);
+  }
+
+  showHideLoading(bool visible) {
+    this.loading = visible;
+    this.updateState();
+  }
 }
 
 class ViewModelProvider<T extends ViewModelBase> extends StatefulWidget {

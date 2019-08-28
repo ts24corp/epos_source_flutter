@@ -1,4 +1,5 @@
 import 'package:epos_source_flutter/src/app/core/baseViewModel.dart';
+import 'package:epos_source_flutter/src/app/helper/loading_spinner.dart';
 import 'package:epos_source_flutter/src/app/pages/configDomain/configDomain_page_viewmodel.dart';
 import 'package:epos_source_flutter/src/app/theme/theme_primary.dart';
 import 'package:flutter/material.dart';
@@ -13,19 +14,29 @@ class ConfigDomainPage extends StatefulWidget {
 class _ConfigDomainPageState extends State<ConfigDomainPage> {
   ConfigDomainPageViewModel viewModel = ConfigDomainPageViewModel();
   @override
+  void initState() {
+    viewModel.reloadData();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _appBar(viewModel),
       body: ViewModelProvider(
         viewmodel: viewModel,
-        child: ConfigDomainBodyWidget(),
+        child: StreamBuilder<Object>(
+            stream: viewModel.stream,
+            builder: (context, snapshot) {
+              return ConfigDomainBodyWidget();
+            }),
       ),
     );
   }
 
   Widget _appBar(ConfigDomainPageViewModel viewModel) => GradientAppBar(
         title: Text("Cấu hình domain"),
-        backgroundColorStart: Colors.blue,
+        backgroundColorStart: Theme.of(context).primaryColor,
         backgroundColorEnd: Color(0Xff135691),
         // bottom: TabBar(
         //   tabs: <Widget>[Text('Một'), Text('Hai')],
@@ -93,8 +104,14 @@ class _ConfigDomainBodyWidgetState extends State<ConfigDomainBodyWidget> {
   final focusClientId = FocusNode();
   final focusClientSerect = FocusNode();
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     viewModel = ViewModelProvider.of(context);
+    viewModel.context = context;
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(10),
@@ -143,7 +160,9 @@ class _ConfigDomainBodyWidgetState extends State<ConfigDomainBodyWidget> {
                 textInputAction: TextInputAction.done,
                 onFieldSubmitted: (v) {},
               ),
-            )
+            ),
+            LoadingSpinner.loadingView(
+                context: context, loading: viewModel.loading),
           ],
         ),
       ),
