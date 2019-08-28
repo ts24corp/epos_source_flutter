@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:epos_source_flutter/src/app/core/app_setting.dart';
+import 'package:epos_source_flutter/src/app/model/config-domain.dart';
 import 'package:epos_source_flutter/src/app/pages/login/login_page_viewmodel.dart';
 import 'package:epos_source_flutter/src/app/repository/api_master.dart';
 import 'package:epos_source_flutter/src/app/theme/sizeConfig.dart';

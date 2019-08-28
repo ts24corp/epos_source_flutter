@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:epos_source_flutter/src/app/core/app_setting.dart';
+import 'package:epos_source_flutter/src/app/helper/validator.dart';
 
 class ConfigDomain {
   String domain;
@@ -51,5 +52,12 @@ class ConfigDomain {
       }
     }
     return this;
+  }
+
+  Future<bool> checkValidDomain() async {
+    await reloadData();
+    var result = Validator.validateURL(this.domain);
+    if (result != null) return false;
+    return true;
   }
 }
