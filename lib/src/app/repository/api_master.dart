@@ -5,6 +5,14 @@ import 'package:epos_source_flutter/src/app/core/app_setting.dart';
 
 enum GrandType { password, client_credentials }
 
+enum StatusCodeGetToken {
+  invalid_client,
+  timeout,
+  invalid_domain,
+  TRUE,
+  FALSE,
+}
+
 class ApiMaster {
   String aliasName = "ApiMaster";
   String api = "$domainApi/api";
@@ -66,7 +74,7 @@ class ApiMaster {
     return str;
   }
 
-  Future<dynamic> getToken() async {
+  Future<StatusCodeGetToken> getToken() async {
     body = new Map();
     switch (grandType) {
       case GrandType.password:
@@ -82,25 +90,37 @@ class ApiMaster {
     body["scope"] = "all";
     body["client_id"] = clientId;
     body["client_secret"] = clienSecret;
+    print('$api/authentication/oauth2/token');
     return http
         .post('$api/authentication/oauth2/token', body: body)
         .then((http.Response response) {
-      if (response.statusCode == 200) {
-        print(response.body);
-        var result = jsonDecode(response.body);
-        _accessToken = result["access_token"];
-        _expiresIn =
-            DateTime.now().add(Duration(seconds: result["expires_in"]));
-        headers[HttpHeaders.authorizationHeader] = "Bearer $_accessToken";
-        print(headers);
-        return true;
-      } else
-        return false;
+      switch (response.statusCode) {
+        case 200:
+          print(response.body);
+          var result = jsonDecode(response.body);
+          _accessToken = result["access_token"];
+          _expiresIn =
+              DateTime.now().add(Duration(seconds: result["expires_in"]));
+          headers[HttpHeaders.authorizationHeader] = "Bearer $_accessToken";
+          print(headers);
+          return StatusCodeGetToken.TRUE;
+          break;
+        case 401:
+          return StatusCodeGetToken.invalid_client;
+          break;
+        default:
+          return StatusCodeGetToken.FALSE;
+      }
+    }).catchError((error) {
+      print(error);
+      return StatusCodeGetToken.invalid_domain;
+    }).timeout(Duration(seconds: 10), onTimeout: () {
+      return StatusCodeGetToken.invalid_domain;
     });
   }
 
-  Future<dynamic> authorization({refresh: false}) async {
-    bool result = true;
+  Future<StatusCodeGetToken> authorization({refresh: false}) async {
+    StatusCodeGetToken result = StatusCodeGetToken.TRUE;
     if (refresh) {
       result = await getToken();
     } else {

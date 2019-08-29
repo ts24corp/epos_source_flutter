@@ -64,6 +64,7 @@ class _CheckTicketBodyWidgetState extends State<CheckTicketBodyWidget> {
   CheckTicketViewModel viewModel;
   @override
   Widget build(BuildContext context) {
+    viewModel = ViewModelProvider.of(context);
     if (viewModel.ticketInfo.ticketId != "") {
       return SingleChildScrollView(
         child: Card(

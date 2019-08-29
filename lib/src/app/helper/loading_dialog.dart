@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class LoadingDialog {
   static void showLoadingDialog(BuildContext context, String msg) {
@@ -19,7 +18,7 @@ class LoadingDialog {
                 padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
                 child: new Text(
                   msg,
-                  style: TextStyle(fontSize: 18),
+                  //style: TextStyle(fontSize: 18),
                 ),
               ),
             ],
@@ -31,5 +30,24 @@ class LoadingDialog {
 
   static hideLoadingDialog(BuildContext context) {
     Navigator.of(context).pop(LoadingDialog);
+    //Navigator.pop(context);
+  }
+
+  static void showMsgDialog(BuildContext context, String msg) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text("Thông báo"),
+        content: Text(msg),
+        actions: [
+          new FlatButton(
+            child: Text("OK"),
+            onPressed: () {
+              Navigator.of(context).pop(LoadingDialog);
+            },
+          ),
+        ],
+      ),
+    );
   }
 }

@@ -4,9 +4,9 @@ import 'package:epos_source_flutter/src/app/core/app_setting.dart';
 import 'package:epos_source_flutter/src/app/helper/validator.dart';
 
 class ConfigDomain {
-  String domain;
-  String clientID;
-  String clientSecret;
+  String domain = "http://sales24.odoo24.vn";
+  String clientID = "r9o1DJD4rZlDnhnzJnSn9LKvhaqhTX";
+  String clientSecret = "ojrZZVCwLf4sqIn9CkZusNOetDTWo9";
   static String aliasName = "ConfigDomain";
 
   static final ConfigDomain _singleton = new ConfigDomain._internal();

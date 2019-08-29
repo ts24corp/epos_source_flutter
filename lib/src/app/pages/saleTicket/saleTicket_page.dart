@@ -221,83 +221,90 @@ Widget _listChooseEat(BuildContext context) {
       shrinkWrap: true,
       scrollDirection: Axis.vertical,
       padding: EdgeInsets.all(3.0),
-      children: viewModel.listChooseEat.map((item) {
-        return GestureDetector(
-          onTap: () {
-            viewModel.addEat(item);
-          },
-          child: Container(
-            color: Colors.white,
-            margin: EdgeInsets.all(3),
-            child: Column(
-              children: <Widget>[
-                Container(
-                  color: Colors.black26.withOpacity(0.2),
-                  padding: EdgeInsets.only(top: 4, bottom: 4),
-                  width: size.width,
-                  child: Text(
-                    '${viewModel.formatter.format(item['price'])}đ',
-                    style: TextStyle(
-                        fontSize: SizeConfig.blockSizeHorizontal * 10,
-                        fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.center,
+      children: viewModel.listChooseEat
+          .asMap()
+          .map((index, item) {
+            return MapEntry(
+              index,
+              InkWell(
+                onTap: () {
+                  viewModel.addEat(item);
+                },
+                child: Container(
+                  color: Colors.white,
+                  margin: EdgeInsets.all(3),
+                  child: Column(
+                    children: <Widget>[
+                      Container(
+                        color: Colors.black26.withOpacity(0.2),
+                        padding: EdgeInsets.only(top: 4, bottom: 4),
+                        width: size.width,
+                        child: Text(
+                          '${viewModel.formatter.format(item['price'])}đ',
+                          style: TextStyle(
+                              fontSize: SizeConfig.blockSizeHorizontal * 10,
+                              fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      Flexible(
+                        flex: 1,
+                        child: Container(
+                          child: Center(
+                            child: Text(
+                              item['name'],
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  inherit: true,
+                                  fontSize: SizeConfig.blockSizeHorizontal * 12,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
                   ),
                 ),
-                Flexible(
-                  flex: 1,
-                  child: Container(
-                    child: Center(
-                      child: Text(
-                        item['name'],
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            inherit: true,
-                            fontSize: SizeConfig.blockSizeHorizontal * 12,
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ),
-                )
-              ],
-            ),
-          ),
-          // child: Stack(
-          //   children: <Widget>[
-          //     Container(
-          //       color: Colors.green,
-          //       margin: EdgeInsets.all(3.0),
-          //       child: Center(
-          //         child: Text(
-          //           item['name'],
-          //           textAlign: TextAlign.center,
-          //           style: TextStyle(
-          //             inherit: true,
-          //             fontSize: 25,
-          //             color: Colors.black,
-          //             fontWeight: FontWeight.bold
-          //           ),
-          //         ),
-          //       ),
-          //     ),
-          //     Align(
-          //       alignment: Alignment.topCenter,
-          //       child: Container(
-          //         margin: EdgeInsets.all(3.0),
-          //         color: Colors.black26.withOpacity(0.2),
-          //         padding: EdgeInsets.only(top: 8, bottom: 8),
-          //         width: size.width,
-          //         child: Text(
-          //           '${viewModel.formatter.format(item['price'])}đ',
-          //           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          //           textAlign: TextAlign.center,
-          //         ),
-          //       ),
-          //     ),
-          //   ],
-          // ),
-        );
-      }).toList(),
+                // child: Stack(
+                //   children: <Widget>[
+                //     Container(
+                //       color: Colors.green,
+                //       margin: EdgeInsets.all(3.0),
+                //       child: Center(
+                //         child: Text(
+                //           item['name'],
+                //           textAlign: TextAlign.center,
+                //           style: TextStyle(
+                //             inherit: true,
+                //             fontSize: 25,
+                //             color: Colors.black,
+                //             fontWeight: FontWeight.bold
+                //           ),
+                //         ),
+                //       ),
+                //     ),
+                //     Align(
+                //       alignment: Alignment.topCenter,
+                //       child: Container(
+                //         margin: EdgeInsets.all(3.0),
+                //         color: Colors.black26.withOpacity(0.2),
+                //         padding: EdgeInsets.only(top: 8, bottom: 8),
+                //         width: size.width,
+                //         child: Text(
+                //           '${viewModel.formatter.format(item['price'])}đ',
+                //           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                //           textAlign: TextAlign.center,
+                //         ),
+                //       ),
+                //     ),
+                //   ],
+                // ),
+              ),
+            );
+          })
+          .values
+          .toList(),
     ),
   );
 }

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:epos_source_flutter/src/app/core/app_setting.dart';
+import 'package:epos_source_flutter/src/app/model/config-domain.dart';
 import 'package:epos_source_flutter/src/app/model/index.dart';
 import 'package:http/http.dart' as http;
 
@@ -45,9 +46,13 @@ class Api1 extends ApiMaster {
 
   ///Kiểm tra thông tin đăng nhập.
   ///Trả về true or false.
-  Future<bool> checkLogin({String username, String password}) async {
-    var result = false;
+  Future<StatusCodeGetToken> checkLogin(
+      {ConfigDomain cfd, String username, String password}) async {
+    StatusCodeGetToken result = StatusCodeGetToken.FALSE;
     this.grandType = GrandType.password;
+    this.api = "${cfd.domain}/api";
+    this.clientId = cfd.clientID;
+    this.clienSecret = cfd.clientSecret;
     this.username = username;
     this.password = password;
     result = await this.authorization(refresh: true);

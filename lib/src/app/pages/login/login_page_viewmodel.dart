@@ -1,12 +1,16 @@
 import 'dart:async';
 
+import 'package:epos_source_flutter/src/app/core/app_setting.dart';
+import 'package:epos_source_flutter/src/app/helper/index.dart';
 import 'package:epos_source_flutter/src/app/helper/validator.dart';
+import 'package:epos_source_flutter/src/app/model/config-domain.dart';
 import 'package:epos_source_flutter/src/app/pages/checkTicket/checkTicket_page.dart';
 import 'package:epos_source_flutter/src/app/pages/configDomain/configDomain_page.dart';
 import 'package:epos_source_flutter/src/app/pages/saleTicket/saleTicket_page.dart';
 
 import 'package:epos_source_flutter/src/app/pages/tabs/tabs_check_page.dart';
 import 'package:epos_source_flutter/src/app/pages/tabs/tabs_sale_page.dart';
+import 'package:epos_source_flutter/src/app/repository/api_master.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -51,6 +55,10 @@ class LoginPageViewModel extends ChangeNotifier {
   ];
 
   LoginPageViewModel() {
+    //account demo
+    _emailController.text = "luan.vm@ts24corp.com";
+    _passController.text = "123456";
+
     _emailController.addListener(() {
       if (_emailController.text.length > 1) isValidEmail();
     });
@@ -134,16 +142,57 @@ class LoginPageViewModel extends ChangeNotifier {
 
   onSignInClicked() async {
     if (isValidInfo())
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(
-      //     builder: (context) => TabsCheckPage(
-      //       TabsCheckArgurment(
-      //           routeChildName: CheckTicketHistoryPage.routeName),
-      //     ),
-      //   ),
-      // );
-      await _chooseBusinessType();
+    // Navigator.push(
+    //   context,
+    //   MaterialPageRoute(
+    //     builder: (context) => TabsCheckPage(
+    //       TabsCheckArgurment(
+    //           routeChildName: CheckTicketHistoryPage.routeName),
+    //     ),
+    //   ),
+    // );
+    {
+      ConfigDomain cfd = new ConfigDomain();
+      //Kiểm tra cấu hình domain
+      LoadingDialog.showLoadingDialog(context, "Đang lấy thông tin domain...");
+      bool _checkResult = await cfd.checkValidDomain();
+      LoadingDialog.hideLoadingDialog(context);
+      if (!_checkResult)
+        return LoadingDialog.showMsgDialog(context,
+            "Thông tin cấu hình domain chưa hợp lệ.Vui lòng kiểm tra lại.");
+      else {
+        LoadingDialog.showLoadingDialog(context, "Đang xác thực tài khoản...");
+        //Kiểm tra login
+        var _checkLogin = await api.checkLogin(
+          cfd: cfd,
+          username: _emailController.text.trim(),
+          password: _passController.text.trim(),
+        );
+        LoadingDialog.hideLoadingDialog(context);
+        print(_checkLogin);
+        if (_checkLogin == StatusCodeGetToken.TRUE) {
+          //Kiểm tra quyền truy cập
+          LoadingDialog.showLoadingDialog(
+              context, "Đang kiểm tra quyền truy cập...");
+          var _checkPermission = await api.checkAccessRightPOS();
+          LoadingDialog.hideLoadingDialog(context);
+          if (_checkPermission)
+            await _chooseBusinessType();
+          else
+            LoadingDialog.showMsgDialog(
+                context, "Bạn không có quyền truy cập vào ứng dụng này.");
+        } else if (_checkLogin == StatusCodeGetToken.invalid_client) {
+          return LoadingDialog.showMsgDialog(context,
+              "Vui lòng kiểm tra lại thông tin Client ID và Client Secret");
+        } else if (_checkLogin == StatusCodeGetToken.invalid_domain) {
+          return LoadingDialog.showMsgDialog(context,
+              "Không kết nối được máy chủ.Vui lòng kiểm tra lại thông tin domain.");
+        } else {
+          return LoadingDialog.showMsgDialog(
+              context, "Kiểm tra lại tên đăng nhập hoặc mật khẩu.");
+        }
+      }
+    }
     // Navigator.pushNamed(context, TabsCheckPage.routeName,
     //     arguments:
     //         TabsCheckArgurment(routeChildName: CheckTicketPage.routeName));
@@ -177,7 +226,7 @@ class LoginPageViewModel extends ChangeNotifier {
               child: Text('Soát vé'),
               onPressed: () {
                 Navigator.of(context).pop();
-                Navigator.pushNamed(context, TabsCheckPage.routeName,
+                Navigator.pushReplacementNamed(context, TabsCheckPage.routeName,
                     arguments: TabsCheckArgurment(
                         routeChildName: CheckTicketPage.routeName));
               },
