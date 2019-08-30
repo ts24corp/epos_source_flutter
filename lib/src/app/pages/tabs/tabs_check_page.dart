@@ -3,13 +3,16 @@ import 'package:epos_source_flutter/src/app/core/baseViewModel.dart';
 import 'package:epos_source_flutter/src/app/pages/checkTicket/checkTicket_page.dart';
 import 'package:epos_source_flutter/src/app/pages/checkTicketHistory/checkTicket_history_page.dart';
 import 'package:epos_source_flutter/src/app/pages/tabs/tabs_check_viewmodel.dart';
+import 'package:epos_source_flutter/src/app/pages/userTicket/userTicket_page.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class TabsCheckPage extends StatefulWidget {
   final TabsCheckArgurment arguments;
+
   TabsCheckPage(this.arguments);
+
   static const String routeName = "/tabsCheck";
 
   @override
@@ -32,7 +35,9 @@ class _TabsCheckPageState extends State<TabsCheckPage> {
     CheckTicketHistoryPage(
         // key: PageStorageKey('CheckTicketHistoryPage'),
         ),
+    UserTicketPage(),
   ];
+
   @override
   void initState() {
     super.initState();
@@ -47,6 +52,9 @@ class _TabsCheckPageState extends State<TabsCheckPage> {
       case CheckTicketHistoryPage.routeName:
         currentTabIndex = 1;
         break;
+      case UserTicketPage.routeName:
+        currentTabIndex = 2;
+        break;
     }
   }
 
@@ -55,6 +63,7 @@ class _TabsCheckPageState extends State<TabsCheckPage> {
   }
 
   final PageStorageBucket bucket = PageStorageBucket();
+
   @override
   Widget build(BuildContext context) {
     // return Scaffold(
@@ -109,6 +118,10 @@ class _TabsCheckPageState extends State<TabsCheckPage> {
             Icons.history,
             color: Colors.white,
           ),
+          Icon(
+            Icons.account_circle,
+            color: Colors.white,
+          )
         ],
       ),
     );

@@ -13,6 +13,7 @@ enum StatusCodeGetToken {
   FALSE,
 }
 
+//document api https://www.odoo.com/apps/modules/12.0/muk_rest/
 class ApiMaster {
   String aliasName = "ApiMaster";
   String api = "$domainApi/api";

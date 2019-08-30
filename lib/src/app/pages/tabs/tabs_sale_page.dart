@@ -3,6 +3,7 @@ import 'package:epos_source_flutter/src/app/core/baseViewModel.dart';
 import 'package:epos_source_flutter/src/app/pages/placeTicket/placeTicket_page.dart';
 import 'package:epos_source_flutter/src/app/pages/saleTicketHistory/saleTicketHistory_page.dart';
 import 'package:epos_source_flutter/src/app/pages/tabs/tabs_sale_viewmodel.dart';
+import 'package:epos_source_flutter/src/app/pages/userTicket/userTicket_page.dart';
 import 'package:flutter/material.dart';
 
 class TabsSalePage extends StatefulWidget {
@@ -31,6 +32,7 @@ class _TabsSalePageState extends State<TabsSalePage> {
     SaleTicketHistoryPage(
         // key: PageStorageKey('CheckTicketHistoryPage'),
         ),
+    UserTicketPage(),
   ];
   @override
   void initState() {
@@ -44,7 +46,10 @@ class _TabsSalePageState extends State<TabsSalePage> {
         currentTabIndex = 0;
         break;
       case SaleTicketHistoryPage.routeName:
-        currentTabIndex = 1;
+      currentTabIndex = 1;
+      break;
+      case UserTicketPage.routeName:
+        currentTabIndex = 2;
         break;
     }
   }
@@ -85,6 +90,10 @@ class _TabsSalePageState extends State<TabsSalePage> {
           ),
           Icon(
             Icons.history,
+            color: Colors.white,
+          ),
+          Icon(
+            Icons.account_circle,
             color: Colors.white,
           ),
         ],

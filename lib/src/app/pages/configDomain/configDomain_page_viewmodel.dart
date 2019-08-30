@@ -30,7 +30,7 @@ class ConfigDomainPageViewModel extends ViewModelBase {
     cfd.clientSecret = _clientSerectController.text;
     this.showHideLoading(true);
     await cfd.saveLocal();
-    //print(result);
+//    print(result);
     this.showHideLoading(false);
     ToastController.show(
         context: context,

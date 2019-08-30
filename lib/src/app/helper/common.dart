@@ -1,6 +1,10 @@
+import 'dart:ui';
+
 import 'package:epos_source_flutter/src/app/theme/sizeConfig.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'dart:convert';
 
 class Common {
   Common();
@@ -24,7 +28,12 @@ class Common {
 
   //Chỉnh font size scale được cho từng screen.
   static double setFontSize(double size) {
-    return SizeConfig.safeBlockHorizontal * size;
+    return SizeConfig.setSize(size);
+  }
+
+  //Convert image from base64
+  static Image convertImageFromBase64(String base64) {
+    return Image.memory(base64Decode(base64));
   }
 }
 

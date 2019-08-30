@@ -11,7 +11,9 @@ abstract class ViewModelBase extends Model {
   }
 
   StreamController streamController = StreamController();
+
   Stream get stream => streamController.stream;
+
   Sink get sink => streamController.sink;
   bool loading;
   ViewModelBase() {
@@ -76,4 +78,28 @@ class _ViewModelProviderInherited<T> extends InheritedWidget {
 
   @override
   bool updateShouldNotify(_ViewModelProviderInherited oldWidget) => false;
+}
+
+/// Wrapper for stateful functionality to provide onInit calls in stateles widget
+class StatefulWrapper extends StatefulWidget {
+  final Function onInit;
+  final Widget child;
+  const StatefulWrapper({@required this.onInit, @required this.child});
+  @override
+  _StatefulWrapperState createState() => _StatefulWrapperState();
+}
+
+class _StatefulWrapperState extends State<StatefulWrapper> {
+  @override
+  void initState() {
+    if (widget.onInit != null) {
+      widget.onInit();
+    }
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return widget.child;
+  }
 }

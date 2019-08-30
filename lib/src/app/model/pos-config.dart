@@ -64,7 +64,7 @@ class PosConfig {
   String name;
   List<dynamic> pickingTypeId;
   String posSessionDuration;
-  String posSessionState;
+  dynamic posSessionState;
   String posSessionUsername;
   List<dynamic> pricelistId;
   List<dynamic> printerIds;

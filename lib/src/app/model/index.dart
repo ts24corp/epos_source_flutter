@@ -6,3 +6,4 @@ export 'pos-order.dart';
 export 'ticket-info.dart';
 export 'pos-session.dart';
 export 'res-currency.dart';
+export 'res-partner.dart';

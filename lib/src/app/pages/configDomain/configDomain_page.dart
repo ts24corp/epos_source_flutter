@@ -13,6 +13,7 @@ class ConfigDomainPage extends StatefulWidget {
 
 class _ConfigDomainPageState extends State<ConfigDomainPage> {
   ConfigDomainPageViewModel viewModel = ConfigDomainPageViewModel();
+
   @override
   void initState() {
     viewModel.reloadData();
@@ -158,7 +159,9 @@ class _ConfigDomainBodyWidgetState extends State<ConfigDomainBodyWidget> {
                     labelStyle: ThemePrimary.loginPageButton(context)),
                 keyboardType: TextInputType.text,
                 textInputAction: TextInputAction.done,
-                onFieldSubmitted: (v) {},
+                onFieldSubmitted: (v) {
+                  viewModel.onSaveConfigDomain();
+                },
               ),
             ),
             LoadingSpinner.loadingView(

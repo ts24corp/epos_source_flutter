@@ -9,7 +9,7 @@ class PosCategory {
   String imageMedium;
   String imageSmall;
   String name;
-  bool parentId;
+  dynamic parentId;
   int sequence;
   String writeDate;
   List<dynamic> writeUid;

@@ -1,46 +1,100 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 
 class SizeConfig {
+  static SizeConfig instance = new SizeConfig();
+
+  /// Size of the phone in UI Design , px
+  double width;
+  double height;
+
+  /// allowFontScaling Specifies whether fonts should scale to respect Text Size accessibility settings. The default is false.
+  bool allowFontScaling;
+
   static MediaQueryData _mediaQueryData;
+  static double _screenWidth;
+  static double _screenHeight;
+  static double _pixelRatio;
+  static double _statusBarHeight;
 
-  static double screenWidth;
+  static double _bottomBarHeight;
 
-  static double screenHeight;
+  static double _textScaleFactor;
 
-  static double blockSizeHorizontal;
+  SizeConfig({
+    this.width = 480,
+    this.height = 853,
+    this.allowFontScaling = true,
+  });
 
-  static double blockSizeVertical;
-
-  static double _safeAreaHorizontal;
-
-  static double _safeAreaVertical;
-
-  static double safeBlockHorizontal;
-
-  static double safeBlockVertical;
-  static double _fontSizeNumber;
+  static SizeConfig getInstance() {
+    return instance;
+  }
 
   void init(BuildContext context) {
-    _mediaQueryData = MediaQuery.of(context);
-    _fontSizeNumber = 4;
-    screenWidth = _mediaQueryData.size.width;
+    MediaQueryData mediaQuery = MediaQuery.of(context);
+    _mediaQueryData = mediaQuery;
+    _pixelRatio = mediaQuery.devicePixelRatio;
+    _screenWidth = mediaQuery.size.width;
+    _screenHeight = mediaQuery.size.height;
+    _statusBarHeight = mediaQuery.padding.top;
+    _bottomBarHeight = _mediaQueryData.padding.bottom;
+    _textScaleFactor = mediaQuery.textScaleFactor;
+  }
 
-    screenHeight = _mediaQueryData.size.height;
+  static MediaQueryData get mediaQueryData => _mediaQueryData;
 
-    blockSizeHorizontal = screenWidth / 100 / _fontSizeNumber;
+  /// The number of font pixels for each logical pixel.
+  static double get textScaleFactory => _textScaleFactor;
 
-    blockSizeVertical = screenHeight / 100 / _fontSizeNumber;
+  /// The size of the media in logical pixels (e.g, the size of the screen).
+  static double get pixelRatio => _pixelRatio;
 
-    _safeAreaHorizontal =
-        _mediaQueryData.padding.left + _mediaQueryData.padding.right;
+  /// The horizontal extent of this size.
+  static double get screenWidthDp => _screenWidth;
 
-    _safeAreaVertical =
-        _mediaQueryData.padding.top + _mediaQueryData.padding.bottom;
+  ///The vertical extent of this size. dp
+  static double get screenHeightDp => _screenHeight;
 
-    safeBlockHorizontal =
-        (screenWidth - _safeAreaHorizontal) / 100 / _fontSizeNumber;
+  /// The vertical extent of this size. px
+  static double get screenWidth => _screenWidth * _pixelRatio;
 
-    safeBlockVertical =
-        (screenHeight - _safeAreaVertical) / 100 / _fontSizeNumber;
+  /// The vertical extent of this size. px
+  static double get screenHeight => _screenHeight * _pixelRatio;
+
+  /// The offset from the top
+  static double get statusBarHeight => _statusBarHeight;
+
+  /// The offset from the bottom.
+  static double get bottomBarHeight => _bottomBarHeight;
+
+  /// The ratio of the actual dp to the design draft px
+  get scaleWidth => _screenWidth / instance.width;
+
+  get scaleHeight => _screenHeight / instance.height;
+
+  /// Adapted to the device width of the UI Design.
+  /// Height can also be adapted according to this to ensure no deformation ,
+  /// if you want a square
+  setWidth(num width) => width * scaleWidth;
+
+  /// Highly adaptable to the device according to UI Design
+  /// It is recommended to use this method to achieve a high degreeSizeConfigof adaptation
+  /// when it is found that one screen in the UI design
+  /// does not match the current style effect, or if there is a difference in shape.
+  setHeight(num height) => height * scaleHeight;
+
+  ///@param [fontSize] The size of the font on the UI design, in px.
+  ///@param [allowFontScaling]
+  setSp(num fontSize) => allowFontScaling
+      ? setWidth(fontSize)
+      : setWidth(fontSize) / _textScaleFactor;
+  static double get size_14 => SizeConfig.getInstance().setSp(14);
+  static double get size_16 => SizeConfig.getInstance().setSp(16);
+  static double get size_18 => SizeConfig.getInstance().setSp(18);
+  static double get size_20 => SizeConfig.getInstance().setSp(20);
+  static double get size_22 => SizeConfig.getInstance().setSp(22);
+
+  static double setSize(double value) {
+    return SizeConfig.getInstance().setSp(value);
   }
 }

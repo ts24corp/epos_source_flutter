@@ -1,18 +1,22 @@
 import 'package:epos_source_flutter/src/app/core/baseViewModel.dart';
-import 'package:epos_source_flutter/src/app/helper/common.dart';
+import 'package:epos_source_flutter/src/app/pages/customerTicket/customerTicket_page.dart';
 import 'package:epos_source_flutter/src/app/pages/payTicket/payTicket_page_viewmodel.dart';
+import 'package:epos_source_flutter/src/app/pages/splitTicket/splitTicket_page.dart';
+import 'package:epos_source_flutter/src/app/theme/sizeConfig.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gradient_app_bar/gradient_app_bar.dart';
 
 class PayTicketPage extends StatefulWidget {
   static const String routeName = "/payTicket";
+
   @override
   _PayTicketPageState createState() => _PayTicketPageState();
 }
 
 class _PayTicketPageState extends State<PayTicketPage> {
   PayTicketViewModel viewModel = PayTicketViewModel();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,352 +44,283 @@ class PayTicketBodyWidget extends StatefulWidget {
 }
 
 class _PayTicketBodyWidgetState extends State<PayTicketBodyWidget> {
-  TextEditingController _controller;
-  var _controller2 = TextEditingController();
-  @override
-  void initState() {
-    super.initState();
-    _controller = new TextEditingController(text: '500,000');
-  }
+  PayTicketViewModel viewModel;
 
   @override
   Widget build(BuildContext context) {
+
+    viewModel = ViewModelProvider.of(context);
     var size = MediaQuery.of(context).size;
+//    Common.initFontSize(context);
     var isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
-    return SingleChildScrollView(
+    SizeConfig.instance = SizeConfig(width: size.width, height: size.height)..init(context);
+    print('=>>>>> PayTicketPage <<<<=');
+    return SafeArea(
       child: Column(
         children: <Widget>[
-          Row(
+          Expanded(
+//              flex: 9,
+              child: ListView(
+            scrollDirection: Axis.vertical,
+            padding: EdgeInsets.only(top: 10),
             children: <Widget>[
-              Flexible(
-                flex: 1,
-                child: Container(
-                  padding: EdgeInsets.all(4),
-                  child: TextFormField(
-                    controller: _controller,
-                    enabled: false,
-                    keyboardType: TextInputType.number,
-                    textInputAction: TextInputAction.done,
-                    autocorrect: true,
-                    textCapitalization: TextCapitalization.characters,
-                    textAlign: TextAlign.end,
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-                    inputFormatters: [
-                      WhitelistingTextInputFormatter.digitsOnly,
-                      NumericTextFormatter()
-                    ],
-                    decoration: InputDecoration(
-                        labelText: 'Tổng tiền',
-                        prefixIcon: Icon(Icons.print),
-                        border: OutlineInputBorder(),
-                        fillColor: Colors.blue),
-                  ),
-                ),
+              Row(
+                children: <Widget>[
+                  Flexible(
+                      flex: 1,
+                      child: _cardTextField(
+                          context,
+                          'Tổng tiền',
+                          viewModel.textInputTotal,
+                          EdgeInsets.all(8),
+                          Icon(Icons.print),
+                          false)),
+                  Flexible(
+                      flex: 1,
+                      child: _cardTextField(
+                          context,
+                          'Tiền trả khách',
+                          viewModel.textInputReturn,
+                          EdgeInsets.only(right: 8),
+                          Icon(Icons.print),
+                          false)),
+                ],
               ),
-              Flexible(
-                flex: 1,
-                child: Container(
-                  padding: EdgeInsets.all(4),
-                  child: TextFormField(
-                    controller: _controller,
-                    enabled: false,
-                    keyboardType: TextInputType.number,
-                    textInputAction: TextInputAction.done,
-                    autocorrect: true,
-                    textCapitalization: TextCapitalization.characters,
-                    textAlign: TextAlign.end,
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-                    decoration: InputDecoration(
-                        labelText: 'Tiền trả khách',
-                        prefixIcon: Icon(Icons.print),
-                        border: OutlineInputBorder(),
-                        fillColor: Colors.blue),
-                  ),
-                ),
-              ),
+              _cardCash(context),
+              _cardBank(context)
             ],
-          ),
-          Column(
-            children: <Widget>[
-              Container(
-                padding: EdgeInsets.symmetric(vertical: 2, horizontal: 4),
-                child: Card(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0)),
-                  elevation: 4.0,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: Column(
-                      children: <Widget>[
-                        Container(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            'Thanh toán tiền mặt:',
-                            style: TextStyle(
-                                color: Colors.blue,
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold),
-                            textAlign: TextAlign.justify,
-                          ),
-                        ),
-                        Container(
-                          child: _listPayPrice(context),
-                        ),
-                        Container(
-                          padding:
-                              EdgeInsets.symmetric(vertical: 4, horizontal: 2),
-                          child: TextFormField(
-                            controller: _controller2,
-                            keyboardType: TextInputType.number,
-                            textInputAction: TextInputAction.done,
-                            autocorrect: true,
-                            textCapitalization: TextCapitalization.characters,
-                            textAlign: TextAlign.end,
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 14),
-                            inputFormatters: [
-                              WhitelistingTextInputFormatter.digitsOnly,
-                              NumericTextFormatter()
-                            ],
-                            decoration: InputDecoration(
-                                labelText: 'Số tiền khách trả',
-                                prefixIcon: Icon(Icons.print),
-                                border: OutlineInputBorder(),
-                                fillColor: Colors.blue),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
+          )),
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 8),
-              alignment: Alignment.bottomCenter,
-              child: SizedBox(
-                width: size.width,
-                height: isPortrait == true ? size.width / 10 : size.width / 20,
-                child: RaisedButton(
-                  child: Text(
-                    "Thanh toán",
-                    style: TextStyle(color: Colors.white, fontSize: 20.0),
-                  ),
-                  color: Colors.red,
-                  onPressed: () {
-                    // Navigator.pushNamed(context, PayTicketPage.routeName);
-                  },
-                ),
-              ),
-            ),
+                height: isPortrait == true ? size.height / 15 : size.width / 15,
+                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                // alignment: Alignment.bottomCenter,
+                child: Row(
+                  children: <Widget>[
+                    Flexible(
+                        child: _sizeBoxButton(context, 'Khách hàng', () {
+                      Navigator.pushNamed(
+                          context, CustomerTicketPage.routeName);
+                    }, Colors.orange)),
+                    Flexible(
+                        child: _sizeBoxButton(context, 'Tách', () {
+                      Navigator.pushReplacementNamed(
+                          context, SplitTicketPage.routeName);
+                    }, Colors.red)),
+                    Flexible(
+                        child: _sizeBoxButton(
+                            context, 'Thanh toán', () {}, Colors.blue)),
+                  ],
+                )),
           ),
         ],
       ),
     );
+  }
 
-    // return Column(
-    //   children: <Widget>[
-    //     Row(
-    //       children: <Widget>[
-    //         Flexible(
-    //           flex: 1,
-    //           child: Container(
-    //             padding: EdgeInsets.all(20),
-    //             child: TextFormField(
-    //               controller: _controller,
-    //               enabled: false,
-    //               keyboardType: TextInputType.number,
-    //               textInputAction: TextInputAction.done,
-    //               autocorrect: true,
-    //               textCapitalization: TextCapitalization.characters,
-    //               textAlign: TextAlign.end,
-    //               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
-    //               inputFormatters: [
-    //                 WhitelistingTextInputFormatter.digitsOnly,
-    //                 NumericTextFormatter()
-    //               ],
-    //               decoration: InputDecoration(
-    //                   labelText: 'Tổng tiền',
-    //                   prefixIcon: Icon(Icons.print),
-    //                   border: OutlineInputBorder(),
-    //                   fillColor: Colors.blue),
-    //             ),
-    //           ),
-    //         ),
-    //         Flexible(
-    //           flex: 1,
-    //           child: Container(
-    //             padding: EdgeInsets.all(20),
-    //             child: TextFormField(
-    //               controller: _controller,
-    //               enabled: false,
-    //               keyboardType: TextInputType.number,
-    //               textInputAction: TextInputAction.done,
-    //               autocorrect: true,
-    //               textCapitalization: TextCapitalization.characters,
-    //               textAlign: TextAlign.end,
-    //               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
-    //               decoration: InputDecoration(
-    //                   labelText: 'Tiền trả khách',
-    //                   prefixIcon: Icon(Icons.print),
-    //                   border: OutlineInputBorder(),
-    //                   fillColor: Colors.blue),
-    //             ),
-    //           ),
-    //         ),
-    //       ],
-    //     ),
-    //     Column(
-    //       children: <Widget>[
-    //         Container(
-    //           padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-    //           child: Card(
-    //             shape: RoundedRectangleBorder(
-    //                 borderRadius: BorderRadius.circular(10.0)),
-    //             elevation: 4.0,
-    //             child: Padding(
-    //               padding: const EdgeInsets.all(20),
-    //               child: Column(
-    //                 children: <Widget>[
-    //                   Container(
-    //                     alignment: Alignment.centerLeft,
-    //                     child: Text(
-    //                       'Thanh toán tiền mặt:',
-    //                       style: TextStyle(
-    //                           color: Colors.blue,
-    //                           fontSize: 25,
-    //                           fontWeight: FontWeight.bold),
-    //                       textAlign: TextAlign.justify,
-    //                     ),
-    //                   ),
-    //                   Container(
-    //                     child: _listPayPrice(context),
-    //                   ),
-    //                   Container(
-    //                     padding:
-    //                         EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-    //                     child: TextFormField(
-    //                       controller: _controller2,
-    //                       keyboardType: TextInputType.number,
-    //                       textInputAction: TextInputAction.done,
-    //                       autocorrect: true,
-    //                       textCapitalization: TextCapitalization.characters,
-    //                       textAlign: TextAlign.end,
-    //                       style: TextStyle(
-    //                           fontWeight: FontWeight.bold, fontSize: 30),
-    //                       inputFormatters: [
-    //                         WhitelistingTextInputFormatter.digitsOnly,
-    //                         NumericTextFormatter()
-    //                       ],
-    //                       decoration: InputDecoration(
-    //                           labelText: 'Số tiền khách trả',
-    //                           prefixIcon: Icon(Icons.print),
-    //                           border: OutlineInputBorder(),
-    //                           fillColor: Colors.blue),
-    //                     ),
-    //                   ),
-    //                 ],
-    //               ),
-    //             ),
-    //           ),
-    //         ),
-    //         Row(
-    //           children: <Widget>[
-    //             Expanded(
-    //               flex: 1,
-    //               child: Container(
-    //                 // color: Colors.blue,
-    //                 margin: EdgeInsets.all(10),
-    //                 padding: EdgeInsets.all(10),
-    //                 decoration: BoxDecoration(
-    //                   border: Border.all(
-    //                     color: Colors.blueAccent,
-    //                     width: 3,
-    //                   ),
-    //                   borderRadius: BorderRadius.all(Radius.circular(10)),
-    //                 ),
-    //                 child: Text('VND',
-    //                     textAlign: TextAlign.center,
-    //                     style: TextStyle(
-    //                         fontSize: 30, fontWeight: FontWeight.bold)),
-    //               ),
-    //             ),
-    //             Expanded(
-    //               flex: 1,
-    //               child: Container(
-    //                 // color: Colors.blue,
-    //                 margin: EdgeInsets.all(10),
-    //                 padding: EdgeInsets.all(10),
-    //                 decoration: BoxDecoration(
-    //                   border: Border.all(
-    //                     color: Colors.blueAccent,
-    //                     width: 3,
-    //                   ),
-    //                   borderRadius: BorderRadius.all(Radius.circular(10)),
-    //                 ),
+  Widget _cardTextField(
+      BuildContext context,
+      String title,
+      TextEditingController controller,
+      EdgeInsets padding,
+      Icon icon,
+      bool status) {
+//    PayTicketViewModel viewModel =  PayTicketViewModel();
+    return Container(
+      padding: padding,
+      child: TextFormField(
+        controller: controller,
+        enabled: status,
+        keyboardType: TextInputType.number,
+        textInputAction: TextInputAction.done,
+        autocorrect: true,
+        // autofocus: true,
+        textCapitalization: TextCapitalization.characters,
+        textAlign: TextAlign.end,
+        style: TextStyle(
+            fontWeight: FontWeight.bold,
+//            fontSize: Common.setFontSize(16)
+        fontSize: SizeConfig.size_14,
+        ),
+//        inputFormatters: [
+//          WhitelistingTextInputFormatter.digitsOnly,
+//          NumericTextFormatter()
+//        ],
+        decoration: InputDecoration(
+            labelText: title,
+            prefixIcon: icon,
+            border: OutlineInputBorder(),
+            fillColor: Colors.blue),
+      ),
+    );
+  }
 
-    //                 child: Text('BANK',
-    //                     textAlign: TextAlign.center,
-    //                     style: TextStyle(
-    //                         fontSize: 30, fontWeight: FontWeight.bold)),
-    //               ),
-    //             )
-    //           ],
-    //         )
-    //       ],
-    //     ),
-    //     Flexible(
-    //       flex: 1,
-    //       child: Container(
-    //         color: Colors.grey,
-    //         alignment: Alignment.bottomCenter,
-    //         child: SizedBox(
-    //           width: size.width,
-    //           height: isPortrait == true ? size.width / 10 : size.width / 20,
-    //           child: RaisedButton(
-    //             child: Text(
-    //               "Thanh toán",
-    //               style: TextStyle(color: Colors.white, fontSize: 20.0),
-    //             ),
-    //             color: Colors.red,
-    //             onPressed: () {
-    //               // Navigator.pushNamed(context, PayTicketPage.routeName);
-    //             },
-    //           ),
-    //         ),
-    //       ),
-    //     )
-    //   ],
-    // );
+  Widget _cardCash(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        Container(
+          padding: EdgeInsets.symmetric(vertical: 2, horizontal: 4),
+          child: Card(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0)),
+            elevation: 4.0,
+            child: Padding(
+              padding: const EdgeInsets.all(8),
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    padding: EdgeInsets.symmetric(vertical: 5),
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'Thanh toán tiền mặt:',
+                      style: TextStyle(
+                          color: Colors.blue,
+//                          fontSize: Common.setFontSize(16),
+                      fontSize: SizeConfig.size_18,
+                          fontWeight: FontWeight.bold),
+
+                      textAlign: TextAlign.justify,
+                    ),
+                  ),
+                  Container(
+                    // padding: EdgeInsets.symmetric(vertical: 10),
+                    child: _listPayPrice(context),
+                  ),
+                  _cardTextField(
+                      context,
+                      'Số tiền khách trả',
+                      viewModel.textInputCash,
+                      EdgeInsets.symmetric(vertical: 10, horizontal: 2),
+                      Icon(Icons.print),
+                      true)
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _cardBank(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        Container(
+          padding: EdgeInsets.symmetric(vertical: 2, horizontal: 4),
+          child: Card(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0)),
+            elevation: 4.0,
+            child: Padding(
+              padding: const EdgeInsets.all(8),
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    padding: EdgeInsets.symmetric(vertical: 5),
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'Thanh toán qua ngân hàng:',
+                      style: TextStyle(
+                          color: Colors.blue,
+                          fontSize: SizeConfig.size_18,
+                          fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.justify,
+                    ),
+                  ),
+                  _cardTextField(
+                      context,
+                      'Số thẻ',
+                      viewModel.textInputBank,
+                      EdgeInsets.symmetric(vertical: 10, horizontal: 2),
+                      Icon(Icons.credit_card),
+                      true)
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
   }
 
   Widget _listPayPrice(BuildContext context) {
-    // var size = MediaQuery.of(context).size;
     return Container(
-      height: 30,
+      height: 40,
       child: ListView.builder(
           scrollDirection: Axis.horizontal,
           itemCount: listPayPrices.length,
+          physics: BouncingScrollPhysics(),
           itemBuilder: (context, index) {
             return Container(
-                // margin: EdgeInsets.all(),
-                padding: EdgeInsets.symmetric(vertical: 4, horizontal: 4),
-                child: RaisedButton(
-                  color: Colors.white,
+              padding: EdgeInsets.symmetric(vertical: 4, horizontal: 4),
+              child: InkWell(
+                onTap: () {
+                  viewModel.textInputCash.text =
+                      '${listPayPrices[index].title}';
+                },
+                child: Chip(
+                  backgroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
-                      borderRadius: new BorderRadius.circular(30.0)),
-                  onPressed: () {
-                    _controller2.text = '${listPayPrices[index].title}';
-                  },
-                  child: Text(
-                    '${listPayPrices[index].title}',
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                      side: BorderSide(width: 1, color: Colors.black26),
+                      borderRadius: BorderRadius.all(Radius.circular(30))),
+                  avatar: CircleAvatar(
+                    backgroundColor: Colors.blue[600],
+                    child: Text('\$', style: TextStyle(color: Colors.white),),
                   ),
-                ));
+                  label: Text('${listPayPrices[index].title}',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      )),
+                ),
+              ),
+
+//                RaisedButton(
+//                  color: Colors.white,
+//                  shape: RoundedRectangleBorder(
+//                      borderRadius: new BorderRadius.circular(30.0)),
+//                  onPressed: () {
+//                    viewModel.textInputCash.text = '${listPayPrices[index].title}';
+//                  },
+//                  child: Text(
+//                    '${listPayPrices[index].title}',
+//                    style: TextStyle(
+//                        fontSize: Common.setFontSize(16),
+//                        fontWeight: FontWeight.bold),
+//                  ),
+//                )
+            );
           }),
+    );
+  }
+
+  Widget _sizeBoxButton(
+      BuildContext context, String title, Function action, Color color) {
+    var size = MediaQuery.of(context).size;
+    var isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 4),
+      child: SizedBox(
+        width: size.width,
+        height: isPortrait == true ? size.width / 10 : size.width / 20,
+        child: RaisedButton(
+          padding: EdgeInsets.all(0),
+          child: Text(
+            title,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                color: Colors.white,
+//                fontSize: Common.setFontSize(16)
+            fontSize: SizeConfig.getInstance().setSp(16)
+            ),
+          ),
+          color: color,
+          onPressed: action,
+          // () {
+          //   // Navigator.pushNamed(context, PayTicketPage.routeName);
+          // },
+        ),
+      ),
     );
   }
 }

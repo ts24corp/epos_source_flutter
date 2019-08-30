@@ -1,3 +1,4 @@
+import 'package:epos_source_flutter/src/app/helper/index.dart';
 import 'package:epos_source_flutter/src/app/pages/login/login_page_viewmodel.dart';
 
 import 'package:epos_source_flutter/src/app/theme/sizeConfig.dart';
@@ -34,8 +35,8 @@ class _LoginBodyWidgetPageState extends State<LoginBodyWidget> {
 
   @override
   Widget build(BuildContext context) {
-    SizeConfig().init(context);
-    print('sizeConfig ${SizeConfig.safeBlockHorizontal * 30}');
+    Common.initFontSize(context);
+//    print('sizeConfig ${SizeConfig.safeBlockHorizontal * 30}');
     var viewmodel = Provider.of<LoginPageViewModel>(context);
     viewmodel.context = context;
     return StreamBuilder<Object>(
@@ -70,7 +71,7 @@ class _LoginBodyWidgetPageState extends State<LoginBodyWidget> {
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Colors.black,
-                          fontSize: SizeConfig.safeBlockHorizontal * 30)),
+                          fontSize: Common.setFontSize(30))),
                 ),
                 DropdownButton<String>(
                   isExpanded: true,

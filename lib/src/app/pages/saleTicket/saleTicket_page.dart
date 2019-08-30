@@ -1,6 +1,7 @@
 import 'dart:core';
 
 import 'package:epos_source_flutter/src/app/core/baseViewModel.dart';
+import 'package:epos_source_flutter/src/app/helper/common.dart';
 import 'package:epos_source_flutter/src/app/pages/payTicket/payTicket_page.dart';
 import 'package:epos_source_flutter/src/app/pages/saleTicket/saleTicket_page_viewmodel.dart';
 import 'package:epos_source_flutter/src/app/theme/sizeConfig.dart';
@@ -9,13 +10,19 @@ import 'package:flutter/material.dart';
 
 class SaleTicketPage extends StatefulWidget {
   static const String routeName = "/saleTicket";
+
   @override
   _SaleTicketPageState createState() => _SaleTicketPageState();
 }
 
 class _SaleTicketPageState extends State<SaleTicketPage> {
   SaleTicketViewModel viewModel = SaleTicketViewModel();
+
   @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return ViewModelProvider(
@@ -103,25 +110,25 @@ class _SaleTicketPageState extends State<SaleTicketPage> {
     );
   }
 
-  // Widget _appBar(SaleTicketViewModel viewModel) => GradientAppBar(
-  //       title: Text("Bán vé"),
-  //       backgroundColorStart: Colors.blue,
-  //       backgroundColorEnd: Color(0Xff135691),
-  //       // bottom: TabBar(
-  //       //   tabs: <Widget>[Text('Một'), Text('Hai')],
-  //       // ),
-  //       actions: <Widget>[
-  //         FlatButton(
-  //           textColor: Colors.white,
-  //           onPressed: () {},
-  //           child: Text(
-  //             "Lưu",
-  //             style: TextStyle(fontWeight: FontWeight.bold),
-  //           ),
-  //           // shape: CircleBorder(side: BorderSide(color: Colors.transparent)),
-  //         ),
-  //       ],
-  //     );
+// Widget _appBar(SaleTicketViewModel viewModel) => GradientAppBar(
+//       title: Text("Bán vé"),
+//       backgroundColorStart: Colors.blue,
+//       backgroundColorEnd: Color(0Xff135691),
+//       // bottom: TabBar(
+//       //   tabs: <Widget>[Text('Một'), Text('Hai')],
+//       // ),
+//       actions: <Widget>[
+//         FlatButton(
+//           textColor: Colors.white,
+//           onPressed: () {},
+//           child: Text(
+//             "Lưu",
+//             style: TextStyle(fontWeight: FontWeight.bold),
+//           ),
+//           // shape: CircleBorder(side: BorderSide(color: Colors.transparent)),
+//         ),
+//       ],
+//     );
 }
 //   Widget _appBar(SaleTicketViewModel viewModel) => GradientAppBar(
 //         title: Text("Bán vé"),
@@ -151,12 +158,15 @@ class SaleTicketBodyWidget extends StatefulWidget {
 
 class _SaleTicketBodyWidgetState extends State<SaleTicketBodyWidget> {
   SaleTicketViewModel viewModel;
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
+    Common.initFontSize(context);
     var isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+    SizeConfig.instance = SizeConfig(width: size.width, height: size.height)..init(context);
     viewModel = ViewModelProvider.of(context);
-    // var _catelogy = viewModel.catelogyProduct;
+    print('=>>>>> SaleTicketPage <<<<=');
     return Row(
       children: <Widget>[
         Expanded(
@@ -213,99 +223,61 @@ Widget _listChooseEat(BuildContext context) {
   // final double itemHeight = (size.height - kToolbarHeight - 24) / 2;
   final double itemWidth = size.width / 2;
   var isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+  var listEat = viewModel.widgetList;
   return Expanded(
-    child: GridView.count(
-      crossAxisCount: isPortrait == true ? 2 : 3,
-      childAspectRatio: (itemWidth / itemWidth),
-      controller: ScrollController(keepScrollOffset: false),
-      shrinkWrap: true,
-      scrollDirection: Axis.vertical,
-      padding: EdgeInsets.all(3.0),
-      children: viewModel.listChooseEat
-          .asMap()
-          .map((index, item) {
-            return MapEntry(
-              index,
-              InkWell(
-                onTap: () {
-                  viewModel.addEat(item);
-                },
-                child: Container(
-                  color: Colors.white,
-                  margin: EdgeInsets.all(3),
-                  child: Column(
-                    children: <Widget>[
-                      Container(
-                        color: Colors.black26.withOpacity(0.2),
-                        padding: EdgeInsets.only(top: 4, bottom: 4),
-                        width: size.width,
+    child: GridView.builder(
+        itemCount: listEat.length,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: (isPortrait == true ? 2 : 3),
+          childAspectRatio: (itemWidth / itemWidth),
+        ),
+        controller: ScrollController(keepScrollOffset: false),
+        shrinkWrap: true,
+        scrollDirection: Axis.vertical,
+        padding: EdgeInsets.all(3.0),
+        itemBuilder: (BuildContext context, int index) {
+          return InkWell(
+            onTap: () {
+              viewModel.addEat(listEat[index]);
+            },
+            child: Container(
+              color: Colors.white,
+              margin: EdgeInsets.all(3),
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    color: Colors.black26.withOpacity(0.2),
+                    padding: EdgeInsets.only(top: 4, bottom: 4),
+                    width: size.width,
+                    child: Text(
+                      '${viewModel.formatter.format(listEat[index]['price'])}đ',
+                      style: TextStyle(
+                          fontSize: SizeConfig.setSize(14),
+                          fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  Flexible(
+                    flex: 1,
+                    child: Container(
+                      child: Center(
                         child: Text(
-                          '${viewModel.formatter.format(item['price'])}đ',
-                          style: TextStyle(
-                              fontSize: SizeConfig.blockSizeHorizontal * 10,
-                              fontWeight: FontWeight.bold),
+                          listEat[index]['name'],
                           textAlign: TextAlign.center,
+                          style: TextStyle(
+                              inherit: true,
+                              fontSize: SizeConfig.setSize(16),
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold),
                         ),
                       ),
-                      Flexible(
-                        flex: 1,
-                        child: Container(
-                          child: Center(
-                            child: Text(
-                              item['name'],
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  inherit: true,
-                                  fontSize: SizeConfig.blockSizeHorizontal * 12,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                // child: Stack(
-                //   children: <Widget>[
-                //     Container(
-                //       color: Colors.green,
-                //       margin: EdgeInsets.all(3.0),
-                //       child: Center(
-                //         child: Text(
-                //           item['name'],
-                //           textAlign: TextAlign.center,
-                //           style: TextStyle(
-                //             inherit: true,
-                //             fontSize: 25,
-                //             color: Colors.black,
-                //             fontWeight: FontWeight.bold
-                //           ),
-                //         ),
-                //       ),
-                //     ),
-                //     Align(
-                //       alignment: Alignment.topCenter,
-                //       child: Container(
-                //         margin: EdgeInsets.all(3.0),
-                //         color: Colors.black26.withOpacity(0.2),
-                //         padding: EdgeInsets.only(top: 8, bottom: 8),
-                //         width: size.width,
-                //         child: Text(
-                //           '${viewModel.formatter.format(item['price'])}đ',
-                //           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                //           textAlign: TextAlign.center,
-                //         ),
-                //       ),
-                //     ),
-                //   ],
-                // ),
+                    ),
+                  )
+                ],
               ),
-            );
-          })
-          .values
-          .toList(),
-    ),
+            ),
+          );
+        }),
   );
 }
 
@@ -319,23 +291,26 @@ Widget _viewCommit(BuildContext context) {
         // Divider(),
         Container(
           height: isPortrait == true ? size.width / 10 : size.width / 20,
-          padding: EdgeInsets.all(5.0),
+          padding: EdgeInsets.only(right: 8),
           alignment: Alignment.centerRight,
           decoration: BoxDecoration(
             color: Colors.white,
           ),
           child: Text(
             '${viewModel.formatter.format(viewModel.total)}đ',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+            style: TextStyle(
+                fontSize: SizeConfig.setSize(20), fontWeight: FontWeight.w600),
           ),
         ),
         SizedBox(
           width: size.width,
           height: isPortrait == true ? size.width / 10 : size.width / 20,
           child: RaisedButton(
+            padding: EdgeInsets.all(0),
             child: Text(
               "Thanh toán",
-              style: TextStyle(color: Colors.white, fontSize: 20.0),
+              style: TextStyle(
+                  color: Colors.white, fontSize: SizeConfig.setSize(20)),
             ),
             color: Colors.red,
             onPressed: () {
@@ -374,7 +349,9 @@ Widget scrollList(BuildContext context) {
                       Border(right: BorderSide(width: 1, color: Colors.grey))),
               child: Text(
                 _catelogyProduct[index]['name'],
-                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+                style: TextStyle(
+                    fontSize: SizeConfig.setSize(16),
+                    fontWeight: FontWeight.w600),
               ));
         },
       ),
@@ -391,7 +368,8 @@ Widget infoCardEat(dynamic item, BuildContext context) {
         alignment: Alignment.bottomLeft,
         child: Text(
           item['name'],
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          style: TextStyle(
+              fontSize: SizeConfig.setSize(18), fontWeight: FontWeight.bold),
         ),
       ),
       Container(
@@ -400,15 +378,16 @@ Widget infoCardEat(dynamic item, BuildContext context) {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Flexible(
-                flex: 1,
+                flex: 55,
                 child: Row(
                   children: <Widget>[
                     SizedBox(
-                      width: 30,
-                      height: 30,
-                      child: RaisedButton(
+                      width: 25,
+                      height: 25,
+                      child: FlatButton(
+                        padding: EdgeInsets.all(0),
                         shape: RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(30.0)),
+                            borderRadius: BorderRadius.circular(25)),
                         color: Colors.blue[300],
                         onPressed: () {
                           viewModel.numberTicketDecrease(item);
@@ -417,7 +396,7 @@ Widget infoCardEat(dynamic item, BuildContext context) {
                           "-",
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              fontSize: 18,
+                               fontSize: SizeConfig.setSize(20),
                               color: Colors.white),
                           textAlign: TextAlign.center,
                         ),
@@ -428,36 +407,40 @@ Widget infoCardEat(dynamic item, BuildContext context) {
                       child: Text(
                         '${item['number']}',
                         style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 18),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 30,
-                      height: 30,
-                      child: RaisedButton(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(30)),
-                        color: Colors.blue[300],
-                        onPressed: () {
-                          viewModel.numberTicketIncrease(item);
-                        },
-                        child: Text(
-                          "+",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                              color: Colors.white),
-                          textAlign: TextAlign.center,
+                          fontWeight: FontWeight.bold,
+                           fontSize: SizeConfig.setSize(20),
                         ),
                       ),
                     ),
+                    SizedBox(
+                      height: 25,
+                      width: 25,
+                      child: RaisedButton(
+                          padding: EdgeInsets.all(0),
+                          color: Colors.blue[300],
+                          shape: RoundedRectangleBorder(
+                              borderRadius: new BorderRadius.circular(25)),
+                          onPressed: () {
+                            viewModel.numberTicketIncrease(item);
+                          },
+                          child: Text(
+                            '+',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: SizeConfig.setSize(20),
+                                color: Colors.white),
+                            // textAlign: TextAlign.center,
+                          )),
+                    )
                   ],
                 )),
             Flexible(
-              flex: 1,
+              flex: 45,
               child: Text(
                 '${viewModel.formatter.format(item['price'])}đ',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                    fontSize: SizeConfig.setSize(16),
+                    fontWeight: FontWeight.bold),
               ),
             )
           ],
@@ -492,7 +475,8 @@ Widget _listViewEat(BuildContext context) {
                 size: 45,
               ),
               Text('Giỏ hàng trống',
-                  style: TextStyle(color: Colors.black26, fontSize: 20)),
+                  style: TextStyle(
+                      color: Colors.black26, fontSize: SizeConfig.setSize(22))),
             ]),
       ),
     );
