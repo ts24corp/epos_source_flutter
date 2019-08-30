@@ -46,6 +46,7 @@ class _SaleTicketPageState extends State<SaleTicketPage> {
                           child: Row(
                             children: <Widget>[
                               FlatButton(
+                                shape: CircleBorder(side: BorderSide(color: Colors.transparent)),
                                 child: Icon(
                                   Icons.arrow_back,
                                   color: Colors.white,
@@ -164,9 +165,10 @@ class _SaleTicketBodyWidgetState extends State<SaleTicketBodyWidget> {
     var size = MediaQuery.of(context).size;
     Common.initFontSize(context);
     var isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
-    SizeConfig.instance = SizeConfig(width: size.width, height: size.height)..init(context);
+//    SizeConfig.instance = SizeConfig()..init(context);
     viewModel = ViewModelProvider.of(context);
-    print('=>>>>> SaleTicketPage <<<<=');
+    SizeConfig.instance = SizeConfig(width: size.width, height: size.height)..init(context);
+    print('${size.width}=>>>>> SaleTicketPage <<<<=${size.height}');
     return Row(
       children: <Widget>[
         Expanded(
@@ -223,7 +225,7 @@ Widget _listChooseEat(BuildContext context) {
   // final double itemHeight = (size.height - kToolbarHeight - 24) / 2;
   final double itemWidth = size.width / 2;
   var isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
-  var listEat = viewModel.widgetList;
+  var listEat = viewModel.listChooseEat;
   return Expanded(
     child: GridView.builder(
         itemCount: listEat.length,

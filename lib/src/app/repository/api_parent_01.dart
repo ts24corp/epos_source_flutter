@@ -142,7 +142,7 @@ class Api1 extends ApiMaster {
   Future<List<ResPartner>> getListCustomer() async {
     await this.authorization();
     body = new Map();
-    body["fields"] = ['name', 'active'];
+    body["fields"] = ['name', 'contact_address', 'email', 'phone'];
     body["limit"] = 0;
     var params = convertSerialize(body);
     return http

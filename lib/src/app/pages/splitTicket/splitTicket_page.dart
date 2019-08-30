@@ -33,20 +33,9 @@ class _SplitTicketPageState extends State<SplitTicketPage> {
   }
 
   Widget _appBar(SplitTicketViewModel viewModel) => GradientAppBar(
-        title: Text("Split Ticket Page"),
+        title: Text("Tách hoá đơn"),
         backgroundColorStart: Colors.blue,
         backgroundColorEnd: Color(0Xff135691),
-        actions: <Widget>[
-          FlatButton(
-            textColor: Colors.white,
-            onPressed: () {},
-            child: Text(
-              "Lưu",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-            ),
-            shape: CircleBorder(side: BorderSide(color: Colors.transparent)),
-          ),
-        ],
       );
 }
 
@@ -87,9 +76,11 @@ class _SplitTicketBodyWidgetState extends State<SplitTicketBodyWidget> {
                           itemBuilder: (context, index) {
                             return InkWell(
                                 onTap: () {
-                                  viewModel.onSplitRight(viewModel.listEat[index], index);
+                                  viewModel.onSplitRight(
+                                      viewModel.listEat[index], index);
                                 },
-                                child: _itemEat(context,viewModel.listEat[index], index));
+                                child: _itemEat(
+                                    context, viewModel.listEat[index], index));
                           })),
                 ),
                 Container(
@@ -106,9 +97,11 @@ class _SplitTicketBodyWidgetState extends State<SplitTicketBodyWidget> {
                           itemBuilder: (context, index) {
                             return InkWell(
                                 onTap: () {
-                                  viewModel.onSplitLeft(viewModel.listSplit[index], index);
+                                  viewModel.onSplitLeft(
+                                      viewModel.listSplit[index], index);
                                 },
-                                child: _itemEat(context,viewModel.listSplit[index], index));
+                                child: _itemEat(context,
+                                    viewModel.listSplit[index], index));
                           })),
                 ),
               ],
@@ -160,7 +153,7 @@ class _SplitTicketBodyWidgetState extends State<SplitTicketBodyWidget> {
     );
   }
 
-  Widget _itemEat(BuildContext context,dynamic item,int index) {
+  Widget _itemEat(BuildContext context, dynamic item, int index) {
     return Container(
       padding: EdgeInsets.all(8),
       child: Column(
@@ -174,8 +167,7 @@ class _SplitTicketBodyWidgetState extends State<SplitTicketBodyWidget> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Text('x${item['amount']}'),
-              Text(
-                  '${viewModel.formatter.format(item['price'])}đ',
+              Text('${viewModel.formatter.format(item['price'])}đ',
                   style: TextStyle(fontWeight: FontWeight.w600))
             ],
           )
