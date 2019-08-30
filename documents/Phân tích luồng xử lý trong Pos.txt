@@ -1,0 +1,159 @@
+--danh sách các model tương tác trong form tạo session của pos:
+pos.session - lưu session của pos
+pos.config - lưu các cài đặt của pos
+res.users - người bán hàng
+res.currency - loại tiền tệ
+account.journal - định khoản
+account.bank.statement - payments
+pos.order - lưu order
+product.template - lưu thông tin sản phẩm
+product.product - lưu thông tin variant
+
+pos.category - danh mục sản phẩm trên pos
+product.pricelist.item - thông tin giảm giá sản phẩm
+product.pricelist - thông tin giảm giá sản phẩm
+stock.location - nơi lưu trữ
+account.tax - thuế
+res.country - thông tin quốc gia, đơn vị tiền tệ
+res.partner - người bán hàng/ khách hàng
+uom.uom - đơn vị đo(cái/kg...)
+res.company - thông tin công ty
+
+--query product
+	domain: [['sale_ok','=',True],['available_in_pos','=',True]],
+
+--query pos category
+	domain: []
+
+--query insert pos_order
+	ui_order: thông tin order lấy từ js
+	process_line = partial(self.env['pos.order.line']._order_line_fields, session_id=ui_order['pos_session_id'])
+	self.env['pos.order'].create({
+				'name':         ui_order['name'],
+				'user_id':      ui_order['user_id'] or False,
+				'session_id':   ui_order['pos_session_id'],
+				'lines':        [process_line(l) for l in ui_order['lines']] if ui_order['lines'] else False,
+				'pos_reference': ui_order['name'],
+				'partner_id':   ui_order['partner_id'] or False,
+				'date_order':   ui_order['creation_date'],
+				'fiscal_position_id': ui_order['fiscal_position_id'],
+				'pricelist_id': ui_order['pricelist_id'],
+				'amount_paid':  ui_order['amount_paid'],
+				'amount_total':  ui_order['amount_total'],
+				'amount_tax':  ui_order['amount_tax'],
+				'amount_return':  ui_order['amount_return'],
+	})
+--check user's permission
+	list_group_ids = self.env['res.users'].browse(uid).groups_id
+	foreach group in list_group_ids:
+		module_name = group.category_id.name
+		permission = group.name
+	
+--query pos_session
+	domain: [['state','=','opened'],['user_id','=',session.uid]]
+--create pos session
+	PosSession: class name
+	
+	@api.model
+    def create(self, values):
+        config_id = values.get('config_id') or self.env.context.get('default_config_id')
+        if not config_id:
+            raise UserError(_("You should assign a Point of Sale to your session."))
+
+        pos_config = self.env['pos.config'].browse(config_id)
+        ctx = dict(self.env.context, company_id=pos_config.company_id.id)
+        if not pos_config.journal_id:
+            default_journals = pos_config.with_context(ctx).default_get(['journal_id', 'invoice_journal_id'])
+            if (not default_journals.get('journal_id') or
+                    not default_journals.get('invoice_journal_id')):
+                raise UserError(_("Unable to open the session. You have to assign a sales journal to your point of sale."))
+            pos_config.with_context(ctx).sudo().write({
+                'journal_id': default_journals['journal_id'],
+                'invoice_journal_id': default_journals['invoice_journal_id']})
+        # define some cash journal if no payment method exists
+        if not pos_config.journal_ids:
+            Journal = self.env['account.journal']
+            journals = Journal.with_context(ctx).search([('journal_user', '=', True), ('type', '=', 'cash')])
+            if not journals:
+                journals = Journal.with_context(ctx).search([('type', '=', 'cash')])
+                if not journals:
+                    journals = Journal.with_context(ctx).search([('journal_user', '=', True)])
+            if not journals:
+                raise ValidationError(_("No payment method configured! \nEither no Chart of Account is installed or no payment method is configured for this POS."))
+            journals.sudo().write({'journal_user': True})
+            pos_config.sudo().write({'journal_ids': [(6, 0, journals.ids)]})
+
+        pos_name = self.env['ir.sequence'].with_context(ctx).next_by_code('pos.session')
+        if values.get('name'):
+            pos_name += ' ' + values['name']
+
+        statements = []
+        ABS = self.env['account.bank.statement']
+        uid = SUPERUSER_ID if self.env.user.has_group('point_of_sale.group_pos_user') else self.env.user.id
+        for journal in pos_config.journal_ids:
+            # set the journal_id which should be used by
+            # account.bank.statement to set the opening balance of the
+            # newly created bank statement
+            ctx['journal_id'] = journal.id if pos_config.cash_control and journal.type == 'cash' else False
+            st_values = {
+                'journal_id': journal.id,
+                'user_id': self.env.user.id,
+                'name': pos_name
+            }
+
+            statements.append(ABS.with_context(ctx).sudo(uid).create(st_values).id)
+
+        values.update({
+            'name': pos_name,
+            'statement_ids': [(6, 0, statements)],
+            'config_id': config_id
+        })
+
+        res = super(PosSession, self.with_context(ctx).sudo(uid)).create(values)
+        if not pos_config.cash_control:
+            res.action_pos_session_open()
+
+        return res
+		
+--query get list floors
+	self: pos session hiện tại
+	pos_config_id = self.config_id.id
+	domain: [['pos_config_id','=',pos_config_id]]
+	query: list_floors = self.env['restaurant.floor'].search([('pos_config_id','=',pos_config_id)])
+
+--get tables
+	list_tables = list_floors.table_ids
+	
+--get table's shape & seats
+	for table in list_tables:
+		shape = table.shape
+		seat = table.seats
+		table_name = table.name
+		
+--get in process pos config
+	pos_session = self.env['pos.session'].search([('state', '=', 'opened'),('rescue', '=', False)])
+	pos_conf = pos_session.config_id
+	
+--get list product base on category
+	config_id: pos config hiện tại
+	
+	def get_child_categ(list_parent_category): (hàm lấy danh sách id danh mục con)
+		res = list_parent_category
+		for catg in list_parent_category:
+			lst_child_categ = self.env['pos.category'].search([('parent_id', '=', catg.id)])
+			if lst_child_categ:
+				res += self.get_child_categ(lst_child_categ)	
+		return res
+		
+		
+	pos_conf = self.env['pos.config'].browse(config_id)
+	list_parent_category = pos_conf.available_categ
+	
+	domain = [('sale_ok','=',True),('available_in_pos','=',True), ('pos_categ_id', 'in', self.get_child_categ(list_parent_category))]
+	list_product = self.env['product.product'].search(domain)
+	
+--get list product base on selected category
+	selected_categ_id: id danh mục đã chọn lấy từ js
+	selected_categ = self.env['pos.category'].browse(selected_categ_id)
+	domain = [('sale_ok','=',True),('available_in_pos','=',True), ('pos_categ_id', 'in', self.get_child_categ(selected_categ))]
+	
