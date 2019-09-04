@@ -90,10 +90,10 @@ class _CTHBodyWidgetState extends State<CTHBodyWidget> {
                           label: "S/L trẻ em",
                           value: _listTicket[i].ticketChildQuantity.toString())
                       : Container(),
-                  rowTicketInfo(
-                      label: "Đơn giá",
-                      value:
-                          '₫' + Common.formatMoney(_listTicket[i].ticketPrice)),
+                  // rowTicketInfo(
+                  //     label: "Đơn giá",
+                  //     value:
+                  //         '₫' + Common.formatMoney(_listTicket[i].ticketPrice)),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 10),
                     child: rowTicketInfo(

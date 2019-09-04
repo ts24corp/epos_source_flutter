@@ -1,7 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:core';
+import 'package:date_format/date_format.dart';
 import 'package:epos_source_flutter/src/app/core/baseViewModel.dart';
+import 'package:epos_source_flutter/src/app/helper/index.dart';
+import 'package:epos_source_flutter/src/app/model/index.dart';
 import 'package:epos_source_flutter/src/app/model/ticket-info.dart';
 import 'package:flutter/services.dart';
 import 'package:barcode_scan/barcode_scan.dart';
@@ -31,9 +34,19 @@ class CheckTicketViewModel extends ViewModelBase {
   Future scanQR() async {
     try {
       String qrResult = await BarcodeScanner.scan();
-      ticketInfo = TicketInfo.fromJson(jsonDecode(qrResult));
-      await ticketInfo.getListInfo();
-      sink.add(true);
+      // ticketInfo = TicketInfo.fromJson(jsonDecode(qrResult));
+      ticketInfo = new TicketInfo();
+      SuoiTienModel st = SuoiTienModel();
+      bool checkMaVe = st.checkMaVe(qrResult);
+      if (checkMaVe) {
+        st.getObjectFromQRCode(qrResult);
+        st.convertCodeToTicketInfo(ticketInfo);
+        await ticketInfo.getListInfo();
+        var checkExist = ticketInfo.checkExists();
+        if (checkExist) ticketInfo.ticketState = "Đã xác nhận";
+        sink.add(true);
+      } else
+        return LoadingDialog.showMsgDialog(context, "Mã soát vé không hợp lệ");
     } on PlatformException catch (ex) {
       if (ex.code == BarcodeScanner.CameraAccessDenied) {
         _result = "Camera permission was denied";
@@ -52,6 +65,15 @@ class CheckTicketViewModel extends ViewModelBase {
   Future conFirmTicket() async {
     ticketInfo.ticketState = "Đã xác nhận";
     await ticketInfo.getListInfo();
+    var checkExist = ticketInfo.checkExists();
+    if (checkExist) {
+      return LoadingDialog.showMsgDialog(
+          context, "Vé này đã xác nhận.Vui lòng thử lại.");
+    } else
+      ToastController.show(
+          context: context,
+          duration: Duration(milliseconds: 1000),
+          message: "xác nhận thành công");
     ticketInfo.saveLocal();
     sink.add(true);
   }

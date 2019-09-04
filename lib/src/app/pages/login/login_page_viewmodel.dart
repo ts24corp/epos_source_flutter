@@ -177,7 +177,10 @@ class LoginPageViewModel extends ChangeNotifier {
           var _checkPermission = await api.checkAccessRightPOS();
           LoadingDialog.hideLoadingDialog(context);
           if (_checkPermission)
-            await _chooseBusinessType();
+            // await _chooseBusinessType();
+            Navigator.pushReplacementNamed(context, TabsCheckPage.routeName,
+                arguments: TabsCheckArgurment(
+                    routeChildName: CheckTicketPage.routeName));
           else
             LoadingDialog.showMsgDialog(
                 context, "Bạn không có quyền truy cập vào ứng dụng này.");

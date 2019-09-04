@@ -10,7 +10,7 @@ class TicketInfo {
   String ticketType = "Vé người lớn";
   int ticketAdultQuantity = 0;
   int ticketChildQuantity = 0;
-  String ticketCustomer = "VƯƠNG MINH LUÂN";
+  String ticketCustomer = "";
   String ticketId = "";
   String ticketDate = DateFormat("yyyy-MM-dd").format(DateTime.now());
   String ticketState = "Chưa xác nhận";
@@ -55,6 +55,13 @@ class TicketInfo {
         listTicketInfo.indexWhere((item) => item.ticketId == this.ticketId);
     if (index == -1) listTicketInfo.insert(0, this);
     localStorage.setItem("listTicketInfo", json.encode(listTicketInfo));
+  }
+
+  bool checkExists() {
+    var index =
+        listTicketInfo.indexWhere((item) => item.ticketId == this.ticketId);
+    if (index == -1) return false;
+    return true;
   }
 
   Future<List<TicketInfo>> getListInfo() async {

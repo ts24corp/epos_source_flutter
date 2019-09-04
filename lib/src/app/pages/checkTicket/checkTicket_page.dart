@@ -14,7 +14,7 @@ class CheckTicketPage extends StatelessWidget {
   Widget build(BuildContext context) {
     TabsCheckViewModel viewModel = ViewModelProvider.of(context);
     var checkTicketViewModel = viewModel.checkTicketViewModel;
-
+    checkTicketViewModel.context = context;
     return ViewModelProvider(
         viewmodel: checkTicketViewModel,
         child: StreamBuilder<Object>(
@@ -103,10 +103,10 @@ class _CheckTicketBodyWidgetState extends State<CheckTicketBodyWidget> {
                       value:
                           viewModel.ticketInfo.ticketChildQuantity.toString())
                   : Container(),
-              rowTicketInfo(
-                  label: "Đơn giá",
-                  value: '₫' +
-                      Common.formatMoney(viewModel.ticketInfo.ticketPrice)),
+              // rowTicketInfo(
+              //     label: "Đơn giá",
+              //     value: '₫' +
+              //         Common.formatMoney(viewModel.ticketInfo.ticketPrice)),
               Padding(
                 padding: const EdgeInsets.only(bottom: 10),
                 child: rowTicketInfo(
