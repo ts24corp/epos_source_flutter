@@ -1,10 +1,15 @@
 import 'dart:core';
 
+import 'package:epos_source_flutter/src/app/app_localizations.dart';
 import 'package:epos_source_flutter/src/app/core/baseViewModel.dart';
 import 'package:epos_source_flutter/src/app/helper/common.dart';
+import 'package:epos_source_flutter/src/app/helper/loading_spinner.dart';
+import 'package:epos_source_flutter/src/app/model/index.dart';
 import 'package:epos_source_flutter/src/app/pages/payTicket/payTicket_page.dart';
 import 'package:epos_source_flutter/src/app/pages/saleTicket/saleTicket_page_viewmodel.dart';
 import 'package:epos_source_flutter/src/app/theme/sizeConfig.dart';
+import 'package:epos_source_flutter/src/app/widgets/button.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 // import 'package:gradient_app_bar/gradient_app_bar.dart';
 
@@ -20,6 +25,8 @@ class _SaleTicketPageState extends State<SaleTicketPage> {
 
   @override
   void initState() {
+//    viewModel.loadData();
+    // TODO: implement initState
     super.initState();
   }
 
@@ -30,127 +37,117 @@ class _SaleTicketPageState extends State<SaleTicketPage> {
       child: StreamBuilder<Object>(
           stream: viewModel.stream,
           builder: (context, snapshot) {
-            return DefaultTabController(
-              length: choices.length,
-              child: Scaffold(
-                // appBar: _appBar(viewModel),
-                appBar: PreferredSize(
-                  preferredSize: Size.fromHeight(kToolbarHeight),
-                  child: Container(
-                    // padding: kTabLabelPadding,
-                    color: Colors.blue,
-                    child: Column(
-                      children: <Widget>[
-                        Expanded(child: Container()),
-                        Container(
-                          child: Row(
-                            children: <Widget>[
-                              FlatButton(
-                                shape: CircleBorder(side: BorderSide(color: Colors.transparent)),
-                                child: Icon(
-                                  Icons.arrow_back,
-                                  color: Colors.white,
-                                  size: 25,
-                                ),
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
+            return Scaffold(
+              // appBar: _appBar(viewModel),
+              appBar: PreferredSize(
+                preferredSize: Size.fromHeight(kToolbarHeight),
+                child: Container(
+                  // padding: kTabLabelPadding,
+                  color: Colors.blue,
+                  child: Column(
+                    children: <Widget>[
+                      Expanded(child: Container()),
+                      Container(
+                        child: Row(
+                          children: <Widget>[
+                            FlatButton(
+                              shape: CircleBorder(
+                                  side: BorderSide(color: Colors.transparent)),
+                              child: Icon(
+                                Icons.arrow_back,
+                                color: Colors.white,
+                                size: 25,
                               ),
-                              Expanded(
-                                child: TabBar(
-                                  onTap: (index) {
-                                    // print('Tabbar: $index ');
-                                    viewModel.onTab(index);
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                            ),
+//                            FlatButton(
+//                              shape: CircleBorder(
+//                                  side: BorderSide(color: Colors.transparent)),
+//                              child: Icon(
+//                                Icons.arrow_back,
+//                                color: Colors.white,
+//                                size: 25,
+//                              ),
+//                              onPressed: () {
+////                                Navigator.pop(context);
+//                              },
+//                            ),
+////                            itemTab(),
+                            Expanded(
+                              child: Container(
+                                height: 50,
+                                child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: 10,
+                                  itemBuilder: (context, index) {
+                                    return itemTab();
                                   },
-                                  indicatorColor: Colors.white,
-                                  isScrollable: true,
-                                  tabs: choices.map((Choice choice) {
-                                    return Tab(
-                                      text: choice.title.toUpperCase(),
-                                      // icon: Icon(choice.icon),
-                                    );
-                                  }).toList(),
                                 ),
                               ),
-                            ],
-                          ),
+                            ),
+//                            Expanded(
+//                              child: ListView.builder(
+//                                  itemCount: viewModel.listHomeCat.length,
+//                                  itemBuilder: (context, index) {
+//                                    return itemTab();
+//                                  }),
+//                            ),
+//                            Expanded(
+//                              child: viewModel.listHomeCat.length == 0
+//                                  ? LoadingSpinner.loadingView(
+//                                      context: context, loading: true)
+//                                  : DefaultTabController(
+////                                      initialIndex: 0,
+//                                      length: viewModel.listHomeCat.length,
+//                                      child: TabBar(
+////                                        controller: viewModel.tabIndex,
+//                                        onTap: (index) {
+//                                          // print('Tabbar: $index ');
+//                                          viewModel.onHome();
+//                                        },
+//                                        indicatorColor: Colors.white,
+//                                        isScrollable: true,
+//                                        tabs: viewModel.listHomeCat
+//                                            .map((PosCategory choice) {
+//                                          return Tab(
+//                                            icon: choice.name == 'home'
+//                                                ? Icon(Icons.home)
+//                                                : null,
+//                                            text: choice.name != 'home'
+//                                                ? choice.name.toUpperCase()
+//                                                : null,
+//
+//                                            // icon: Icon(choice.icon),
+//                                          );
+//                                        }).toList(),
+//                                      ),
+//                                    ),
+//                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                  // bottom: TabBar(
-                  //   onTap: (index) {
-                  //     // print('Tabbar: $index ');
-                  //     viewModel.onTab(index);
-                  //   },
-                  //   isScrollable: true,
-                  //   tabs: choices.map((Choice choice) {
-                  //     return Tab(
-                  //       text: choice.title,
-                  //       // icon: Icon(choice.icon),
-                  //     );
-                  //   }).toList(),
-                  // ),
-                  // flexibleSpace: Column(
-                  //   mainAxisAlignment: MainAxisAlignment.end,
-                  //   children: [
-                  //     TabBar(
-                  //       tabs: [
-                  //         Tab(icon: Icon(Icons.directions_car)),
-                  //         Tab(icon: Icon(Icons.directions_transit)),
-                  //         Tab(icon: Icon(Icons.directions_bike)),
-                  //       ],
-                  //     ),
-                  //   ],
-                  // ),
                 ),
-                body: SafeArea(child: SaleTicketBodyWidget()),
               ),
+              body: SafeArea(child: SaleTicketBodyWidget()),
             );
           }),
     );
   }
 
-// Widget _appBar(SaleTicketViewModel viewModel) => GradientAppBar(
-//       title: Text("Bán vé"),
-//       backgroundColorStart: Colors.blue,
-//       backgroundColorEnd: Color(0Xff135691),
-//       // bottom: TabBar(
-//       //   tabs: <Widget>[Text('Một'), Text('Hai')],
-//       // ),
-//       actions: <Widget>[
-//         FlatButton(
-//           textColor: Colors.white,
-//           onPressed: () {},
-//           child: Text(
-//             "Lưu",
-//             style: TextStyle(fontWeight: FontWeight.bold),
-//           ),
-//           // shape: CircleBorder(side: BorderSide(color: Colors.transparent)),
-//         ),
-//       ],
-//     );
+  Widget itemTab() {
+    return Container(
+      child: FlatButton(
+        shape: CircleBorder(side: BorderSide(color: Colors.transparent)),
+        child: Text('Name'),
+        onPressed: () {},
+      ),
+    );
+  }
 }
-//   Widget _appBar(SaleTicketViewModel viewModel) => GradientAppBar(
-//         title: Text("Bán vé"),
-//         backgroundColorStart: Colors.blue,
-//         backgroundColorEnd: Color(0Xff135691),
-//         // bottom: TabBar(
-//         //   tabs: <Widget>[Text('Một'), Text('Hai')],
-//         // ),
-//         actions: <Widget>[
-//           FlatButton(
-//             textColor: Colors.white,
-//             onPressed: () {},
-//             child: Text(
-//               "Lưu",
-//               style: TextStyle(fontWeight: FontWeight.bold),
-//             ),
-//             // shape: CircleBorder(side: BorderSide(color: Colors.transparent)),
-//           ),
-//         ],
-//       );
-// }
 
 class SaleTicketBodyWidget extends StatefulWidget {
   @override
@@ -162,39 +159,83 @@ class _SaleTicketBodyWidgetState extends State<SaleTicketBodyWidget> {
 
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
+    var size = MediaQuery
+        .of(context)
+        .size;
     Common.initFontSize(context);
-    var isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+    var isPortrait = MediaQuery
+        .of(context)
+        .orientation == Orientation.portrait;
 //    SizeConfig.instance = SizeConfig()..init(context);
     viewModel = ViewModelProvider.of(context);
-    SizeConfig.instance = SizeConfig(width: size.width, height: size.height)..init(context);
+    SizeConfig.instance = SizeConfig(width: size.width, height: size.height)
+      ..init(context);
     print('${size.width}=>>>>> SaleTicketPage <<<<=${size.height}');
-    return Row(
-      children: <Widget>[
-        Expanded(
-          flex: isPortrait == true ? 1 : 2,
-          child: Column(
-            children: <Widget>[
-              _searchView(context),
-              _listChooseEat(context),
-            ],
+    print('awawaw: ${viewModel.listAllCategoryByListParentID}');
+    return StatefulWrapper(
+      onInit: () {
+        viewModel.loadData();
+      },
+      child: Column(
+        children: <Widget>[
+          viewModel.listChildCat.length == 0
+              ? Container()
+              : Container(
+            height: 50,
+            color: Colors.blue,
+            child: DefaultTabController(
+              length: viewModel.listChildCat.length,
+              child: TabBar(
+                onTap: (index) {
+                  // print('Tabbar: $index ');
+                  viewModel.onChooseID(index);
+                },
+                indicatorColor: Colors.white,
+                isScrollable: true,
+                tabs: viewModel.listChildCat.map((PosCategory choice) {
+                  return Tab(
+                    icon: choice.name == 'home' ? Icon(Icons.home) : null,
+                    text: choice.name != 'home'
+                        ? choice.name.toUpperCase()
+                        : null,
+
+                    // icon: Icon(choice.icon),
+                  );
+                }).toList(),
+              ),
+            ),
           ),
-        ),
-        Container(
-          height: size.height,
-          width: size.width / 300,
-          color: Colors.black26,
-        ),
-        Expanded(
-          flex: 1,
-          child: Column(
-            children: <Widget>[
-              _listViewEat(context),
-              _viewCommit(context),
-            ],
+          Expanded(
+            child: Row(
+              children: <Widget>[
+                Expanded(
+                  flex: isPortrait == true ? 1 : 2,
+                  child: Column(
+                    children: <Widget>[
+                      _searchView(context),
+                      _listChooseEat(context),
+                    ],
+                  ),
+                ),
+                Container(
+                  height: size.height,
+                  width: size.width / 300,
+                  color: Colors.black26,
+                ),
+                Expanded(
+                  flex: 1,
+                  child: Column(
+                    children: <Widget>[
+                      _listViewEat(context),
+                      _viewCommit(context),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
@@ -208,7 +249,7 @@ Widget _searchView(BuildContext context) {
       onChanged: viewModel.filterSearchResults,
       controller: viewModel.searchController,
       decoration: InputDecoration(
-        hintText: "Tìm kiếm",
+        hintText: translation.text("SALE_TICKET.SEARCH"),
         prefixIcon: Icon(
           Icons.search,
           size: 20,
@@ -220,15 +261,21 @@ Widget _searchView(BuildContext context) {
 
 Widget _listChooseEat(BuildContext context) {
   SaleTicketViewModel viewModel = ViewModelProvider.of(context);
-  var size = MediaQuery.of(context).size;
+  var size = MediaQuery
+      .of(context)
+      .size;
   /*24 is for notification bar on Android*/
   // final double itemHeight = (size.height - kToolbarHeight - 24) / 2;
   final double itemWidth = size.width / 2;
-  var isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+  var isPortrait = MediaQuery
+      .of(context)
+      .orientation == Orientation.portrait;
   var listEat = viewModel.listChooseEat;
+  print('print: ${viewModel.listProductIDCatID}');
+  var listProduct = viewModel.listProductIDCatID;
   return Expanded(
     child: GridView.builder(
-        itemCount: listEat.length,
+        itemCount: listProduct.length,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: (isPortrait == true ? 2 : 3),
           childAspectRatio: (itemWidth / itemWidth),
@@ -240,10 +287,10 @@ Widget _listChooseEat(BuildContext context) {
         itemBuilder: (BuildContext context, int index) {
           return InkWell(
             onTap: () {
-              viewModel.addEat(listEat[index]);
+              viewModel.addEat(listProduct[index]);
             },
             child: Container(
-              color: Colors.white,
+              color: Colors.amberAccent,
               margin: EdgeInsets.all(3),
               child: Column(
                 children: <Widget>[
@@ -252,7 +299,8 @@ Widget _listChooseEat(BuildContext context) {
                     padding: EdgeInsets.only(top: 4, bottom: 4),
                     width: size.width,
                     child: Text(
-                      '${viewModel.formatter.format(listEat[index]['price'])}đ',
+                      '${viewModel.formatter.format(
+                          listProduct[index].listPrice)}đ',
                       style: TextStyle(
                           fontSize: SizeConfig.setSize(14),
                           fontWeight: FontWeight.bold),
@@ -264,7 +312,7 @@ Widget _listChooseEat(BuildContext context) {
                     child: Container(
                       child: Center(
                         child: Text(
-                          listEat[index]['name'],
+                          listProduct[index].name,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                               inherit: true,
@@ -285,8 +333,12 @@ Widget _listChooseEat(BuildContext context) {
 
 Widget _viewCommit(BuildContext context) {
   SaleTicketViewModel viewModel = ViewModelProvider.of(context);
-  var size = MediaQuery.of(context).size;
-  var isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+  var size = MediaQuery
+      .of(context)
+      .size;
+  var isPortrait = MediaQuery
+      .of(context)
+      .orientation == Orientation.portrait;
   return Container(
     child: Column(
       children: <Widget>[
@@ -304,22 +356,14 @@ Widget _viewCommit(BuildContext context) {
                 fontSize: SizeConfig.setSize(20), fontWeight: FontWeight.w600),
           ),
         ),
-        SizedBox(
-          width: size.width,
-          height: isPortrait == true ? size.width / 10 : size.width / 20,
-          child: RaisedButton(
-            padding: EdgeInsets.all(0),
-            child: Text(
-              "Thanh toán",
-              style: TextStyle(
-                  color: Colors.white, fontSize: SizeConfig.setSize(20)),
-            ),
-            color: Colors.red,
-            onPressed: () {
-              Navigator.pushNamed(context, PayTicketPage.routeName);
-            },
-          ),
-        ),
+        Button(
+          onPressed: () {
+            Navigator.pushNamed(context, PayTicketPage.routeName);
+          },
+          paddingContainer: EdgeInsets.symmetric(horizontal: 4),
+          title: translation.text("SALE_TICKET.PAY"),
+          colorButton: Colors.red,
+        )
       ],
     ),
   );
@@ -330,7 +374,9 @@ Widget scrollList(BuildContext context) {
   // var size = MediaQuery.of(context).size;
   /*24 is for notification bar on Android*/
   // final double itemHeight = (size.height - kToolbarHeight - 24) / 2;
-  var isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+  var isPortrait = MediaQuery
+      .of(context)
+      .orientation == Orientation.portrait;
   // final double itemWidth = size.width / 4;
   var _catelogyProduct = viewModel.catelogyProduct;
   return Expanded(
@@ -346,9 +392,9 @@ Widget scrollList(BuildContext context) {
               alignment: Alignment.center,
               padding: EdgeInsets.all(8),
               decoration: BoxDecoration(
-                  // borderRadius: BorderRadius.only(bottomRight: Radius.circular(5.0), topRight: Radius.circular(5.0)),
+                // borderRadius: BorderRadius.only(bottomRight: Radius.circular(5.0), topRight: Radius.circular(5.0)),
                   border:
-                      Border(right: BorderSide(width: 1, color: Colors.grey))),
+                  Border(right: BorderSide(width: 1, color: Colors.grey))),
               child: Text(
                 _catelogyProduct[index]['name'],
                 style: TextStyle(
@@ -369,7 +415,7 @@ Widget infoCardEat(dynamic item, BuildContext context) {
         padding: EdgeInsets.all(8),
         alignment: Alignment.bottomLeft,
         child: Text(
-          item['name'],
+          item.name,
           style: TextStyle(
               fontSize: SizeConfig.setSize(18), fontWeight: FontWeight.bold),
         ),
@@ -398,7 +444,7 @@ Widget infoCardEat(dynamic item, BuildContext context) {
                           "-",
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
-                               fontSize: SizeConfig.setSize(20),
+                              fontSize: SizeConfig.setSize(20),
                               color: Colors.white),
                           textAlign: TextAlign.center,
                         ),
@@ -407,10 +453,11 @@ Widget infoCardEat(dynamic item, BuildContext context) {
                     Padding(
                       padding: const EdgeInsets.all(4.0),
                       child: Text(
-                        '${item['number']}',
+                        '1',
+//                        '${item['number']}',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
-                           fontSize: SizeConfig.setSize(20),
+                          fontSize: SizeConfig.setSize(20),
                         ),
                       ),
                     ),
@@ -439,7 +486,7 @@ Widget infoCardEat(dynamic item, BuildContext context) {
             Flexible(
               flex: 45,
               child: Text(
-                '${viewModel.formatter.format(item['price'])}đ',
+                '${viewModel.formatter.format(item.listPrice)}đ',
                 style: TextStyle(
                     fontSize: SizeConfig.setSize(16),
                     fontWeight: FontWeight.bold),
@@ -467,6 +514,7 @@ Widget _listViewEat(BuildContext context) {
   } else {
     return Expanded(
       child: Container(
+        color: Colors.white,
         alignment: Alignment.center,
         child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -476,7 +524,7 @@ Widget _listViewEat(BuildContext context) {
                 color: Colors.black26,
                 size: 45,
               ),
-              Text('Giỏ hàng trống',
+              Text(translation.text("SALE_TICKET.CART_EMPTY"),
                   style: TextStyle(
                       color: Colors.black26, fontSize: SizeConfig.setSize(22))),
             ]),

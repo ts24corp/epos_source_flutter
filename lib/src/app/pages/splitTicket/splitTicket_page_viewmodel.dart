@@ -22,11 +22,11 @@ class SplitTicketViewModel extends ViewModelBase {
   }
 
   List<dynamic> listEat = [
-    {'id': 1, 'name': 'Lẫu thập cẩm', 'price': 40000, 'amount': 3},
-    {'id': 2, 'name': 'Lẫu thập cẩm', 'price': 40000, 'amount': 3},
-    {'id': 3, 'name': 'Lẫu thập cẩm', 'price': 40000, 'amount': 3},
+    {'id': 1, 'name': 'Lẫu thập cẩm', 'price': 80000, 'amount': 3},
+    {'id': 2, 'name': 'Lẫu thập cẩm', 'price': 90000, 'amount': 3},
+    {'id': 3, 'name': 'Lẫu thập cẩm', 'price': 10000, 'amount': 3},
     {'id': 4, 'name': 'Lẫu thập cẩm', 'price': 40000, 'amount': 3},
-    {'id': 5, 'name': 'Lẫu thập cẩm', 'price': 40000, 'amount': 3},
-    {'id': 6, 'name': 'Lẫu thập cẩm', 'price': 40000, 'amount': 3}
+    {'id': 5, 'name': 'Lẫu thập cẩm', 'price': 48000, 'amount': 3},
+    {'id': 6, 'name': 'Lẫu thập cẩm', 'price': 70050, 'amount': 3}
   ];
 }

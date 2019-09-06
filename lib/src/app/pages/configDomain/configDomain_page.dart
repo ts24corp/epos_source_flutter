@@ -1,3 +1,4 @@
+import 'package:epos_source_flutter/src/app/app_localizations.dart';
 import 'package:epos_source_flutter/src/app/core/baseViewModel.dart';
 import 'package:epos_source_flutter/src/app/helper/loading_spinner.dart';
 import 'package:epos_source_flutter/src/app/pages/configDomain/configDomain_page_viewmodel.dart';
@@ -36,7 +37,7 @@ class _ConfigDomainPageState extends State<ConfigDomainPage> {
   }
 
   Widget _appBar(ConfigDomainPageViewModel viewModel) => GradientAppBar(
-        title: Text("Cấu hình domain"),
+        title: Text(translation.text("CONFIG_DOMAIN.CONFIG_DOMAIN")),
         backgroundColorStart: Theme.of(context).primaryColor,
         backgroundColorEnd: Color(0Xff135691),
         // bottom: TabBar(
@@ -49,7 +50,7 @@ class _ConfigDomainPageState extends State<ConfigDomainPage> {
               viewModel.onSaveConfigDomain();
             },
             child: Text(
-              "Lưu",
+              translation.text("CONFIG_DOMAIN.SAVE"),
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
             ),
             shape: CircleBorder(side: BorderSide(color: Colors.transparent)),

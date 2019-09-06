@@ -8,3 +8,4 @@ export 'pos-session.dart';
 export 'res-currency.dart';
 export 'res-partner.dart';
 export 'suoitien.dart';
+export 'product.dart';

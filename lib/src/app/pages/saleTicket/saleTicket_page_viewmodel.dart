@@ -1,8 +1,11 @@
 import 'dart:async';
 
+import 'package:epos_source_flutter/src/app/core/app_setting.dart';
 import 'package:epos_source_flutter/src/app/core/baseViewModel.dart';
 import 'package:epos_source_flutter/src/app/helper/common.dart';
+import 'package:epos_source_flutter/src/app/model/index.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class SaleTicketViewModel extends ViewModelBase {
@@ -11,17 +14,18 @@ class SaleTicketViewModel extends ViewModelBase {
   final formatter = new NumberFormat("#,###");
   TextEditingController searchController = TextEditingController();
   List<dynamic> listChooseEat = new List<dynamic>();
-  List eat = [];
+  List<dynamic> eat = List();
   var total = 0;
+  int i = 0;
 
-  Future addEat(item) async {
-    var index = eat.indexWhere((value) => value["id"] == item['id']);
-    // print('INDEX$index');
-    if (index != -1) {
-      eat[index]['number'] = eat[index]['number'] + 1;
-    } else
-      eat.add(item);
-    total = total + item['price'];
+  Future addEat(dynamic item) async {
+//    var index = listProductIDCatID.indexWhere((value) => value.id == item.id);
+//    // print('INDEX$index');
+//    if (index != -1) {
+//      eat[index]['number'] = eat[index]['number'] + 1;
+//    } else
+    eat.add(item);
+//    total = total + item.listPrice;
     // await print(total);
     sink.add(true);
   }
@@ -49,14 +53,35 @@ class SaleTicketViewModel extends ViewModelBase {
   }
 
   Future onTab(index) async {
-    print(choices[index].title);
-    print(choices[index]);
+    print(listCategorybyID[index].name);
+    print(listCategorybyID[index].childId);
+  }
+
+  Future onHome() async {
+    listChildCat = listCategorybyID;
+    this.updateState();
+  }
+
+  Future onChooseID(index) async {
+    print(listCategorybyID[index].name);
+    print(listCategorybyID[index].childId);
+    await listHomeCat.add(listCategorybyID[index]);
+    List<int> list = await api
+        .getAllCategoryIDByListParentID(listCategorybyID[index].childId);
+    print('GGGGG: $list');
+
+//    print('Index: $index');
+//    i = listHomeCat.length;
+
+    this.updateState();
   }
 
   SaleTicketViewModel() {
-    listChooseEat.addAll(widgetList);
+    listChooseEat.addAll(listProductIDCatID);
   }
+
   var iteamsSearch = List<dynamic>();
+
   void filterSearchResults(String value) async {
     print('Value $value');
     List<dynamic> tempwidgetList = List<dynamic>();
@@ -203,8 +228,36 @@ class SaleTicketViewModel extends ViewModelBase {
       'name': 'Đồ gia dụng',
     }
   ];
+
   void dispose() {
     streamAddController.close();
+  }
+
+  List<int> listAllCategory = List();
+  List<PosCategory> listCategorybyID = List();
+  List<int> listCategoryIDByListParentID = List();
+  List<Product> listProductIDCatID = List();
+  List<PosCategory> listAllCategoryByListParentID = List();
+  List<PosCategory> listHomeCat = List();
+  List<PosCategory> listChildCat = List();
+
+  Future loadData() async {
+    PosCategory home = new PosCategory();
+    home.childId = [];
+    home.id = 0;
+    home.name = 'home';
+    home.parentId = false;
+    listHomeCat.insert(0, home);
+    listAllCategory = await api.getAllParentIDCategory();
+    listCategorybyID = await api.getCategoryByID(listAllCategory);
+    listAllCategoryByListParentID =
+        await api.getAllCategoryByListParentID(listCategorybyID);
+    listCategoryIDByListParentID =
+        await api.getAllCategoryIDByListParentID(listAllCategory);
+    listProductIDCatID =
+        await api.getProductByCatID(listCategoryIDByListParentID);
+    listChildCat = listCategorybyID;
+    this.updateState();
   }
 }
 

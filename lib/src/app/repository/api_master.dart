@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:epos_source_flutter/src/app/core/app_setting.dart';
 
@@ -63,7 +64,19 @@ class ApiMaster {
             element = "'$element'";
           else if (element is List) {
             element.asMap().forEach((indexChild, elementChild) {
-              if (elementChild is String) elementChild = "'$elementChild'";
+              if (elementChild is String)
+                elementChild = "'$elementChild'";
+              else if (elementChild is bool) {
+                switch (elementChild) {
+                  case false:
+                    elementChild = 'False';
+                    break;
+                  case true:
+                    elementChild = 'True';
+                    break;
+                  default:
+                }
+              }
               element[indexChild] = elementChild;
             });
           }
@@ -103,7 +116,7 @@ class ApiMaster {
           _expiresIn =
               DateTime.now().add(Duration(seconds: result["expires_in"]));
           headers[HttpHeaders.authorizationHeader] = "Bearer $_accessToken";
-          print(headers);
+          print('headers: $headers');
           return StatusCodeGetToken.TRUE;
           break;
         case 401:

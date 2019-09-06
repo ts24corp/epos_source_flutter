@@ -1,8 +1,11 @@
+import 'package:epos_source_flutter/src/app/app_localizations.dart';
 import 'package:epos_source_flutter/src/app/core/baseViewModel.dart';
 import 'package:epos_source_flutter/src/app/pages/customerTicket/customerTicket_page.dart';
+import 'package:epos_source_flutter/src/app/pages/invoiceTicket/invoiceTicket_page.dart';
 import 'package:epos_source_flutter/src/app/pages/payTicket/payTicket_page_viewmodel.dart';
 import 'package:epos_source_flutter/src/app/pages/splitTicket/splitTicket_page.dart';
 import 'package:epos_source_flutter/src/app/theme/sizeConfig.dart';
+import 'package:epos_source_flutter/src/app/widgets/button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gradient_app_bar/gradient_app_bar.dart';
@@ -29,12 +32,9 @@ class _PayTicketPageState extends State<PayTicketPage> {
   }
 
   Widget _appBar(PayTicketViewModel viewModel) => GradientAppBar(
-        title: Text("Trang thanh toán"),
+        title: Text(translation.text("PAY_TICKET.PAY")),
         backgroundColorStart: Colors.blue,
         backgroundColorEnd: Color(0Xff135691),
-        // bottom: TabBar(
-        //   tabs: <Widget>[Text('Một'), Text('Hai')],
-        // ),
       );
 }
 
@@ -48,12 +48,12 @@ class _PayTicketBodyWidgetState extends State<PayTicketBodyWidget> {
 
   @override
   Widget build(BuildContext context) {
-
     viewModel = ViewModelProvider.of(context);
     var size = MediaQuery.of(context).size;
 //    Common.initFontSize(context);
     var isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
-    SizeConfig.instance = SizeConfig(width: size.width, height: size.height)..init(context);
+    SizeConfig.instance = SizeConfig(width: size.width, height: size.height)
+      ..init(context);
     print('=>>>>> PayTicketPage <<<<=');
     return SafeArea(
       child: Column(
@@ -70,7 +70,7 @@ class _PayTicketBodyWidgetState extends State<PayTicketBodyWidget> {
                       flex: 1,
                       child: _cardTextField(
                           context,
-                          'Tổng tiền',
+                          translation.text("PAY_TICKET.TOTAL"),
                           viewModel.textInputTotal,
                           EdgeInsets.all(8),
                           Icon(Icons.print),
@@ -79,7 +79,7 @@ class _PayTicketBodyWidgetState extends State<PayTicketBodyWidget> {
                       flex: 1,
                       child: _cardTextField(
                           context,
-                          'Tiền trả khách',
+                          translation.text("PAY_TICKET.BALANCE"),
                           viewModel.textInputReturn,
                           EdgeInsets.only(right: 8),
                           Icon(Icons.print),
@@ -99,18 +99,44 @@ class _PayTicketBodyWidgetState extends State<PayTicketBodyWidget> {
                 child: Row(
                   children: <Widget>[
                     Flexible(
-                        child: _sizeBoxButton(context, 'Khách hàng', () {
-                      Navigator.pushNamed(
-                          context, CustomerTicketPage.routeName);
-                    }, Colors.orange)),
+                        child: Button(
+                      onPressed: () {
+                        Navigator.pushNamed(
+                            context, CustomerTicketPage.routeName);
+                      },
+                      title: translation.text("PAY_TICKET.GUEST"),
+                      colorButton: Colors.orange,
+                      textStyle: TextStyle(
+                          fontSize: SizeConfig.setSize(16),
+                          color: Colors.white),
+                      paddingContainer: EdgeInsets.symmetric(horizontal: 4),
+                    )),
                     Flexible(
-                        child: _sizeBoxButton(context, 'Tách', () {
-                      Navigator.pushReplacementNamed(
-                          context, SplitTicketPage.routeName);
-                    }, Colors.red)),
+                        child: Button(
+                      onPressed: () {
+                        Navigator.pushReplacementNamed(
+                            context, SplitTicketPage.routeName);
+                      },
+                      title: translation.text("PAY_TICKET.SPLIT"),
+                      textStyle: TextStyle(
+                          fontSize: SizeConfig.setSize(16),
+                          color: Colors.white),
+                      colorButton: Colors.red,
+                      paddingContainer: EdgeInsets.symmetric(horizontal: 4),
+                    )),
                     Flexible(
-                        child: _sizeBoxButton(
-                            context, 'Thanh toán', () {}, Colors.blue)),
+                      child: Button(
+                        onPressed: () {
+                          Navigator.pushReplacementNamed(
+                              context, InvoiceTicketPage.routeName);
+                        },
+                        title: translation.text("PAY_TICKET.PAY"),
+                        textStyle: TextStyle(
+                            fontSize: SizeConfig.setSize(16),
+                            color: Colors.white),
+                        paddingContainer: EdgeInsets.symmetric(horizontal: 4),
+                      ),
+                    ),
                   ],
                 )),
           ),
@@ -139,9 +165,9 @@ class _PayTicketBodyWidgetState extends State<PayTicketBodyWidget> {
         textCapitalization: TextCapitalization.characters,
         textAlign: TextAlign.end,
         style: TextStyle(
-            fontWeight: FontWeight.bold,
+          fontWeight: FontWeight.bold,
 //            fontSize: Common.setFontSize(16)
-        fontSize: SizeConfig.size_14,
+          fontSize: SizeConfig.size_14,
         ),
 //        inputFormatters: [
 //          WhitelistingTextInputFormatter.digitsOnly,
@@ -173,13 +199,12 @@ class _PayTicketBodyWidgetState extends State<PayTicketBodyWidget> {
                     padding: EdgeInsets.symmetric(vertical: 5),
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      'Thanh toán tiền mặt:',
+                      translation.text("PAY_TICKET.CASH_PAYMENT"),
                       style: TextStyle(
                           color: Colors.blue,
 //                          fontSize: Common.setFontSize(16),
-                      fontSize: SizeConfig.size_18,
+                          fontSize: SizeConfig.size_18,
                           fontWeight: FontWeight.bold),
-
                       textAlign: TextAlign.justify,
                     ),
                   ),
@@ -189,7 +214,7 @@ class _PayTicketBodyWidgetState extends State<PayTicketBodyWidget> {
                   ),
                   _cardTextField(
                       context,
-                      'Số tiền khách trả',
+                      translation.text("PAY_TICKET.GUEST_PAID"),
                       viewModel.textInputCash,
                       EdgeInsets.symmetric(vertical: 10, horizontal: 2),
                       Icon(Icons.print),
@@ -220,7 +245,7 @@ class _PayTicketBodyWidgetState extends State<PayTicketBodyWidget> {
                     padding: EdgeInsets.symmetric(vertical: 5),
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      'Thanh toán qua ngân hàng:',
+                      translation.text("PAY_TICKET.BANK_PAYMENT"),
                       style: TextStyle(
                           color: Colors.blue,
                           fontSize: SizeConfig.size_18,
@@ -230,7 +255,7 @@ class _PayTicketBodyWidgetState extends State<PayTicketBodyWidget> {
                   ),
                   _cardTextField(
                       context,
-                      'Số thẻ',
+                      translation.text("PAY_TICKET.CARD_NUMBER"),
                       viewModel.textInputBank,
                       EdgeInsets.symmetric(vertical: 10, horizontal: 2),
                       Icon(Icons.credit_card),
@@ -266,7 +291,10 @@ class _PayTicketBodyWidgetState extends State<PayTicketBodyWidget> {
                       borderRadius: BorderRadius.all(Radius.circular(30))),
                   avatar: CircleAvatar(
                     backgroundColor: Colors.blue[600],
-                    child: Text('\$', style: TextStyle(color: Colors.white),),
+                    child: Text(
+                      '\$',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                   label: Text('${listPayPrices[index].title}',
                       style: TextStyle(
@@ -291,36 +319,6 @@ class _PayTicketBodyWidgetState extends State<PayTicketBodyWidget> {
 //                )
             );
           }),
-    );
-  }
-
-  Widget _sizeBoxButton(
-      BuildContext context, String title, Function action, Color color) {
-    var size = MediaQuery.of(context).size;
-    var isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 4),
-      child: SizedBox(
-        width: size.width,
-        height: isPortrait == true ? size.width / 10 : size.width / 20,
-        child: RaisedButton(
-          padding: EdgeInsets.all(0),
-          child: Text(
-            title,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-                color: Colors.white,
-//                fontSize: Common.setFontSize(16)
-            fontSize: SizeConfig.getInstance().setSp(16)
-            ),
-          ),
-          color: color,
-          onPressed: action,
-          // () {
-          //   // Navigator.pushNamed(context, PayTicketPage.routeName);
-          // },
-        ),
-      ),
     );
   }
 }

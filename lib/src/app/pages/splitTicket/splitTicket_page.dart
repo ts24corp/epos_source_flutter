@@ -2,6 +2,7 @@ import 'package:epos_source_flutter/src/app/core/baseViewModel.dart';
 import 'package:epos_source_flutter/src/app/helper/common.dart';
 import 'package:epos_source_flutter/src/app/pages/splitTicket/splitTicket_page_viewmodel.dart';
 import 'package:epos_source_flutter/src/app/theme/sizeConfig.dart';
+import 'package:epos_source_flutter/src/app/widgets/button.dart';
 import 'package:flutter/material.dart';
 import 'package:gradient_app_bar/gradient_app_bar.dart';
 
@@ -112,7 +113,7 @@ class _SplitTicketBodyWidgetState extends State<SplitTicketBodyWidget> {
             child: Column(
               children: <Widget>[
                 Container(
-                  margin: EdgeInsets.only(bottom: 4),
+                  margin: EdgeInsets.symmetric(horizontal: 8),
                   height:
                       isPortrait == true ? size.width / 10 : size.width / 20,
                   padding: EdgeInsets.only(right: 8),
@@ -129,22 +130,14 @@ class _SplitTicketBodyWidgetState extends State<SplitTicketBodyWidget> {
                         color: Colors.white),
                   ),
                 ),
-                SizedBox(
-                  width: size.width,
-                  height:
-                      isPortrait == true ? size.width / 10 : size.width / 20,
-                  child: RaisedButton(
-                    padding: EdgeInsets.all(0),
-                    child: Text(
-                      "Tách",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: SizeConfig.setSize(22)),
-                    ),
-                    color: Colors.red,
-                    onPressed: () {},
-                  ),
-                ),
+                Button(
+                  onPressed: () {},
+                  title: 'Tách',
+                  paddingContainer: EdgeInsets.all(8),
+                  textStyle: TextStyle(
+                      fontSize: SizeConfig.setSize(22), color: Colors.white),
+                  colorButton: Colors.red,
+                )
               ],
             ),
           ),

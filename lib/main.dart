@@ -1,11 +1,14 @@
 import 'package:epos_source_flutter/src/app/app.dart';
+import 'package:epos_source_flutter/src/app/app_localizations.dart';
 import 'package:flutter/material.dart';
 
-void main() =>
-// runApp(MaterialApp(
-//       home: Page1(),
-//     ))
-    runApp(MyApp());
+void main() async {
+  // Initializes the translation module
+  await translation.init('vi');
+
+  // then start the application
+  runApp(MyApp());
+}
 
 // class Page1 extends StatelessWidget {
 //   @override

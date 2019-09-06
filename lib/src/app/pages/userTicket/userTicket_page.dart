@@ -1,3 +1,4 @@
+import 'package:epos_source_flutter/src/app/app_localizations.dart';
 import 'package:epos_source_flutter/src/app/pages/placeTicket/placeTicket_page.dart';
 import 'package:epos_source_flutter/src/app/pages/tabs/tabs_check_page.dart';
 import 'package:epos_source_flutter/src/app/pages/tabs/tabs_sale_page.dart';
@@ -11,7 +12,7 @@ class UserTicketPage extends StatelessWidget {
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(
-        title: Text('User Ticket'),
+        title: Text(translation.text("USER_TICKET.USERNAME")),
       ),
       body: UserTicketBodyWidget(),
     );
@@ -40,20 +41,19 @@ class _UserTicketBodyWidgetState extends State<UserTicketBodyWidget> {
   Widget build(BuildContext context) {
     var route = ModalRoute.of(context);
     String tabName = route.settings.name;
-    // TODO: implement build
     return Container(
       child: ListView(
           children: ListTile.divideTiles(context: context, tiles: [
         ListTile(
             leading: Icon(Icons.person),
-            title: Text('Username'),
+            title: Text(translation.text("USER_TICKET.USERNAME")),
             trailing: Icon(Icons.arrow_forward_ios),
             onTap: () {}),
         ListTile(
             leading: Icon(Icons.loop),
             title: tabName == TabsCheckPage.routeName
-                ? Text('Sale Ticket')
-                : Text('Check Ticket'),
+                ? Text(translation.text("USER_TICKET.SALE_TICKET"))
+                : Text(translation.text("USER_TICKET.CHECK_TICKET")),
             trailing: Icon(Icons.arrow_forward_ios),
             onTap: () {
               if (route != null) {
@@ -72,12 +72,12 @@ class _UserTicketBodyWidgetState extends State<UserTicketBodyWidget> {
             }),
         ListTile(
             leading: Icon(Icons.settings),
-            title: Text('Setting'),
+            title: Text(translation.text("USER_TICKET.SETTING")),
             trailing: Icon(Icons.arrow_forward_ios),
             onTap: () {}),
         ListTile(
             leading: Icon(Icons.power_settings_new),
-            title: Text('Logout'),
+            title: Text(translation.text("USER_TICKET.LOGOUT")),
             trailing: Icon(Icons.arrow_forward_ios),
             onTap: () {}),
       ]).toList()),

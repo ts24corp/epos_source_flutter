@@ -1,3 +1,4 @@
+import 'package:epos_source_flutter/src/app/app_localizations.dart';
 import 'package:epos_source_flutter/src/app/helper/index.dart';
 import 'package:epos_source_flutter/src/app/pages/login/login_page_viewmodel.dart';
 
@@ -67,7 +68,7 @@ class _LoginBodyWidgetPageState extends State<LoginBodyWidget> {
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(0, 0, 0, 60),
-                  child: Text('EPOS\nChào mừng bạn',
+                  child: Text(translation.text("LOGIN_PAGE.WELCOME"),
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Colors.black,
@@ -78,7 +79,7 @@ class _LoginBodyWidgetPageState extends State<LoginBodyWidget> {
                   style: TextStyle(color: Colors.black, fontSize: 18),
                   hint: DropdownMenuItem(
                     value: null,
-                    child: Text("Cấu hình domain"),
+                    child: Text(translation.text("LOGIN_PAGE.CHOOSE_DOMAIN")),
                   ),
                   items: viewmodel.listCompany,
                   onChanged: viewmodel.listCompanyOnchanged,
@@ -90,7 +91,7 @@ class _LoginBodyWidgetPageState extends State<LoginBodyWidget> {
                     controller: viewmodel.emailController,
                     style: TextStyle(fontSize: 18, color: Colors.black),
                     decoration: InputDecoration(
-                        labelText: "EMAIL",
+                        labelText: translation.text("LOGIN_PAGE.EMAIL"),
                         errorText: viewmodel.errorEmail,
                         labelStyle: ThemePrimary.loginPageButton(context)),
                     keyboardType: TextInputType.emailAddress,
@@ -111,7 +112,8 @@ class _LoginBodyWidgetPageState extends State<LoginBodyWidget> {
                           style: TextStyle(fontSize: 18, color: Colors.black),
                           obscureText: !viewmodel.showPass ? true : false,
                           decoration: InputDecoration(
-                              labelText: "PASSWORD",
+                              labelText:
+                                  translation.text("LOGIN_PAGE.PASSWORD"),
                               errorText: viewmodel.errorPass,
                               labelStyle:
                                   ThemePrimary.loginPageButton(context)),
@@ -124,7 +126,9 @@ class _LoginBodyWidgetPageState extends State<LoginBodyWidget> {
                         GestureDetector(
                           onTap: viewmodel.onTapShowPassword,
                           child: Text(
-                            viewmodel.showPass ? "HIDE" : "SHOW",
+                            viewmodel.showPass
+                                ? translation.text("LOGIN_PAGE.HIDE")
+                                : translation.text("LOGIN_PAGE.SHOW"),
                             style: TextStyle(
                                 color: Theme.of(context).primaryColor,
                                 fontSize: 13,
@@ -142,7 +146,7 @@ class _LoginBodyWidgetPageState extends State<LoginBodyWidget> {
                           borderRadius: BorderRadius.all(Radius.circular(8))),
                       onPressed: viewmodel.onSignInClicked,
                       child: Text(
-                        "Sign in",
+                        translation.text("LOGIN_PAGE.SIGN_IN"),
                         style: TextStyle(color: Colors.white, fontSize: 16),
                       )),
                 ),

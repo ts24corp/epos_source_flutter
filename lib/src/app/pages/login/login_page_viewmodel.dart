@@ -14,6 +14,8 @@ import 'package:epos_source_flutter/src/app/repository/api_master.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../app_localizations.dart';
+
 class LoginPageViewModel extends ChangeNotifier {
   // final _emailSub = BehaviorSubject<String>();
   // final _passSub = BehaviorSubject<String>();
@@ -50,8 +52,8 @@ class LoginPageViewModel extends ChangeNotifier {
   String currentCompany;
 
   List<dynamic> _company = [
-    {'id': 1, 'name': 'Thủ công'},
-    {'id': 2, 'name': 'QR code'}
+    {'id': 1, 'name': translation.text("LOGIN_PAGE.MANUAL")},
+    {'id': 2, 'name': translation.text("LOGIN_PAGE.QR_CODE")}
   ];
 
   LoginPageViewModel() {
@@ -95,9 +97,9 @@ class LoginPageViewModel extends ChangeNotifier {
   void listCompanyOnchanged(value) {
     currentCompany = value;
     print(value);
-    if (value == 'Thủ công') {
+    if (value == translation.text("LOGIN_PAGE.MANUAL")) {
       Navigator.pushNamed(context, ConfigDomainPage.routeName);
-    } else if (value == 'QR code') {
+    } else if (value == translation.text("LOGIN_PAGE.QR_CODE")) {
       Navigator.pushNamed(context, SaleTicketPage.routeName);
     }
     loginSink.add(value);
@@ -154,14 +156,16 @@ class LoginPageViewModel extends ChangeNotifier {
     {
       ConfigDomain cfd = new ConfigDomain();
       //Kiểm tra cấu hình domain
-      LoadingDialog.showLoadingDialog(context, "Đang lấy thông tin domain...");
+      LoadingDialog.showLoadingDialog(
+          context, translation.text("WAITING_MESSAGE.INFO_DOMAIN"));
       bool _checkResult = await cfd.checkValidDomain();
       LoadingDialog.hideLoadingDialog(context);
       if (!_checkResult)
-        return LoadingDialog.showMsgDialog(context,
-            "Thông tin cấu hình domain chưa hợp lệ.Vui lòng kiểm tra lại.");
+        return LoadingDialog.showMsgDialog(
+            context, translation.text("ERROR_MESSAGE.WRONG_DOMAIN"));
       else {
-        LoadingDialog.showLoadingDialog(context, "Đang xác thực tài khoản...");
+        LoadingDialog.showLoadingDialog(
+            context, translation.text("WAITING_MESSAGE.AUTH_ACCOUNT"));
         //Kiểm tra login
         var _checkLogin = await api.checkLogin(
           cfd: cfd,
@@ -173,26 +177,26 @@ class LoginPageViewModel extends ChangeNotifier {
         if (_checkLogin == StatusCodeGetToken.TRUE) {
           //Kiểm tra quyền truy cập
           LoadingDialog.showLoadingDialog(
-              context, "Đang kiểm tra quyền truy cập...");
+              context, translation.text("WAITING_MESSAGE.PERMISSION_CONNECT"));
           var _checkPermission = await api.checkAccessRightPOS();
           LoadingDialog.hideLoadingDialog(context);
           if (_checkPermission)
-            // await _chooseBusinessType();
-            Navigator.pushReplacementNamed(context, TabsCheckPage.routeName,
-                arguments: TabsCheckArgurment(
-                    routeChildName: CheckTicketPage.routeName));
+            await _chooseBusinessType();
+          // Navigator.pushReplacementNamed(context, TabsCheckPage.routeName,
+          //     arguments: TabsCheckArgurment(
+          //         routeChildName: CheckTicketPage.routeName));
           else
             LoadingDialog.showMsgDialog(
-                context, "Bạn không có quyền truy cập vào ứng dụng này.");
+                context, translation.text("ERROR_MESSAGE.PERMISSION_APP"));
         } else if (_checkLogin == StatusCodeGetToken.invalid_client) {
-          return LoadingDialog.showMsgDialog(context,
-              "Vui lòng kiểm tra lại thông tin Client ID và Client Secret");
+          return LoadingDialog.showMsgDialog(
+              context, translation.text("ERROR_MESSAGE.WRONG_CLIENT"));
         } else if (_checkLogin == StatusCodeGetToken.invalid_domain) {
-          return LoadingDialog.showMsgDialog(context,
-              "Không kết nối được máy chủ.Vui lòng kiểm tra lại thông tin domain.");
+          return LoadingDialog.showMsgDialog(
+              context, translation.text("ERROR_MESSAGE.CONNECT_SERVER"));
         } else {
           return LoadingDialog.showMsgDialog(
-              context, "Kiểm tra lại tên đăng nhập hoặc mật khẩu.");
+              context, translation.text("ERROR_MESSAGE.WRONG_LOGIN"));
         }
       }
     }
@@ -207,17 +211,17 @@ class LoginPageViewModel extends ChangeNotifier {
       barrierDismissible: true, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Thông báo'),
+          title: Text(translation.text("NOTIFICATION")),
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                Text('Chọn loại hình sử dụng'),
+                Text(translation.text("LOGIN_PAGE.CHOOSE_TYPE")),
               ],
             ),
           ),
           actions: <Widget>[
             FlatButton(
-              child: Text('Bán vé'),
+              child: Text(translation.text("LOGIN_PAGE.SALE_TICKET")),
               onPressed: () {
                 Navigator.of(context).pop();
                 Navigator.pushNamed(context, TabsSalePage.routeName,
@@ -226,7 +230,7 @@ class LoginPageViewModel extends ChangeNotifier {
               },
             ),
             FlatButton(
-              child: Text('Soát vé'),
+              child: Text(translation.text("LOGIN_PAGE.CHECK_TICKET")),
               onPressed: () {
                 Navigator.of(context).pop();
                 Navigator.pushReplacementNamed(context, TabsCheckPage.routeName,

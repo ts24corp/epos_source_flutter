@@ -122,6 +122,7 @@ class Api1 extends ApiMaster {
     body["domain"] = [
       ['active', '=', 'True']
     ];
+    print('Body: $body');
     var params = convertSerialize(body);
     return http
         .get('${this.api}/search_read/pos.config?$params',
@@ -129,7 +130,7 @@ class Api1 extends ApiMaster {
         .then((http.Response response) {
       List<PosConfig> listResult = new List();
       if (response.statusCode == 200) {
-        print(response.body);
+        print('RES.body: ${response.body}');
         List list = json.decode(response.body);
         listResult = list.map((item) => PosConfig.fromJson(item)).toList();
         print(listResult);
@@ -145,6 +146,7 @@ class Api1 extends ApiMaster {
     body["fields"] = ['name', 'contact_address', 'email', 'phone'];
     body["limit"] = 0;
     var params = convertSerialize(body);
+    print('API full: ${this.api}/search_read/res.partner?$params');
     return http
         .get('${this.api}/search_read/res.partner?$params',
             headers: this.headers)
@@ -160,13 +162,13 @@ class Api1 extends ApiMaster {
     });
   }
 
-  //Lấy danh sách category từ  list id
-  Future<List<PosCategory>> getCategoryByID(List<int> id) async {
+  //Lấy tất cả id category cha 1-1
+  Future<List<int>> getAllParentIDCategory() async {
     await this.authorization();
     body = new Map();
-    body["fields"] = ['name', 'child_id', 'parent_id'];
+    body["fields"] = ['id', 'name'];
     body["domain"] = [
-      ['id', 'in', id.toString()]
+      ['parent_id', '=', false]
     ];
     body["limit"] = 0;
     var params = convertSerialize(body);
@@ -174,6 +176,37 @@ class Api1 extends ApiMaster {
         .get('${this.api}/search_read/pos.category?$params',
             headers: this.headers)
         .then((http.Response response) {
+      List<int> listResult = new List();
+      if (response.statusCode == 200) {
+        print(response.body);
+        List list = json.decode(response.body);
+        if (list.length > 0) {
+          var listPosCategory =
+              list.map((item) => PosCategory.fromJson(item)).toList();
+          listResult = listPosCategory.map((item) => item.id).toList();
+        }
+        //print(list);
+      }
+      return listResult;
+    });
+  }
+
+  //Lấy danh sách category từ  list id 1-2
+  Future<List<PosCategory>> getCategoryByID(List<int> id) async {
+    await this.authorization();
+    body = new Map();
+    body["fields"] = ['name', 'child_id', 'parent_id'];
+    body["domain"] = [
+      ['id', 'in', id]
+    ];
+    body["limit"] = 0;
+    var params = convertSerialize(body);
+    print('BODY: $body');
+    return http
+        .get('${this.api}/search_read/pos.category?$params',
+            headers: this.headers)
+        .then((http.Response response) {
+      print('RES: ${response.body}');
       List<PosCategory> listResult = new List();
       if (response.statusCode == 200) {
         print(response.body);
@@ -229,8 +262,23 @@ class Api1 extends ApiMaster {
     return listResult;
   }
 
+//Tìm và lấy tất cả danh sách  category con từ danh sách parent id 1-3
+  Future<List<PosCategory>> getAllCategoryByListParentID(
+      List<PosCategory> listParentID) async {
+    var listResult = listParentID;
+    for (var i = 0; i < listParentID.length; i++) {
+      var parentId = listParentID[i].id;
+      var listChildCateg = await this.getCategoryByListParentID(parentId);
+      if (listChildCateg.length > 0) {
+        listResult += await this.getAllCategoryByListParentID(listChildCateg);
+      }
+    }
+    print('listChild$listResult');
+    return listResult;
+  }
+
   //Lấy danh sách product từ  list category id
-  Future<List<PosCategory>> getProductByCatID(List<int> id) async {
+  Future<List<Product>> getProductByCatID(List<int> id) async {
     await this.authorization();
     body = new Map();
     body["fields"] = [
@@ -241,13 +289,14 @@ class Api1 extends ApiMaster {
       'uom_id',
       'weight_uom_name'
     ];
+    body["order"] = "name";
     body["domain"] = [
-      ['sale_ok', '=', 'True'],
-      ['available_in_pos', '=', 'True'],
+      ['sale_ok', '=', true],
+      ['available_in_pos', '=', true],
       [
         'pos_categ_id',
         'in',
-        id.toString(),
+        id,
       ]
     ];
     body["limit"] = 0;
@@ -256,12 +305,13 @@ class Api1 extends ApiMaster {
         .get('${this.api}/search_read/product.product?$params',
             headers: this.headers)
         .then((http.Response response) {
-      List<PosCategory> listResult = new List();
+      List<Product> listResult = new List();
       if (response.statusCode == 200) {
         print(response.body);
         List list = json.decode(response.body);
-        listResult = list.map((item) => PosCategory.fromJson(item)).toList();
-        //print(list);
+        if (list.length > 0)
+          listResult = list.map((item) => Product.fromJson(item)).toList();
+        print('List Product: $list');
       }
       return listResult;
     });
@@ -303,5 +353,33 @@ class Api1 extends ApiMaster {
       }
       return result;
     });
+  }
+
+  //Lấy danh sách tất cả category cha từ id con.
+  List<PosCategory> getListParentCategoryByChild(
+      int childID, List<PosCategory> listCategory) {
+    var listResult = List<PosCategory>();
+    for (var i = 0; i < listCategory.length; i++) {
+      var itemCurrent = listCategory[i];
+      if (itemCurrent.id == childID) {
+        var categoryParent = listCategory.where((item) {
+          if (itemCurrent.parentId is List)
+            return item.id == itemCurrent.parentId[0];
+          else if (itemCurrent.parentId is bool) {
+            if (!itemCurrent.parentId) return item.id == itemCurrent.id;
+          }
+          return false;
+        });
+        if (categoryParent.length > 0) {
+          listResult += categoryParent.toList();
+          if (categoryParent.toList()[0].parentId is List) {
+            listResult += this.getListParentCategoryByChild(
+                categoryParent.toList()[0].id, listCategory);
+            listResult += [itemCurrent];
+          }
+        }
+      }
+    }
+    return listResult;
   }
 }

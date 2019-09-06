@@ -1,3 +1,4 @@
+import 'package:epos_source_flutter/src/app/app_localizations.dart';
 import 'package:epos_source_flutter/src/app/core/baseViewModel.dart';
 import 'package:epos_source_flutter/src/app/model/config-domain.dart';
 import 'package:flutter/material.dart';
@@ -35,7 +36,7 @@ class ConfigDomainPageViewModel extends ViewModelBase {
     ToastController.show(
         context: context,
         duration: Duration(seconds: 1),
-        message: "Lưu thông tin cấu hình thành công");
+        message: translation.text("CONFIG_DOMAIN.SAVE_SUCCESS"));
   }
 
   Future<void> reloadData() async {

@@ -2,12 +2,14 @@ import 'package:epos_source_flutter/src/app/pages/checkTicket/checkTicket_page.d
 import 'package:epos_source_flutter/src/app/pages/checkTicketHistory/checkTicket_history_page.dart';
 import 'package:epos_source_flutter/src/app/pages/configDomain/configDomain_page.dart';
 import 'package:epos_source_flutter/src/app/pages/customerTicket/customerTicket_page.dart';
+import 'package:epos_source_flutter/src/app/pages/invoiceTicket/invoiceTicket_page.dart';
 import 'package:epos_source_flutter/src/app/pages/login/login_page.dart';
 import 'package:epos_source_flutter/src/app/pages/payTicket/payTicket_page.dart';
 import 'package:epos_source_flutter/src/app/pages/placeTicket/placeTicket_page.dart';
 import 'package:epos_source_flutter/src/app/pages/saleTicket/saleTicket_page.dart';
 import 'package:epos_source_flutter/src/app/pages/saleTicketHistory/saleTicketHistory_page.dart';
 import 'package:epos_source_flutter/src/app/pages/splitTicket/splitTicket_page.dart';
+import 'package:epos_source_flutter/src/app/pages/tableTicket/tableTicket_page.dart';
 import 'package:epos_source_flutter/src/app/pages/tabs/tabs_check_page.dart';
 import 'package:epos_source_flutter/src/app/pages/tabs/tabs_sale_page.dart';
 import 'package:epos_source_flutter/src/app/pages/userTicket/userTicket_page.dart';
@@ -31,5 +33,7 @@ class Routes {
     SplitTicketPage.routeName: (context) => SplitTicketPage(),
     CustomerTicketPage.routeName: (context) => CustomerTicketPage(),
     UserTicketPage.routeName: (context) => UserTicketPage(),
+    TableTicketPage.routeName: (context) => TableTicketPage(),
+    InvoiceTicketPage.routeName: (context) => InvoiceTicketPage()
   };
 }
