@@ -3,6 +3,7 @@ import 'package:epos_source_flutter/src/app/core/baseViewModel.dart';
 import 'package:epos_source_flutter/src/app/model/index.dart';
 import 'package:epos_source_flutter/src/app/model/pos-config.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 class PlaceTicketViewModel extends ViewModelBase {
   BuildContext context;
@@ -55,5 +56,12 @@ class PlaceTicketViewModel extends ViewModelBase {
     listPosConfig = await api.getListPos();
     this.updateState();
 //    this.updateState();
+    // var listParentID = await api.getAllParentIDCategory();
+    // var listCategoryParent = await api.getCategoryByID(listParentID);
+    // var listCategory =
+    //     await api.getAllCategoryByListParentID(listCategoryParent);
+    // var listPreParent =
+    //     api.getListParentCategoryByChild(listCategory[12].id, listCategory);
+    // print(listPreParent.toString());
   }
 }

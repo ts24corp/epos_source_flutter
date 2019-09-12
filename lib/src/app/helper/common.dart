@@ -23,7 +23,7 @@ class Common {
 
   //Khởi tạo Size Config
   static void initFontSize(context) {
-    SizeConfig().init(context);
+    SizeConfig.getInstance()..init(context);
   }
 
   //Chỉnh font size scale được cho từng screen.

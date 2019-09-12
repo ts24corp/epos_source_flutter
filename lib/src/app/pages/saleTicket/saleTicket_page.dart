@@ -3,15 +3,12 @@ import 'dart:core';
 import 'package:epos_source_flutter/src/app/app_localizations.dart';
 import 'package:epos_source_flutter/src/app/core/baseViewModel.dart';
 import 'package:epos_source_flutter/src/app/helper/common.dart';
-import 'package:epos_source_flutter/src/app/helper/loading_spinner.dart';
-import 'package:epos_source_flutter/src/app/model/index.dart';
 import 'package:epos_source_flutter/src/app/pages/payTicket/payTicket_page.dart';
 import 'package:epos_source_flutter/src/app/pages/saleTicket/saleTicket_page_viewmodel.dart';
-import 'package:epos_source_flutter/src/app/theme/sizeConfig.dart';
 import 'package:epos_source_flutter/src/app/widgets/button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-// import 'package:gradient_app_bar/gradient_app_bar.dart';
+//import 'package:validators/validators.dart';
 
 class SaleTicketPage extends StatefulWidget {
   static const String routeName = "/saleTicket";
@@ -25,13 +22,13 @@ class _SaleTicketPageState extends State<SaleTicketPage> {
 
   @override
   void initState() {
-//    viewModel.loadData();
-    // TODO: implement initState
+    viewModel.loadData();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    Common.initFontSize(context);
     return ViewModelProvider(
       viewmodel: viewModel,
       child: StreamBuilder<Object>(
@@ -39,114 +36,99 @@ class _SaleTicketPageState extends State<SaleTicketPage> {
           builder: (context, snapshot) {
             return Scaffold(
               // appBar: _appBar(viewModel),
-              appBar: PreferredSize(
-                preferredSize: Size.fromHeight(kToolbarHeight),
-                child: Container(
-                  // padding: kTabLabelPadding,
-                  color: Colors.blue,
-                  child: Column(
-                    children: <Widget>[
-                      Expanded(child: Container()),
-                      Container(
-                        child: Row(
-                          children: <Widget>[
-                            FlatButton(
-                              shape: CircleBorder(
-                                  side: BorderSide(color: Colors.transparent)),
-                              child: Icon(
-                                Icons.arrow_back,
-                                color: Colors.white,
-                                size: 25,
-                              ),
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                            ),
-//                            FlatButton(
-//                              shape: CircleBorder(
-//                                  side: BorderSide(color: Colors.transparent)),
-//                              child: Icon(
-//                                Icons.arrow_back,
-//                                color: Colors.white,
-//                                size: 25,
-//                              ),
-//                              onPressed: () {
-////                                Navigator.pop(context);
-//                              },
-//                            ),
-////                            itemTab(),
-                            Expanded(
-                              child: Container(
-                                height: 50,
-                                child: ListView.builder(
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: 10,
-                                  itemBuilder: (context, index) {
-                                    return itemTab();
-                                  },
-                                ),
-                              ),
-                            ),
-//                            Expanded(
-//                              child: ListView.builder(
-//                                  itemCount: viewModel.listHomeCat.length,
-//                                  itemBuilder: (context, index) {
-//                                    return itemTab();
-//                                  }),
-//                            ),
-//                            Expanded(
-//                              child: viewModel.listHomeCat.length == 0
-//                                  ? LoadingSpinner.loadingView(
-//                                      context: context, loading: true)
-//                                  : DefaultTabController(
-////                                      initialIndex: 0,
-//                                      length: viewModel.listHomeCat.length,
-//                                      child: TabBar(
-////                                        controller: viewModel.tabIndex,
-//                                        onTap: (index) {
-//                                          // print('Tabbar: $index ');
-//                                          viewModel.onHome();
-//                                        },
-//                                        indicatorColor: Colors.white,
-//                                        isScrollable: true,
-//                                        tabs: viewModel.listHomeCat
-//                                            .map((PosCategory choice) {
-//                                          return Tab(
-//                                            icon: choice.name == 'home'
-//                                                ? Icon(Icons.home)
-//                                                : null,
-//                                            text: choice.name != 'home'
-//                                                ? choice.name.toUpperCase()
-//                                                : null,
-//
-//                                            // icon: Icon(choice.icon),
-//                                          );
-//                                        }).toList(),
-//                                      ),
-//                                    ),
-//                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+              appBar: _appBar(context),
               body: SafeArea(child: SaleTicketBodyWidget()),
             );
           }),
     );
   }
 
-  Widget itemTab() {
-    return Container(
-      child: FlatButton(
-        shape: CircleBorder(side: BorderSide(color: Colors.transparent)),
-        child: Text('Name'),
-        onPressed: () {},
+  Widget _appBar(BuildContext context) {
+    return PreferredSize(
+      preferredSize: Size.fromHeight(kToolbarHeight),
+      child: Container(
+        // padding: kTabLabelPadding,
+        color: Colors.blue,
+        child: Column(
+          children: <Widget>[
+            Expanded(child: Container()),
+            Container(
+              child: Row(
+                children: <Widget>[
+                  FlatButton(
+                    shape: CircleBorder(
+                        side: BorderSide(color: Colors.transparent)),
+                    child: Icon(
+                      Icons.arrow_back,
+                      color: Colors.white,
+                      size: 25,
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                  Expanded(
+                    child: Container(
+                      height: kToolbarHeight,
+                      child: Scrollbar(
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: viewModel.listHomeCat.length,
+                          itemBuilder: (context, index) {
+                            return Container(
+                              child: FlatButton(
+                                child: viewModel.listHomeCat[index].name ==
+                                        'home'
+                                    ? Icon(
+                                        Icons.home,
+                                        color: Colors.white,
+                                      )
+                                    : Text(
+                                        viewModel.listHomeCat[index].name,
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: Common.setFontSize(16)),
+                                      ),
+                                onPressed: () {
+                                  viewModel.onHomeCat(
+                                      viewModel.listHomeCat[index], index);
+                                },
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
+
+//   Widget itemTab(PosCategory item) {
+//     return Container(
+//       child: FlatButton(
+// //        shape: CircleBorder(side: BorderSide(color: Colors.transparent)),
+//         child: item.name == 'home'
+//             ? Icon(
+//                 Icons.home,
+//                 color: Colors.white,
+//               )
+//             : Text(
+//                 item.name,
+//                 style: TextStyle(
+//                     color: Colors.white, fontSize: Common.setFontSize(16)),
+//               ),
+//         onPressed: () {
+// //          viewModel.onHomeCat(item);
+//         },
+//       ),
+//     );
+//   }
 }
 
 class SaleTicketBodyWidget extends StatefulWidget {
@@ -154,88 +136,85 @@ class SaleTicketBodyWidget extends StatefulWidget {
   _SaleTicketBodyWidgetState createState() => _SaleTicketBodyWidgetState();
 }
 
-class _SaleTicketBodyWidgetState extends State<SaleTicketBodyWidget> {
+class _SaleTicketBodyWidgetState extends State<SaleTicketBodyWidget>
+    with TickerProviderStateMixin {
   SaleTicketViewModel viewModel;
+  TabController tc;
+  TabController _tabController() => TabController(
+        vsync: this,
+        length: viewModel.listChildCat.length,
+        initialIndex: viewModel.listChildCat.length - 1,
+      );
+  @override
+  initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery
-        .of(context)
-        .size;
-    Common.initFontSize(context);
-    var isPortrait = MediaQuery
-        .of(context)
-        .orientation == Orientation.portrait;
-//    SizeConfig.instance = SizeConfig()..init(context);
+    var size = MediaQuery.of(context).size;
+    var isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
     viewModel = ViewModelProvider.of(context);
-    SizeConfig.instance = SizeConfig(width: size.width, height: size.height)
-      ..init(context);
-    print('${size.width}=>>>>> SaleTicketPage <<<<=${size.height}');
-    print('awawaw: ${viewModel.listAllCategoryByListParentID}');
-    return StatefulWrapper(
-      onInit: () {
-        viewModel.loadData();
-      },
-      child: Column(
-        children: <Widget>[
-          viewModel.listChildCat.length == 0
-              ? Container()
-              : Container(
-            height: 50,
-            color: Colors.blue,
-            child: DefaultTabController(
-              length: viewModel.listChildCat.length,
-              child: TabBar(
-                onTap: (index) {
-                  // print('Tabbar: $index ');
-                  viewModel.onChooseID(index);
-                },
-                indicatorColor: Colors.white,
-                isScrollable: true,
-                tabs: viewModel.listChildCat.map((PosCategory choice) {
-                  return Tab(
-                    icon: choice.name == 'home' ? Icon(Icons.home) : null,
-                    text: choice.name != 'home'
-                        ? choice.name.toUpperCase()
-                        : null,
+    // tc = _tabController();
+    return Column(
+      children: <Widget>[
+        viewModel.listChildCat.length == 0
+            ? Container()
+            : _listCategoryChild(viewModel),
+        // Container(
+        //   height: 50,
+        //   color: Colors.blue,
+        //   // child: DefaultTabController(
+        //   //   length: viewModel.listChildCat.length,
+        //   child: TabBar(
+        //     controller: tc,
+        //     onTap: (index) {
+        //       // print('Tabbar: $index ');
+        //       // viewModel.onChooseID(index);
+        //     },
+        //     indicatorColor: Colors.white,
+        //     isScrollable: true,
+        //     tabs: viewModel.listChildCat.map((choice) {
+        //       return Tab(
+        //         icon: choice.name == 'home' ? Icon(Icons.home) : null,
+        //         text: choice.name != 'home' ? choice.name.toUpperCase() : null,
 
-                    // icon: Icon(choice.icon),
-                  );
-                }).toList(),
+        //         // icon: Icon(choice.icon),
+        //       );
+        //     }).toList(),
+        //   ),
+        //   //  ),
+        // ),
+        Expanded(
+          child: Row(
+            children: <Widget>[
+              Expanded(
+                flex: isPortrait == true ? 1 : 2,
+                child: Column(
+                  children: <Widget>[
+                    _searchView(context),
+                    _listChooseEat(context),
+                  ],
+                ),
               ),
-            ),
+              Container(
+                height: size.height,
+                width: size.width / 300,
+                color: Colors.black26,
+              ),
+              Expanded(
+                flex: 1,
+                child: Column(
+                  children: <Widget>[
+                    _listViewEat(context),
+                    _viewCommit(context),
+                  ],
+                ),
+              ),
+            ],
           ),
-          Expanded(
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  flex: isPortrait == true ? 1 : 2,
-                  child: Column(
-                    children: <Widget>[
-                      _searchView(context),
-                      _listChooseEat(context),
-                    ],
-                  ),
-                ),
-                Container(
-                  height: size.height,
-                  width: size.width / 300,
-                  color: Colors.black26,
-                ),
-                Expanded(
-                  flex: 1,
-                  child: Column(
-                    children: <Widget>[
-                      _listViewEat(context),
-                      _viewCommit(context),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
@@ -259,20 +238,45 @@ Widget _searchView(BuildContext context) {
   );
 }
 
+Widget _listCategoryChild(
+  SaleTicketViewModel viewModel,
+) {
+  return Container(
+    color: Colors.blue,
+    height: kMinInteractiveDimension,
+    child: ListView.builder(
+      scrollDirection: Axis.horizontal,
+      itemCount: viewModel.listChildCat.length,
+      itemBuilder: (context, index) {
+        return Container(
+          child: FlatButton(
+//        shape: CircleBorder(side: BorderSide(color: Colors.transparent)),
+            child: Text(
+              viewModel.listChildCat[index].name,
+              style: TextStyle(
+                  color: Colors.white, fontSize: Common.setFontSize(16)),
+            ),
+            onPressed: () {
+              viewModel.onChildCat(viewModel.listChildCat[index], index);
+            },
+          ),
+        );
+      },
+    ),
+  );
+}
+
 Widget _listChooseEat(BuildContext context) {
   SaleTicketViewModel viewModel = ViewModelProvider.of(context);
-  var size = MediaQuery
-      .of(context)
-      .size;
+  var size = MediaQuery.of(context).size;
   /*24 is for notification bar on Android*/
   // final double itemHeight = (size.height - kToolbarHeight - 24) / 2;
   final double itemWidth = size.width / 2;
-  var isPortrait = MediaQuery
-      .of(context)
-      .orientation == Orientation.portrait;
-  var listEat = viewModel.listChooseEat;
-  print('print: ${viewModel.listProductIDCatID}');
-  var listProduct = viewModel.listProductIDCatID;
+  var isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+//  var listEat = viewModel.listChooseEat;
+//  print('print: ${viewModel.listProductIDCatID}');
+  var listProduct = viewModel.listProduct;
+//  Uint8List imageData = base64.decode(viewModel.imageURL);
   return Expanded(
     child: GridView.builder(
         itemCount: listProduct.length,
@@ -290,19 +294,28 @@ Widget _listChooseEat(BuildContext context) {
               viewModel.addEat(listProduct[index]);
             },
             child: Container(
-              color: Colors.amberAccent,
               margin: EdgeInsets.all(3),
+//              color: Colors.yellow,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage("image01.png"),
+                ),
+
+//                  AssetImage("image01.png"),
+//                  MemoryImage(imageData),
+//                Image.memory(imageData),
+              ),
               child: Column(
                 children: <Widget>[
                   Container(
                     color: Colors.black26.withOpacity(0.2),
                     padding: EdgeInsets.only(top: 4, bottom: 4),
+//                    padding: EdgeInsets.symmetric(vertical: 3, horizontal: 0),
                     width: size.width,
                     child: Text(
-                      '${viewModel.formatter.format(
-                          listProduct[index].listPrice)}đ',
+                      '${viewModel.formatter.format(listProduct[index].listPrice)}đ',
                       style: TextStyle(
-                          fontSize: SizeConfig.setSize(14),
+                          fontSize: Common.setFontSize(14),
                           fontWeight: FontWeight.bold),
                       textAlign: TextAlign.center,
                     ),
@@ -316,7 +329,7 @@ Widget _listChooseEat(BuildContext context) {
                           textAlign: TextAlign.center,
                           style: TextStyle(
                               inherit: true,
-                              fontSize: SizeConfig.setSize(16),
+                              fontSize: Common.setFontSize(16),
                               color: Colors.black,
                               fontWeight: FontWeight.bold),
                         ),
@@ -333,12 +346,8 @@ Widget _listChooseEat(BuildContext context) {
 
 Widget _viewCommit(BuildContext context) {
   SaleTicketViewModel viewModel = ViewModelProvider.of(context);
-  var size = MediaQuery
-      .of(context)
-      .size;
-  var isPortrait = MediaQuery
-      .of(context)
-      .orientation == Orientation.portrait;
+  var size = MediaQuery.of(context).size;
+  var isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
   return Container(
     child: Column(
       children: <Widget>[
@@ -353,7 +362,7 @@ Widget _viewCommit(BuildContext context) {
           child: Text(
             '${viewModel.formatter.format(viewModel.total)}đ',
             style: TextStyle(
-                fontSize: SizeConfig.setSize(20), fontWeight: FontWeight.w600),
+                fontSize: Common.setFontSize(20), fontWeight: FontWeight.w600),
           ),
         ),
         Button(
@@ -369,44 +378,6 @@ Widget _viewCommit(BuildContext context) {
   );
 }
 
-Widget scrollList(BuildContext context) {
-  SaleTicketViewModel viewModel = ViewModelProvider.of(context);
-  // var size = MediaQuery.of(context).size;
-  /*24 is for notification bar on Android*/
-  // final double itemHeight = (size.height - kToolbarHeight - 24) / 2;
-  var isPortrait = MediaQuery
-      .of(context)
-      .orientation == Orientation.portrait;
-  // final double itemWidth = size.width / 4;
-  var _catelogyProduct = viewModel.catelogyProduct;
-  return Expanded(
-    flex: isPortrait == true ? 1 : 1,
-    child: Container(
-      color: Colors.limeAccent,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: viewModel.catelogyProduct.length,
-        itemBuilder: (context, index) {
-          return Container(
-              margin: EdgeInsets.only(top: 10, bottom: 10),
-              alignment: Alignment.center,
-              padding: EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                // borderRadius: BorderRadius.only(bottomRight: Radius.circular(5.0), topRight: Radius.circular(5.0)),
-                  border:
-                  Border(right: BorderSide(width: 1, color: Colors.grey))),
-              child: Text(
-                _catelogyProduct[index]['name'],
-                style: TextStyle(
-                    fontSize: SizeConfig.setSize(16),
-                    fontWeight: FontWeight.w600),
-              ));
-        },
-      ),
-    ),
-  );
-}
-
 Widget infoCardEat(dynamic item, BuildContext context) {
   SaleTicketViewModel viewModel = ViewModelProvider.of(context);
   return Column(
@@ -417,7 +388,7 @@ Widget infoCardEat(dynamic item, BuildContext context) {
         child: Text(
           item.name,
           style: TextStyle(
-              fontSize: SizeConfig.setSize(18), fontWeight: FontWeight.bold),
+              fontSize: Common.setFontSize(18), fontWeight: FontWeight.bold),
         ),
       ),
       Container(
@@ -444,7 +415,7 @@ Widget infoCardEat(dynamic item, BuildContext context) {
                           "-",
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              fontSize: SizeConfig.setSize(20),
+                              fontSize: Common.setFontSize(20),
                               color: Colors.white),
                           textAlign: TextAlign.center,
                         ),
@@ -453,11 +424,11 @@ Widget infoCardEat(dynamic item, BuildContext context) {
                     Padding(
                       padding: const EdgeInsets.all(4.0),
                       child: Text(
-                        '1',
+                        item.uomId[0].toString(),
 //                        '${item['number']}',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: SizeConfig.setSize(20),
+                          fontSize: Common.setFontSize(20),
                         ),
                       ),
                     ),
@@ -476,7 +447,7 @@ Widget infoCardEat(dynamic item, BuildContext context) {
                             '+',
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                fontSize: SizeConfig.setSize(20),
+                                fontSize: Common.setFontSize(20),
                                 color: Colors.white),
                             // textAlign: TextAlign.center,
                           )),
@@ -488,7 +459,7 @@ Widget infoCardEat(dynamic item, BuildContext context) {
               child: Text(
                 '${viewModel.formatter.format(item.listPrice)}đ',
                 style: TextStyle(
-                    fontSize: SizeConfig.setSize(16),
+                    fontSize: Common.setFontSize(16),
                     fontWeight: FontWeight.bold),
               ),
             )
@@ -507,6 +478,7 @@ Widget _listViewEat(BuildContext context) {
       child: ListView.builder(
         itemCount: viewModel.eat.length,
         itemBuilder: (context, index) {
+          print('EATLIST: ${viewModel.eat[index].id}');
           return infoCardEat(viewModel.eat[index], context);
         },
       ),
@@ -526,7 +498,7 @@ Widget _listViewEat(BuildContext context) {
               ),
               Text(translation.text("SALE_TICKET.CART_EMPTY"),
                   style: TextStyle(
-                      color: Colors.black26, fontSize: SizeConfig.setSize(22))),
+                      color: Colors.black26, fontSize: Common.setFontSize(20))),
             ]),
       ),
     );

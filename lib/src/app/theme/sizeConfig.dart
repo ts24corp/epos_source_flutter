@@ -21,9 +21,12 @@ class SizeConfig {
   static double _textScaleFactor;
 
   SizeConfig({
-    this.width = 480,
-    this.height = 853,
-    this.allowFontScaling = true,
+    this.width = 410,
+    this.height = 820,
+    this.allowFontScaling = false,
+//    this.width = 480,
+//    this.height = 853,
+//    this.allowFontScaling = true,
   });
 
   static SizeConfig getInstance() {
@@ -36,6 +39,9 @@ class SizeConfig {
     _pixelRatio = mediaQuery.devicePixelRatio;
     _screenWidth = mediaQuery.size.width;
     _screenHeight = mediaQuery.size.height;
+    if (_screenWidth > 600 && _screenHeight > 500) {
+      this.width = 600;
+    }
     _statusBarHeight = mediaQuery.padding.top;
     _bottomBarHeight = _mediaQueryData.padding.bottom;
     _textScaleFactor = mediaQuery.textScaleFactor;
@@ -95,6 +101,7 @@ class SizeConfig {
   static double get size_22 => SizeConfig.getInstance().setSp(22);
 
   static double setSize(double value) {
+    if (_screenWidth > _screenHeight) _screenWidth = _screenHeight;
     return SizeConfig.getInstance().setSp(value);
   }
 }

@@ -1,3 +1,4 @@
+import 'package:epos_source_flutter/src/app/pages/addCustomer/addCustomer_page.dart';
 import 'package:epos_source_flutter/src/app/pages/checkTicket/checkTicket_page.dart';
 import 'package:epos_source_flutter/src/app/pages/checkTicketHistory/checkTicket_history_page.dart';
 import 'package:epos_source_flutter/src/app/pages/configDomain/configDomain_page.dart';
@@ -34,6 +35,7 @@ class Routes {
     CustomerTicketPage.routeName: (context) => CustomerTicketPage(),
     UserTicketPage.routeName: (context) => UserTicketPage(),
     TableTicketPage.routeName: (context) => TableTicketPage(),
-    InvoiceTicketPage.routeName: (context) => InvoiceTicketPage()
+    InvoiceTicketPage.routeName: (context) => InvoiceTicketPage(),
+    AddCustomerPage.routeName: (context) => AddCustomerPage(),
   };
 }

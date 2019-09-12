@@ -4,6 +4,7 @@ import 'package:epos_source_flutter/src/app/core/app_setting.dart';
 import 'package:epos_source_flutter/src/app/helper/index.dart';
 import 'package:epos_source_flutter/src/app/helper/validator.dart';
 import 'package:epos_source_flutter/src/app/model/config-domain.dart';
+import 'package:epos_source_flutter/src/app/model/index.dart';
 import 'package:epos_source_flutter/src/app/pages/checkTicket/checkTicket_page.dart';
 import 'package:epos_source_flutter/src/app/pages/configDomain/configDomain_page.dart';
 import 'package:epos_source_flutter/src/app/pages/saleTicket/saleTicket_page.dart';
@@ -154,6 +155,10 @@ class LoginPageViewModel extends ChangeNotifier {
     //   ),
     // );
     {
+      ResPartner res = new ResPartner();
+      res.id = 264;
+      res.name = 'luan';
+      api.updateCustomer(res);
       ConfigDomain cfd = new ConfigDomain();
       //Kiểm tra cấu hình domain
       LoadingDialog.showLoadingDialog(

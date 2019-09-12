@@ -2,7 +2,6 @@ import 'package:epos_source_flutter/src/app/app_localizations.dart';
 import 'package:epos_source_flutter/src/app/helper/index.dart';
 import 'package:epos_source_flutter/src/app/pages/login/login_page_viewmodel.dart';
 
-import 'package:epos_source_flutter/src/app/theme/sizeConfig.dart';
 import 'package:epos_source_flutter/src/app/theme/theme_primary.dart';
 
 import 'package:flutter/material.dart';

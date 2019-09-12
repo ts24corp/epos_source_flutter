@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:epos_source_flutter/src/app/core/app_setting.dart';
 import 'package:epos_source_flutter/src/app/core/baseViewModel.dart';
 import 'package:epos_source_flutter/src/app/helper/common.dart';
 import 'package:epos_source_flutter/src/app/model/index.dart';
+import 'package:epos_source_flutter/src/app/repository/api_parent_01.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -13,233 +15,93 @@ class SaleTicketViewModel extends ViewModelBase {
   StreamController streamAddController = new StreamController();
   final formatter = new NumberFormat("#,###");
   TextEditingController searchController = TextEditingController();
-  List<dynamic> listChooseEat = new List<dynamic>();
-  List<dynamic> eat = List();
-  var total = 0;
+  List<Product> eat = List();
+  double total = 0;
   int i = 0;
 
-  Future addEat(dynamic item) async {
-//    var index = listProductIDCatID.indexWhere((value) => value.id == item.id);
-//    // print('INDEX$index');
-//    if (index != -1) {
-//      eat[index]['number'] = eat[index]['number'] + 1;
-//    } else
-    eat.add(item);
-//    total = total + item.listPrice;
-    // await print(total);
-    sink.add(true);
-  }
-
-  Future numberTicketIncrease(dynamic item) async {
-    var index = eat.indexWhere((value) => value["id"] == item['id']);
+  Future addEat(Product item) async {
+    var index = eat.indexWhere((e) => e.id == item.id);
+    print('INDEX$index');
     if (index != -1) {
-      eat[index]['number'] = eat[index]['number'] + 1;
+      eat[index].uomId[0] = eat[index].uomId[0] + 1;
+      print('eat ${eat[index].uomId}');
     } else
       eat.add(item);
-    total = total + item['price'];
+    total = total + item.listPrice;
+    this.updateState();
+  }
+
+  Future numberTicketIncrease(Product item) async {
+    var index = eat.indexWhere((e) => e.id == item.id);
+    if (index != -1) {}
+    if (index != -1) {
+      eat[index].uomId[0] = eat[index].uomId[0] + 1;
+    } else
+      eat.add(item);
+    total = total + item.listPrice;
     sink.add(true);
   }
 
-  Future numberTicketDecrease(dynamic item) async {
-    var index = eat.indexWhere((value) => value["id"] == item['id']);
+  Future numberTicketDecrease(Product item) async {
+    var index = eat.indexWhere((e) => e.id == item.id);
     if (index != -1) {
-      if (item['number'] == 1) {
-        eat.removeWhere((i) => i['id'] == item['id']);
+      if (item.uomId[0] == 1) {
+        eat.removeWhere((i) => i.id == item.id);
       } else
-        eat[index]['number'] = eat[index]['number'] - 1;
-      total = total - item['price'];
+        eat[index].uomId[0] = eat[index].uomId[0] - 1;
+      total = total - item.listPrice;
     }
     sink.add(true);
   }
 
   Future onTab(index) async {
-    print(listCategorybyID[index].name);
-    print(listCategorybyID[index].childId);
+    print(listCategoryByID[index].name);
+    print(listCategoryByID[index].childId);
   }
 
   Future onHome() async {
-    listChildCat = listCategorybyID;
+    listChildCat = listCategoryByID;
     this.updateState();
   }
-
-  Future onChooseID(index) async {
-    print(listCategorybyID[index].name);
-    print(listCategorybyID[index].childId);
-    await listHomeCat.add(listCategorybyID[index]);
-    List<int> list = await api
-        .getAllCategoryIDByListParentID(listCategorybyID[index].childId);
-    print('GGGGG: $list');
-
-//    print('Index: $index');
-//    i = listHomeCat.length;
-
-    this.updateState();
-  }
-
-  SaleTicketViewModel() {
-    listChooseEat.addAll(listProductIDCatID);
-  }
-
-  var iteamsSearch = List<dynamic>();
 
   void filterSearchResults(String value) async {
     print('Value $value');
-    List<dynamic> tempwidgetList = List<dynamic>();
-    tempwidgetList.addAll(widgetList);
+    List<Product> tempWidgetList = List();
+    tempWidgetList.addAll(listProductIDCatID);
     if (value.isNotEmpty) {
-      List<dynamic> tempListData = List<dynamic>();
-      tempwidgetList.forEach((f) {
-        if (Common.sanitizing(f['name']).contains(Common.sanitizing(value))) {
+      List<Product> tempListData = List<Product>();
+      tempWidgetList.forEach((f) {
+        if (Common.sanitizing(f.name).contains(Common.sanitizing(value))) {
           tempListData.add(f);
         }
       });
-      listChooseEat.clear();
-      listChooseEat.addAll(tempListData);
-      print(' LISST ITEMS$listChooseEat');
+      listProduct.clear();
+      listProduct.addAll(tempListData);
       sink.add(true);
       return;
     } else {
-      listChooseEat.clear();
-      listChooseEat.addAll(widgetList);
+      listProduct.clear();
+      listProduct.addAll(listProductIDCatID);
       sink.add(true);
     }
   }
-
-  List<dynamic> widgetList = [
-    {
-      'id': 1,
-      'name': "Bún thịt nướng",
-      'type': 'quan',
-      "price": 100000,
-      "number": 1
-    },
-    {'id': 2, 'name': "Bún bò Huế", 'type': 'nha', "price": 50000, "number": 1},
-    {
-      'id': 3,
-      'name': "Cháo nhân sâm",
-      'type': 'nha',
-      "price": 40000,
-      "number": 1
-    },
-    {
-      'id': 4,
-      'name': "Thịt bò xào",
-      'type': 'nha',
-      "price": 200000,
-      "number": 1
-    },
-    {
-      'id': 5,
-      'name': "Cơm gà chiên",
-      'type': 'nha',
-      "price": 270000,
-      "number": 1
-    },
-    {
-      'id': 6,
-      'name': "Cơm dương châu",
-      'type': 'nha',
-      "price": 209000,
-      "number": 1
-    },
-    {
-      'id': 7,
-      'name': "Vịt nướng lu",
-      'type': 'nha',
-      "price": 201000,
-      "number": 1
-    },
-    {'id': 8, 'name': "Hủ tiếu bò", 'type': 'nha', "price": 20000, "number": 1},
-    {
-      'id': 9,
-      'name': "Mì xào bò thập cẩm",
-      'type': 'nha',
-      "price": 12000,
-      "number": 1
-    },
-    {
-      'id': 10,
-      'name': "Chè thập cẩm",
-      'type': 'nha',
-      "price": 10000,
-      "number": 1
-    },
-    {
-      'id': 11,
-      'name': "Cháo thập cẩm",
-      'type': 'nha',
-      "price": 14000,
-      "number": 1
-    },
-    {
-      'id': 12,
-      'name': "Mì ăn liền",
-      'type': 'nha',
-      "price": 178000,
-      "number": 1
-    },
-    {
-      'id': 13,
-      'name': "Cơm hải sản",
-      'type': 'nha',
-      "price": 136000,
-      "number": 1
-    },
-  ];
-  List<dynamic> catelogyProduct = [
-    {
-      'id': 1,
-      'type': 'Do uong',
-      'name': 'Đồ uống',
-    },
-    {
-      'id': 2,
-      'type': 'Nha hang',
-      'name': 'Nhà hàng',
-    },
-    {
-      'id': 3,
-      'type': 'Thuc an',
-      'name': 'Thức ăn',
-    },
-    {
-      'id': 4,
-      'type': 'Do go',
-      'name': 'Đồ gỗ',
-    },
-    {
-      'id': 5,
-      'type': 'Linh kien',
-      'name': 'Linh kiện',
-    },
-    {
-      'id': 6,
-      'type': 'May tinh',
-      'name': 'Máy tính',
-    },
-    {
-      'id': 7,
-      'type': 'Spa',
-      'name': 'Spa',
-    },
-    {
-      'id': 8,
-      'type': 'Do gia dung',
-      'name': 'Đồ gia dụng',
-    }
-  ];
 
   void dispose() {
     streamAddController.close();
   }
 
   List<int> listAllCategory = List();
-  List<PosCategory> listCategorybyID = List();
+  List<PosCategory> listCategoryByID = List();
   List<int> listCategoryIDByListParentID = List();
   List<Product> listProductIDCatID = List();
   List<PosCategory> listAllCategoryByListParentID = List();
   List<PosCategory> listHomeCat = List();
   List<PosCategory> listChildCat = List();
+  List<PosCategory> filterList = List();
+  List<Product> listProduct = List();
+  List<String> image = List();
+  String imageURL = '';
+  Uint8List bytesImage;
 
   Future loadData() async {
     PosCategory home = new PosCategory();
@@ -248,37 +110,107 @@ class SaleTicketViewModel extends ViewModelBase {
     home.name = 'home';
     home.parentId = false;
     listHomeCat.insert(0, home);
+
+    // Lấy category cha
     listAllCategory = await api.getAllParentIDCategory();
-    listCategorybyID = await api.getCategoryByID(listAllCategory);
+    listCategoryByID = await api.getCategoryByID(listAllCategory);
+    listChildCat.addAll(listCategoryByID);
+    this.updateState();
+
+    //Lấy product
     listAllCategoryByListParentID =
-        await api.getAllCategoryByListParentID(listCategorybyID);
+        await api.getAllCategoryByListParentID(listCategoryByID);
     listCategoryIDByListParentID =
         await api.getAllCategoryIDByListParentID(listAllCategory);
     listProductIDCatID =
         await api.getProductByCatID(listCategoryIDByListParentID);
-    listChildCat = listCategorybyID;
+    listProduct.addAll(listProductIDCatID);
+    this.updateState();
+    imageURL = await api.getImageProductByID(160, TypeImage.ORIGINAL);
     this.updateState();
   }
+
+  Future onHomeCat(PosCategory item, int index) async {
+    PosCategory home = new PosCategory();
+    home.childId = [];
+    home.id = 0;
+    home.name = 'home';
+    home.parentId = false;
+    print(item.name);
+    if (item.name == 'home') {
+      listHomeCat.clear();
+      listHomeCat.add(home);
+      listChildCat.clear();
+      listChildCat.addAll(listCategoryByID);
+      onFilterProduct(listCategoryIDByListParentID);
+      this.updateState();
+    } else {
+      onRefreshListChild(item.childId);
+      if (item.childId.isEmpty) {
+        onFilterProductID(item.id);
+      } else
+        onFilterProduct(item.childId);
+      listHomeCat.removeRange(index + 1, listHomeCat.length);
+      this.updateState();
+    }
+  }
+
+  Future onChildCat(PosCategory item, int index) async {
+    var ixx = listHomeCat.indexWhere((value) => value.id == item.id);
+    print('INDEX$ixx, childId: ${item.childId}');
+    if (ixx == -1) {
+      listHomeCat.add(item);
+      if (item.childId.isEmpty) {
+        onFilterProductID(item.id);
+      } else
+        onFilterProduct(item.childId);
+      onRefreshListChild(item.childId);
+    }
+    this.updateState();
+  }
+
+  Future onRefreshListChild(List<dynamic> childId) async {
+    List<PosCategory> res = List();
+    print('CHildID: $childId');
+
+    listAllCategoryByListParentID.forEach((i) {
+      childId.forEach((e) {
+        if (e == i.id) {
+          res.add(i);
+        }
+      });
+    });
+    print('Element: $res');
+    listChildCat.clear();
+    listChildCat.addAll(res);
+    this.updateState();
+  }
+
+  Future onFilterProductID(int id) async {
+    List<Product> listFilter = List();
+    listProductIDCatID.forEach((i) {
+      if (id == i.posCategId[0]) {
+        listFilter.add(i);
+      }
+    });
+    listProduct.clear();
+    listProduct.addAll(listFilter);
+    this.updateState();
+    print('ListProduct: $listProduct');
+  }
+
+  Future onFilterProduct(List<dynamic> childId) async {
+    List<Product> listFilter = List();
+    childId.forEach((e) {
+      listProductIDCatID.forEach((i) {
+        if (e == i.posCategId[0]) {
+          listFilter.add(i);
+        }
+      });
+    });
+    listProduct.clear();
+    listProduct.addAll(listFilter);
+    this.updateState();
+    print('ListProduct: $listProduct');
+  }
 }
-
-class Choice {
-  const Choice({this.title, this.icon, this.id});
-
-  final String title;
-  final IconData icon;
-  final int id;
-}
-
-const List<Choice> choices = const <Choice>[
-  const Choice(title: 'Đồ uống', id: 1),
-  const Choice(title: 'Nhà hàng', id: 2),
-  const Choice(title: 'Thức ăn', id: 3),
-  const Choice(title: 'Đồ gỗ', id: 4),
-  const Choice(title: 'Linh kiện', id: 5),
-  const Choice(title: 'Máy tính', id: 6),
-  const Choice(title: 'Spa', id: 7),
-  const Choice(title: 'Đồ gia dụng', id: 8),
-  const Choice(title: 'Đồ gia dụng', id: 8),
-  const Choice(title: 'Đồ gia dụng', id: 8),
-  const Choice(title: 'Đồ gia dụng', id: 8),
-];

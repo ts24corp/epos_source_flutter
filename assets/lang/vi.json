@@ -1,31 +1,65 @@
 {
-    "LOGIN_PAGE": {
-        "WELCOME": "EPOS\nChào mừng bạn",
-        "CHOOSE_DOMAIN": "Cấu hình domain",
-        "EMAIL": "Email",
-        "PASSWORD": "Mật khẩu",
-        "SHOW": "Hiện",
-        "HIDE": "Ẩn",
-        "SIGN_IN": "Đăng nhập",
-        "CHOOSE_TYPE": "Chọn loại hình sử dụng",
-        "MANUAL": "Thủ công",
-        "QR_CODE": "QR Code",
-        "SALE_TICKET": "Bán vé",
-        "CHECK_TICKET": "Soát vé"
+  "LOGIN_PAGE": {
+    "WELCOME": "EPOS\nChào mừng bạn",
+    "CHOOSE_DOMAIN": "Cấu hình domain",
+    "EMAIL": "Email",
+    "PASSWORD": "Mật khẩu",
+    "SHOW": "Hiện",
+    "HIDE": "Ẩn",
+    "SIGN_IN": "Đăng nhập",
+    "CHOOSE_TYPE": "Chọn loại hình sử dụng",
+    "MANUAL": "Thủ công",
+    "QR_CODE": "QR Code",
+    "SALE_TICKET": "Bán vé",
+    "CHECK_TICKET": "Soát vé"
+  },
 
-    },
-    "NOTIFICATION": "Thông báo",
-    "ERROR_MESSAGE": {
-        "PERMISSION_APP": "Bạn không có quyền truy cập vào ứng dụng này.",
-        "WRONG_CLIENT": "Vui lòng kiểm tra lại thông tin Client ID và Client Secret",
-        "CONNECT_SERVER": "Không kết nối được máy chủ.Vui lòng kiểm tra lại thông tin domain.",
-        "WRONG_LOGIN": "Kiểm tra lại tên đăng nhập hoặc mật khẩu.",
-        "WRONG_DOMAIN": "Thông tin cấu hình domain chưa hợp lệ.Vui lòng kiểm tra lại."
-    },
-    "WAITING_MESSAGE": {
-        "PERMISSION_CONNECT": "Đang kiểm tra quyền truy cập...",
-        "AUTH_ACCOUNT": "Đang xác thực tài khoản",
-        "INFO_DOMAIN": "Đang lấy thông tin domain..."
-
-    }
+  "USER_TICKET": {
+    "SALE_TICKET": "Bán vé",
+    "CHECK_TICKET": "Soát vé",
+    "USERNAME": "Tài khoản",
+    "SETTING": "Cài đặt",
+    "LOGOUT": "Đăng xuất"
+  },
+  "SALE_TICKET": {
+    "SEARCH": "Tìm kiếm",
+    "CART_EMPTY": "Giở hàng trống",
+    "PAY": "Thanh toán"
+  },
+  "CONFIG_DOMAIN": {
+    "CONFIG_DOMAIN": "Cấu hình doamin",
+    "SAVE": "Lưu",
+    "QR_CODE": "QR Code",
+    "MANUAL": "Thủ công",
+    "SAVE_SUCCESS": "Lưu thông tin cấu hình thành công"
+  },
+  "PLACE_TICKET": {
+    "OPEN": "Đang mở",
+    "CLOSE": "Đã đóng",
+    "PLACE_POS": "Địa điểm POS"
+  },
+  "PAY_TICKET": {
+    "PAY": "Thanh toán",
+    "TOTAL": "Tổng tiền",
+    "CASH_PAYMENT": "Thanh toán bằng tiền mặt",
+    "BANK_PAYMENT": "Thanh toán bằng ngân hàng",
+    "CARD_NUMBER": "Số thẻ",
+    "GUEST_PAID": "Tiền khách trả",
+    "SPLIT": "Tách",
+    "GUEST": "Khách hàng",
+    "BALANCE": "Tiền dư"
+  },
+  "NOTIFICATION": "Thông báo",
+  "ERROR_MESSAGE": {
+    "PERMISSION_APP": "Bạn không có quyền truy cập vào ứng dụng này.",
+    "WRONG_CLIENT": "Vui lòng kiểm tra lại thông tin Client ID và Client Secret",
+    "CONNECT_SERVER": "Không kết nối được máy chủ.Vui lòng kiểm tra lại thông tin domain.",
+    "WRONG_LOGIN": "Kiểm tra lại tên đăng nhập hoặc mật khẩu.",
+    "WRONG_DOMAIN": "Thông tin cấu hình domain chưa hợp lệ.Vui lòng kiểm tra lại."
+  },
+  "WAITING_MESSAGE": {
+    "PERMISSION_CONNECT": "Đang kiểm tra quyền truy cập...",
+    "AUTH_ACCOUNT": "Đang xác thực tài khoản",
+    "INFO_DOMAIN": "Đang lấy thông tin domain..."
+  }
 }

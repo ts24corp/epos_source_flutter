@@ -56,26 +56,29 @@ class _PlaceTicketBodyWidgetState extends State<PlaceTicketBodyWidget> {
   Widget build(BuildContext context) {
     viewModel = ViewModelProvider.of(context);
     var _placeList = viewModel.listPosConfig;
-    print('List ${_placeList}');
-    return _placeList.length == 0
-        ? LoadingSpinner.loadingView(context: context, loading: true)
-        : ListView.builder(
-            itemCount: _placeList.length,
-            itemBuilder: (context, index) {
-              return InkWell(
-                onTap: () {
-                  print("Card Clicked $index & ${_placeList[index]}");
-                  if (_placeList[index].posSessionState == false) {
-                    Navigator.pushNamed(context, SaleTicketPage.routeName);
-                  } else {
-                    Navigator.pushNamed(context, TableTicketPage.routeName);
-                  }
-                },
-                child: _makeCard(
-                    _placeList[index].name, _placeList[index].posSessionState),
-              );
-            },
-          );
+    print('List _placeList');
+    return RefreshIndicator(
+      onRefresh: viewModel.loadData,
+      child: _placeList.length == 0
+          ? LoadingSpinner.loadingView(context: context, loading: true)
+          : ListView.builder(
+              itemCount: _placeList.length,
+              itemBuilder: (context, index) {
+                return InkWell(
+                  onTap: () {
+                    print("Card Clicked $index & ${_placeList[index]}");
+                    if (_placeList[index].posSessionState == false) {
+                      Navigator.pushNamed(context, SaleTicketPage.routeName);
+                    } else {
+                      Navigator.pushNamed(context, TableTicketPage.routeName);
+                    }
+                  },
+                  child: _makeCard(_placeList[index].name,
+                      _placeList[index].posSessionState),
+                );
+              },
+            ),
+    );
   }
 }
 
@@ -99,7 +102,10 @@ Widget _makeCard(String name, dynamic status) {
             color: status == "opened" ? Colors.greenAccent : Colors.red,
             size: 20,
           ),
-          Text(status == "opened" ? translation.text("PLACE_TICKET.OPEN") : translation.text("PLACE_TICKET.CLOSE"),
+          Text(
+              status == "opened"
+                  ? translation.text("PLACE_TICKET.OPEN")
+                  : translation.text("PLACE_TICKET.CLOSE"),
               style: TextStyle(color: Colors.white))
         ],
       ),

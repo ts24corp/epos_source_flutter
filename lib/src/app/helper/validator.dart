@@ -22,4 +22,13 @@ class Validator {
     if (!isValid) return "URL is invalid";
     return null;
   }
+
+  static String validatePhone(String phone) {
+    if (phone == null || phone.trim() == "") return "Phone required";
+    var isValid = RegExp(
+            r"^(\+\d{1,2}\s?)?1?\-?\.?\s?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$")
+        .hasMatch(phone);
+    if (!isValid) return "Phone is invalid";
+    return null;
+  }
 }

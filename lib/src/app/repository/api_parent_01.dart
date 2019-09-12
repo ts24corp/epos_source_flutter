@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:epos_source_flutter/src/app/core/app_setting.dart';
 import 'package:epos_source_flutter/src/app/model/config-domain.dart';
 import 'package:epos_source_flutter/src/app/model/index.dart';
 import 'package:http/http.dart' as http;
@@ -114,7 +113,7 @@ class Api1 extends ApiMaster {
   //   localStorage.setItem(this.aliasName, json.encode(this.toJson()));
   // }
 
-  //Lấy danh sách POS
+  ///Lấy danh sách POS
   Future<List<PosConfig>> getListPos() async {
     await this.authorization();
     body = new Map();
@@ -139,12 +138,13 @@ class Api1 extends ApiMaster {
     });
   }
 
-  //Lấy danh sách khách hàng
+  ///Lấy danh sách khách hàng
   Future<List<ResPartner>> getListCustomer() async {
     await this.authorization();
     body = new Map();
     body["fields"] = ['name', 'contact_address', 'email', 'phone'];
     body["limit"] = 0;
+    body["order"] = 'name';
     var params = convertSerialize(body);
     print('API full: ${this.api}/search_read/res.partner?$params');
     return http
@@ -162,7 +162,51 @@ class Api1 extends ApiMaster {
     });
   }
 
-  //Lấy tất cả id category cha 1-1
+  ///Insert thông tin khách hàng - trả về true false, nếu true trả về thêm id đã insert.
+  Future<Map<bool, int>> createCustomer(ResPartner partner) async {
+    await this.authorization();
+    body = new Map();
+    body["model"] = "res.partner";
+    body["values"] = json.encode(partner.toJson());
+    return http
+        .post('${this.api}/create', headers: this.headers, body: body)
+        .then((http.Response response) {
+      Map<bool, int> result = Map();
+      if (response.statusCode == 200) {
+        print(response.body);
+        List list = json.decode(response.body);
+        result[true] = list[0];
+        //print(list);
+      } else {
+        result[false] = 0;
+      }
+      return result;
+    });
+  }
+
+  ///Update thông tin khách hàng - trả về true false
+  Future<bool> updateCustomer(ResPartner partner) async {
+    await this.authorization();
+    body = new Map();
+    body["model"] = "res.partner";
+    body["ids"] = json.encode([partner.id]);
+    body["values"] = json.encode(partner.toJson());
+    return http
+        .put('${this.api}/write', headers: this.headers, body: body)
+        .then((http.Response response) {
+      var result = false;
+      if (response.statusCode == 200) {
+        print(response.body);
+        result = true;
+        //print(list);
+      } else {
+        result = false;
+      }
+      return result;
+    });
+  }
+
+  ///Lấy tất cả id category cha 1-1
   Future<List<int>> getAllParentIDCategory() async {
     await this.authorization();
     body = new Map();
@@ -191,7 +235,7 @@ class Api1 extends ApiMaster {
     });
   }
 
-  //Lấy danh sách category từ  list id 1-2
+  ///Lấy danh sách category từ  list id 1-2
   Future<List<PosCategory>> getCategoryByID(List<int> id) async {
     await this.authorization();
     body = new Map();
@@ -218,7 +262,7 @@ class Api1 extends ApiMaster {
     });
   }
 
-  //Lấy danh sách category từ parent id
+  ///Lấy danh sách category từ parent id
   Future<List<PosCategory>> getCategoryByListParentID(int parentID) async {
     await this.authorization();
     body = new Map();
@@ -236,7 +280,9 @@ class Api1 extends ApiMaster {
         .get('${this.api}/search_read/pos.category?$params',
             headers: this.headers)
         .then((http.Response response) {
+          print('ListChildID: ${response.body}');
       List<PosCategory> listResult = new List();
+      print('ParentID: ${response.body}');
       if (response.statusCode == 200) {
         List list = json.decode(response.body);
         listResult = list.map((item) => PosCategory.fromJson(item)).toList();
@@ -246,7 +292,7 @@ class Api1 extends ApiMaster {
     });
   }
 
-  //Tìm và lấy tất cả danh sách id category con từ danh sách parent id
+  ///Tìm và lấy tất cả danh sách id category con từ danh sách parent id
   Future<List<int>> getAllCategoryIDByListParentID(
       List<int> listParentID) async {
     var listResult = listParentID;
@@ -262,7 +308,7 @@ class Api1 extends ApiMaster {
     return listResult;
   }
 
-//Tìm và lấy tất cả danh sách  category con từ danh sách parent id 1-3
+  ///Tìm và lấy tất cả danh sách  category con từ danh sách parent id 1-3
   Future<List<PosCategory>> getAllCategoryByListParentID(
       List<PosCategory> listParentID) async {
     var listResult = listParentID;
@@ -277,17 +323,18 @@ class Api1 extends ApiMaster {
     return listResult;
   }
 
-  //Lấy danh sách product từ  list category id
+  ///Lấy danh sách product từ  list category id
   Future<List<Product>> getProductByCatID(List<int> id) async {
     await this.authorization();
     body = new Map();
     body["fields"] = [
       'name',
       'categ_id',
+      'pos_categ_id',
       'cost_currency_id',
       'list_price',
       'uom_id',
-      'weight_uom_name'
+      'weight_uom_name',
     ];
     body["order"] = "name";
     body["domain"] = [
@@ -311,13 +358,13 @@ class Api1 extends ApiMaster {
         List list = json.decode(response.body);
         if (list.length > 0)
           listResult = list.map((item) => Product.fromJson(item)).toList();
-        print('List Product: $list');
+        print('List Product: ${list[0]}');
       }
       return listResult;
     });
   }
 
-  //Lấy image của product theo id
+  ///Lấy image của product theo id
   Future<String> getImageProductByID(int id, TypeImage typeImage) async {
     await this.authorization();
     body = new Map();
@@ -346,7 +393,7 @@ class Api1 extends ApiMaster {
         .then((http.Response response) {
       var result = "";
       if (response.statusCode == 200) {
-        print(response.body);
+//        print(response.body);
         List list = json.decode(response.body);
         result = list[0][_typeImage];
         //print(list);
@@ -355,7 +402,7 @@ class Api1 extends ApiMaster {
     });
   }
 
-  //Lấy danh sách tất cả category cha từ id con.
+  ///Lấy danh sách tất cả category cha từ id con, without call api.
   List<PosCategory> getListParentCategoryByChild(
       int childID, List<PosCategory> listCategory) {
     var listResult = List<PosCategory>();
@@ -371,10 +418,12 @@ class Api1 extends ApiMaster {
           return false;
         });
         if (categoryParent.length > 0) {
-          listResult += categoryParent.toList();
+          listResult.insert(0, categoryParent.toList()[0]);
           if (categoryParent.toList()[0].parentId is List) {
-            listResult += this.getListParentCategoryByChild(
-                categoryParent.toList()[0].id, listCategory);
+            listResult.insertAll(
+                0,
+                this.getListParentCategoryByChild(
+                    categoryParent.toList()[0].id, listCategory));
             listResult += [itemCurrent];
           }
         }
